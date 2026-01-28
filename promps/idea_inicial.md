@@ -130,3 +130,15 @@ Almacenamiento persistente de los datos de la aplicación.
 - control de versiones con git
 - Jest para test unitarios
 - Cypress para test end 2 end
+
+
+# Próximos pasos
+1. generar fichero NEGOCIO.md del negocio. Para ello falta:
+- [] Búsqueda de nuevas funcionalidades
+- [] Búsqueda de nuevos requisitos funcionales
+- [] Búsqueda de nuevas requisitos no funcionales
+- [] Verificar la elección de las tecnologías
+2. Generar fichero de modelo de datos con diagramas mermaid
+3. Generar casos de uso
+4. Generar primera versión de la API utilizando openAPI
+5. Generar plan de desarrollo
