@@ -579,7 +579,8 @@ Los siguientes elementos NO forman parte del desarrollo actual:
 2. Generar modelo de datos con diagramas Mermaid
 3. Generar casos de uso detallados
 4. Generar especificación de API con OpenAPI
-5. Generar plan de desarrollo con sprints
+5. Generar documento técnico con la estructura de carpetas, las tecnologías usadas, la arquitectura de backend y frontend, todos los pasos para levantar el entorno (incluida la base de datos) y todo lo que consideremos oportuno.
+6. Generar plan de desarrollo con sprints
 
 ---
 
