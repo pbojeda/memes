@@ -1,0 +1,3669 @@
+openapi: 3.0.3
+info:
+  title: Meme Products E-commerce API
+  description: |
+    REST API for the Meme Products E-commerce platform.
+
+    ## Authentication
+    This API uses JWT authentication with refresh tokens.
+    - Access tokens expire in 15 minutes
+    - Refresh tokens expire in 7 days
+    - Include access token in Authorization header: `Bearer <token>`
+
+    ## Localization
+    Use `Accept-Language` header for localized content (es, en).
+    Default: es
+
+    ## Pagination
+    List endpoints support pagination via query parameters:
+    - `page`: Page number (default: 1)
+    - `limit`: Items per page (default: 20, max: 100)
+
+    ## Response Format
+    All responses are wrapped in an envelope:
+    ```json
+    {
+      "data": { ... },
+      "meta": { "page": 1, "limit": 20, "total": 100, "totalPages": 5 }
+    }
+    ```
+
+    ## Error Format
+    ```json
+    {
+      "error": {
+        "code": "ERROR_CODE",
+        "message": "Human readable message",
+        "details": [{ "field": "email", "message": "Invalid format" }]
+      }
+    }
+    ```
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@memestore.com
+  license:
+    name: Proprietary
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.memestore.com/api/v1
+    description: Production server
+
+tags:
+  - name: Auth
+    description: Authentication and authorization
+  - name: Users
+    description: User profile and account management
+  - name: Products
+    description: Product catalog operations
+  - name: Product Types
+    description: Product category management
+  - name: Cart
+    description: Shopping cart operations
+  - name: Orders
+    description: Order management
+  - name: Promo Codes
+    description: Promotional codes management
+  - name: Reviews
+    description: Product reviews
+  - name: Newsletter
+    description: Newsletter subscriptions
+  - name: Contact
+    description: Contact form and messages
+  - name: AI Generation
+    description: AI-powered content generation
+  - name: Admin
+    description: Administrative operations
+  - name: Webhooks
+    description: External service webhooks
+  - name: Upload
+    description: File upload operations
+
+security:
+  - BearerAuth: []
+
+paths:
+  # ============================================
+  # AUTH ENDPOINTS
+  # ============================================
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user account
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              email: user@example.com
+              password: SecurePass123!
+              firstName: John
+              lastName: Doe
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Authenticate user and get tokens
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: user@example.com
+              password: SecurePass123!
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout and invalidate refresh token
+      operationId: logoutUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '204':
+          description: Logout successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      operationId: refreshToken
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/password/forgot:
+    post:
+      tags: [Auth]
+      summary: Request password reset email
+      operationId: forgotPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Reset email sent (always returns 200 for security)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /auth/password/reset:
+    post:
+      tags: [Auth]
+      summary: Reset password with token
+      operationId: resetPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  # ============================================
+  # USER ENDPOINTS
+  # ============================================
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Get current user profile
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    patch:
+      tags: [Users]
+      summary: Update current user profile
+      operationId: updateCurrentUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/me/password:
+    patch:
+      tags: [Users]
+      summary: Change current user password
+      operationId: changePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [currentPassword, newPassword]
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/me/addresses:
+    get:
+      tags: [Users]
+      summary: List user addresses
+      operationId: listUserAddresses
+      responses:
+        '200':
+          description: List of addresses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Address'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Users]
+      summary: Create new address
+      operationId: createUserAddress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAddressRequest'
+      responses:
+        '201':
+          description: Address created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Address'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/me/addresses/{addressId}:
+    parameters:
+      - $ref: '#/components/parameters/AddressId'
+
+    get:
+      tags: [Users]
+      summary: Get address by ID
+      operationId: getUserAddress
+      responses:
+        '200':
+          description: Address details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Address'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Users]
+      summary: Update address
+      operationId: updateUserAddress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAddressRequest'
+      responses:
+        '200':
+          description: Address updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Address'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Users]
+      summary: Delete address
+      operationId: deleteUserAddress
+      responses:
+        '204':
+          description: Address deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/me/orders:
+    get:
+      tags: [Users]
+      summary: List current user's orders
+      operationId: listUserOrders
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================
+  # PRODUCT ENDPOINTS
+  # ============================================
+  /products:
+    get:
+      tags: [Products]
+      summary: List products with filtering and pagination
+      operationId: listProducts
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - name: search
+          in: query
+          description: Search in title and description
+          schema:
+            type: string
+        - name: typeSlug
+          in: query
+          description: Filter by product type slug
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: isHot
+          in: query
+          description: Filter hot/trending products
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [price_asc, price_desc, newest, popular]
+            default: newest
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+
+    post:
+      tags: [Products]
+      summary: Create new product (Staff only)
+      operationId: createProduct
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /products/hot:
+    get:
+      tags: [Products]
+      summary: Get hot/trending products
+      operationId: getHotProducts
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: List of hot products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+
+  /products/{slug}:
+    parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags: [Products]
+      summary: Get product by slug
+      operationId: getProductBySlug
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    patch:
+      tags: [Products]
+      summary: Update product (Staff only)
+      operationId: updateProduct
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Products]
+      summary: Delete product (Staff only)
+      operationId: deleteProduct
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '204':
+          description: Product deleted (soft delete)
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/activate:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    post:
+      tags: [Products]
+      summary: Activate product (Staff only)
+      operationId: activateProduct
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '200':
+          description: Product activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/deactivate:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    post:
+      tags: [Products]
+      summary: Deactivate product (Staff only)
+      operationId: deactivateProduct
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '200':
+          description: Product deactivated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/images:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    get:
+      tags: [Products]
+      summary: List product images
+      operationId: listProductImages
+      security: []
+      responses:
+        '200':
+          description: List of images
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductImage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags: [Products]
+      summary: Add product image (Staff only)
+      operationId: addProductImage
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductImageRequest'
+      responses:
+        '201':
+          description: Image added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProductImage'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/images/{imageId}:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+      - name: imageId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags: [Products]
+      summary: Update product image (Staff only)
+      operationId: updateProductImage
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductImageRequest'
+      responses:
+        '200':
+          description: Image updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProductImage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Products]
+      summary: Delete product image (Staff only)
+      operationId: deleteProductImage
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '204':
+          description: Image deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    get:
+      tags: [Reviews]
+      summary: List product reviews
+      operationId: listProductReviews
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: List of reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags: [Reviews]
+      summary: Add product review (Staff only)
+      operationId: addProductReview
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+      responses:
+        '201':
+          description: Review added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/related:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    get:
+      tags: [Products]
+      summary: Get related products
+      operationId: getRelatedProducts
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: Related products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/analytics:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    get:
+      tags: [Products]
+      summary: Get product analytics (Staff only)
+      operationId: getProductAnalytics
+      security:
+        - BearerAuth: [manager, admin]
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Product analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAnalytics'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================
+  # PRODUCT TYPE ENDPOINTS
+  # ============================================
+  /product-types:
+    get:
+      tags: [Product Types]
+      summary: List product types
+      operationId: listProductTypes
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: List of product types
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductType'
+
+    post:
+      tags: [Product Types]
+      summary: Create product type (Admin only)
+      operationId: createProductType
+      security:
+        - BearerAuth: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductTypeRequest'
+      responses:
+        '201':
+          description: Product type created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProductType'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /product-types/{productTypeId}:
+    parameters:
+      - name: productTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags: [Product Types]
+      summary: Update product type (Admin only)
+      operationId: updateProductType
+      security:
+        - BearerAuth: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductTypeRequest'
+      responses:
+        '200':
+          description: Product type updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProductType'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Product Types]
+      summary: Delete product type (Admin only)
+      operationId: deleteProductType
+      security:
+        - BearerAuth: [admin]
+      responses:
+        '204':
+          description: Product type deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Cannot delete - has associated products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ============================================
+  # CART ENDPOINTS
+  # ============================================
+  /cart:
+    get:
+      tags: [Cart]
+      summary: Get current cart
+      operationId: getCart
+      security: []
+      parameters:
+        - name: cartId
+          in: query
+          description: Cart ID for guest users (from cookie/localStorage)
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: Cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+
+    delete:
+      tags: [Cart]
+      summary: Clear cart
+      operationId: clearCart
+      security: []
+      parameters:
+        - name: cartId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Cart cleared
+
+  /cart/items:
+    post:
+      tags: [Cart]
+      summary: Add item to cart
+      operationId: addCartItem
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCartItemRequest'
+      responses:
+        '200':
+          description: Item added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /cart/items/{itemId}:
+    parameters:
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags: [Cart]
+      summary: Update cart item quantity
+      operationId: updateCartItem
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [quantity]
+              properties:
+                quantity:
+                  type: integer
+                  minimum: 1
+                cartId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Cart]
+      summary: Remove item from cart
+      operationId: removeCartItem
+      security: []
+      parameters:
+        - name: cartId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /cart/promo-code:
+    post:
+      tags: [Cart]
+      summary: Apply promo code to cart
+      operationId: applyPromoCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                cartId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Promo code applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '400':
+          description: Invalid or expired promo code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags: [Cart]
+      summary: Remove promo code from cart
+      operationId: removePromoCode
+      security: []
+      parameters:
+        - name: cartId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Promo code removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+
+  /cart/shipping:
+    post:
+      tags: [Cart]
+      summary: Calculate shipping cost
+      operationId: calculateShipping
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [countryCode, postalCode]
+              properties:
+                cartId:
+                  type: string
+                  format: uuid
+                countryCode:
+                  type: string
+                  minLength: 2
+                  maxLength: 2
+                postalCode:
+                  type: string
+      responses:
+        '200':
+          description: Shipping options
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingOptionsResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  # ============================================
+  # ORDER ENDPOINTS
+  # ============================================
+  /orders:
+    get:
+      tags: [Orders]
+      summary: List orders (Staff only)
+      operationId: listOrders
+      security:
+        - BearerAuth: [manager, admin]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+        - name: search
+          in: query
+          description: Search by order number or email
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Orders]
+      summary: Create order (initiate checkout)
+      operationId: createOrder
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order created, returns Stripe checkout URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrderResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /orders/{orderNumber}:
+    parameters:
+      - name: orderNumber
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags: [Orders]
+      summary: Get order by order number
+      operationId: getOrderByNumber
+      security: []
+      description: |
+        For guests, requires verification via email or phone in query params.
+        For authenticated users, checks ownership.
+        For staff, direct access.
+      parameters:
+        - name: email
+          in: query
+          description: Verification email (for guests)
+          schema:
+            type: string
+            format: email
+        - name: phone
+          in: query
+          description: Verification phone (for guests)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetailResponse'
+        '401':
+          description: Verification required or failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /orders/{orderId}:
+    parameters:
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags: [Orders]
+      summary: Update order (Staff only)
+      operationId: updateOrder
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderRequest'
+      responses:
+        '200':
+          description: Order updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetailResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /orders/{orderId}/refund:
+    parameters:
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      tags: [Orders]
+      summary: Request/process refund
+      operationId: refundOrder
+      security: []
+      description: |
+        Customers can request a refund within 14 days.
+        Staff can process the refund.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                  description: For guest verification
+      responses:
+        '200':
+          description: Refund initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetailResponse'
+        '400':
+          description: Refund not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================
+  # PROMO CODE ENDPOINTS
+  # ============================================
+  /promo-codes:
+    get:
+      tags: [Promo Codes]
+      summary: List promo codes (Staff only)
+      operationId: listPromoCodes
+      security:
+        - BearerAuth: [marketing, admin]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of promo codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoCodeListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Promo Codes]
+      summary: Create promo code (Staff only)
+      operationId: createPromoCode
+      security:
+        - BearerAuth: [marketing, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePromoCodeRequest'
+      responses:
+        '201':
+          description: Promo code created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PromoCode'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Code already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /promo-codes/validate:
+    post:
+      tags: [Promo Codes]
+      summary: Validate promo code
+      operationId: validatePromoCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                orderTotal:
+                  type: number
+                  description: Order total for min amount validation
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoCodeValidationResponse'
+        '400':
+          description: Invalid code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /promo-codes/{promoCodeId}:
+    parameters:
+      - name: promoCodeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags: [Promo Codes]
+      summary: Get promo code details (Staff only)
+      operationId: getPromoCode
+      security:
+        - BearerAuth: [marketing, admin]
+      responses:
+        '200':
+          description: Promo code details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PromoCode'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Promo Codes]
+      summary: Update promo code (Staff only)
+      operationId: updatePromoCode
+      security:
+        - BearerAuth: [marketing, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePromoCodeRequest'
+      responses:
+        '200':
+          description: Promo code updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PromoCode'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Promo Codes]
+      summary: Delete promo code (Staff only)
+      operationId: deletePromoCode
+      security:
+        - BearerAuth: [marketing, admin]
+      responses:
+        '204':
+          description: Promo code deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /promo-codes/{promoCodeId}/stats:
+    parameters:
+      - name: promoCodeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags: [Promo Codes]
+      summary: Get promo code usage stats (Staff only)
+      operationId: getPromoCodeStats
+      security:
+        - BearerAuth: [marketing, admin]
+      responses:
+        '200':
+          description: Usage statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoCodeStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================
+  # REVIEW ENDPOINTS
+  # ============================================
+  /reviews/{reviewId}:
+    parameters:
+      - name: reviewId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags: [Reviews]
+      summary: Update review (Staff only)
+      operationId: updateReview
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewRequest'
+      responses:
+        '200':
+          description: Review updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Reviews]
+      summary: Delete review (Staff only)
+      operationId: deleteReview
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '204':
+          description: Review deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reviews/{reviewId}/visibility:
+    parameters:
+      - name: reviewId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags: [Reviews]
+      summary: Toggle review visibility (Staff only)
+      operationId: toggleReviewVisibility
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [isVisible]
+              properties:
+                isVisible:
+                  type: boolean
+      responses:
+        '200':
+          description: Visibility updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================
+  # NEWSLETTER ENDPOINTS
+  # ============================================
+  /newsletter/subscribe:
+    post:
+      tags: [Newsletter]
+      summary: Subscribe to newsletter
+      operationId: subscribeNewsletter
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                source:
+                  type: string
+                  description: Signup source (footer, checkout, popup)
+      responses:
+        '201':
+          description: Subscribed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Already subscribed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /newsletter/unsubscribe:
+    post:
+      tags: [Newsletter]
+      summary: Unsubscribe from newsletter
+      operationId: unsubscribeNewsletter
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                token:
+                  type: string
+                  description: Unsubscribe token from email
+      responses:
+        '200':
+          description: Unsubscribed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /newsletter/subscribers:
+    get:
+      tags: [Newsletter]
+      summary: List newsletter subscribers (Staff only)
+      operationId: listNewsletterSubscribers
+      security:
+        - BearerAuth: [marketing, admin]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of subscribers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsletterSubscriberListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ============================================
+  # CONTACT ENDPOINTS
+  # ============================================
+  /contact:
+    post:
+      tags: [Contact]
+      summary: Submit contact message
+      operationId: submitContactMessage
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactMessageRequest'
+      responses:
+        '201':
+          description: Message submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /contact/messages:
+    get:
+      tags: [Contact]
+      summary: List contact messages (Staff only)
+      operationId: listContactMessages
+      security:
+        - BearerAuth: [manager, admin]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: isRead
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactMessageListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /contact/messages/{messageId}:
+    parameters:
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags: [Contact]
+      summary: Get contact message (Staff only)
+      operationId: getContactMessage
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '200':
+          description: Message details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ContactMessage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Contact]
+      summary: Update message status (Staff only)
+      operationId: updateContactMessage
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isRead:
+                  type: boolean
+      responses:
+        '200':
+          description: Message updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ContactMessage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /contact/messages/{messageId}/reply:
+    parameters:
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      tags: [Contact]
+      summary: Reply to contact message (Staff only)
+      operationId: replyContactMessage
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Reply sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================
+  # AI GENERATION ENDPOINTS
+  # ============================================
+  /ai/generate-image:
+    post:
+      tags: [AI Generation]
+      summary: Generate meme image with AI (Staff only)
+      operationId: generateImage
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateImageRequest'
+      responses:
+        '200':
+          description: Generated images
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateImageResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          description: AI service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ai/generate-reviews:
+    post:
+      tags: [AI Generation]
+      summary: Generate product reviews with AI (Staff only)
+      operationId: generateReviews
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateReviewsRequest'
+      responses:
+        '200':
+          description: Generated reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateReviewsResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          description: AI service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ============================================
+  # ADMIN ENDPOINTS
+  # ============================================
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List staff users (Admin only)
+      operationId: listStaffUsers
+      security:
+        - BearerAuth: [admin]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [MANAGER, ADMIN, MARKETING]
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of staff users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Admin]
+      summary: Create staff user (Admin only)
+      operationId: createStaffUser
+      security:
+        - BearerAuth: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStaffUserRequest'
+      responses:
+        '201':
+          description: Staff user created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags: [Admin]
+      summary: Get staff user (Admin only)
+      operationId: getStaffUser
+      security:
+        - BearerAuth: [admin]
+      responses:
+        '200':
+          description: Staff user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Admin]
+      summary: Update staff user (Admin only)
+      operationId: updateStaffUser
+      security:
+        - BearerAuth: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStaffUserRequest'
+      responses:
+        '200':
+          description: Staff user updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Admin]
+      summary: Deactivate staff user (Admin only)
+      operationId: deactivateStaffUser
+      security:
+        - BearerAuth: [admin]
+      responses:
+        '200':
+          description: Staff user deactivated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /admin/dashboard:
+    get:
+      tags: [Admin]
+      summary: Get dashboard statistics (Staff only)
+      operationId: getDashboardStats
+      security:
+        - BearerAuth: [manager, admin, marketing]
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [today, week, month, year]
+            default: month
+      responses:
+        '200':
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ============================================
+  # UPLOAD ENDPOINTS
+  # ============================================
+  /upload/image:
+    post:
+      tags: [Upload]
+      summary: Upload image file (Staff only)
+      operationId: uploadImage
+      security:
+        - BearerAuth: [manager, admin]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                folder:
+                  type: string
+                  description: Target folder (products, memes, etc.)
+      responses:
+        '201':
+          description: Image uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          description: Invalid file type or size
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ============================================
+  # WEBHOOK ENDPOINTS
+  # ============================================
+  /webhooks/stripe:
+    post:
+      tags: [Webhooks]
+      summary: Stripe webhook endpoint
+      operationId: handleStripeWebhook
+      security: []
+      description: |
+        Handles Stripe webhook events.
+        Signature verification via Stripe-Signature header.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook processed
+        '400':
+          description: Invalid payload or signature
+
+  /webhooks/printful:
+    post:
+      tags: [Webhooks]
+      summary: Printful webhook endpoint
+      operationId: handlePrintfulWebhook
+      security: []
+      description: |
+        Handles Printful webhook events for order fulfillment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook processed
+        '400':
+          description: Invalid payload
+
+# ============================================
+# COMPONENTS
+# ============================================
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token
+
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Page number
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    Limit:
+      name: limit
+      in: query
+      description: Items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      description: Preferred language for localized content
+      schema:
+        type: string
+        enum: [es, en]
+        default: es
+
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    AddressId:
+      name: addressId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: Validation failed
+              details:
+                - field: email
+                  message: Invalid email format
+
+    Unauthorized:
+      description: Authentication required or token invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: UNAUTHORIZED
+              message: Authentication required
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: FORBIDDEN
+              message: Insufficient permissions
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: NOT_FOUND
+              message: Resource not found
+
+  schemas:
+    # ============================================
+    # COMMON SCHEMAS
+    # ============================================
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  message:
+                    type: string
+
+    MessageResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+
+    LocalizedString:
+      type: object
+      properties:
+        es:
+          type: string
+        en:
+          type: string
+
+    # ============================================
+    # AUTH SCHEMAS
+    # ============================================
+    RegisterRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+            expiresIn:
+              type: integer
+              description: Access token expiry in seconds
+            user:
+              $ref: '#/components/schemas/User'
+
+    # ============================================
+    # USER SCHEMAS
+    # ============================================
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    UserRole:
+      type: string
+      enum: [TARGET, MANAGER, ADMIN, MARKETING]
+
+    UserResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/User'
+
+    UserListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+
+    CreateStaffUserRequest:
+      type: object
+      required: [email, password, role]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum: [MANAGER, ADMIN, MARKETING]
+
+    UpdateStaffUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum: [MANAGER, ADMIN, MARKETING]
+        isActive:
+          type: boolean
+
+    # ============================================
+    # ADDRESS SCHEMAS
+    # ============================================
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        label:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        streetLine1:
+          type: string
+        streetLine2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        phone:
+          type: string
+        isDefault:
+          type: boolean
+
+    CreateAddressRequest:
+      type: object
+      required: [firstName, lastName, streetLine1, city, postalCode, countryCode]
+      properties:
+        label:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        streetLine1:
+          type: string
+        streetLine2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+          minLength: 2
+          maxLength: 2
+        phone:
+          type: string
+        isDefault:
+          type: boolean
+
+    UpdateAddressRequest:
+      type: object
+      properties:
+        label:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        streetLine1:
+          type: string
+        streetLine2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        phone:
+          type: string
+        isDefault:
+          type: boolean
+
+    # ============================================
+    # PRODUCT SCHEMAS
+    # ============================================
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        productType:
+          $ref: '#/components/schemas/ProductTypeSummary'
+        title:
+          type: string
+          description: Localized title based on Accept-Language
+        description:
+          type: string
+          description: Localized description
+        slug:
+          type: string
+        price:
+          type: number
+        compareAtPrice:
+          type: number
+        availableSizes:
+          type: array
+          items:
+            type: string
+        color:
+          type: string
+        isActive:
+          type: boolean
+        isHot:
+          type: boolean
+        primaryImage:
+          $ref: '#/components/schemas/ProductImage'
+        reviewsCount:
+          type: integer
+        averageRating:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+
+    ProductDetail:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - type: object
+          properties:
+            images:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductImage'
+            reviews:
+              type: array
+              items:
+                $ref: '#/components/schemas/Review'
+
+    ProductTypeSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        hasSizes:
+          type: boolean
+
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+        altText:
+          type: string
+        isPrimary:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    ProductListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    ProductResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Product'
+
+    ProductDetailResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ProductDetail'
+
+    CreateProductRequest:
+      type: object
+      required: [productTypeId, title, description, price]
+      properties:
+        productTypeId:
+          type: string
+          format: uuid
+        title:
+          $ref: '#/components/schemas/LocalizedString'
+        description:
+          $ref: '#/components/schemas/LocalizedString'
+        price:
+          type: number
+          minimum: 0
+        compareAtPrice:
+          type: number
+        availableSizes:
+          type: array
+          items:
+            type: string
+            enum: [S, M, L, XL, XXL]
+        color:
+          type: string
+          default: white
+        isActive:
+          type: boolean
+          default: true
+        isHot:
+          type: boolean
+          default: false
+        memeSourceUrl:
+          type: string
+        memeIsOriginal:
+          type: boolean
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        productTypeId:
+          type: string
+          format: uuid
+        title:
+          $ref: '#/components/schemas/LocalizedString'
+        description:
+          $ref: '#/components/schemas/LocalizedString'
+        price:
+          type: number
+          minimum: 0
+        compareAtPrice:
+          type: number
+        availableSizes:
+          type: array
+          items:
+            type: string
+        color:
+          type: string
+        isHot:
+          type: boolean
+        memeSourceUrl:
+          type: string
+        memeIsOriginal:
+          type: boolean
+        priceChangeReason:
+          type: string
+          description: Reason for price change (for audit)
+
+    CreateProductImageRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+        altText:
+          $ref: '#/components/schemas/LocalizedString'
+        isPrimary:
+          type: boolean
+          default: false
+        sortOrder:
+          type: integer
+          default: 0
+
+    UpdateProductImageRequest:
+      type: object
+      properties:
+        altText:
+          $ref: '#/components/schemas/LocalizedString'
+        isPrimary:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    ProductAnalytics:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            views:
+              type: integer
+            addToCartCount:
+              type: integer
+            purchaseCount:
+              type: integer
+            conversionRate:
+              type: number
+            revenue:
+              type: number
+
+    # ============================================
+    # PRODUCT TYPE SCHEMAS
+    # ============================================
+    ProductType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: Localized name
+        slug:
+          type: string
+        hasSizes:
+          type: boolean
+        isActive:
+          type: boolean
+        sortOrder:
+          type: integer
+        productCount:
+          type: integer
+
+    CreateProductTypeRequest:
+      type: object
+      required: [name, slug]
+      properties:
+        name:
+          $ref: '#/components/schemas/LocalizedString'
+        slug:
+          type: string
+        hasSizes:
+          type: boolean
+          default: false
+        isActive:
+          type: boolean
+          default: true
+        sortOrder:
+          type: integer
+          default: 0
+
+    UpdateProductTypeRequest:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/LocalizedString'
+        slug:
+          type: string
+        hasSizes:
+          type: boolean
+        isActive:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    # ============================================
+    # REVIEW SCHEMAS
+    # ============================================
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        authorName:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+        isAiGenerated:
+          type: boolean
+        isVisible:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    ReviewListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+        meta:
+          allOf:
+            - $ref: '#/components/schemas/PaginationMeta'
+            - type: object
+              properties:
+                averageRating:
+                  type: number
+                ratingDistribution:
+                  type: object
+                  properties:
+                    '1':
+                      type: integer
+                    '2':
+                      type: integer
+                    '3':
+                      type: integer
+                    '4':
+                      type: integer
+                    '5':
+                      type: integer
+
+    CreateReviewRequest:
+      type: object
+      required: [authorName, rating, comment]
+      properties:
+        authorName:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+          minLength: 10
+        isAiGenerated:
+          type: boolean
+          default: false
+        isVisible:
+          type: boolean
+          default: true
+
+    UpdateReviewRequest:
+      type: object
+      properties:
+        authorName:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+        isVisible:
+          type: boolean
+
+    # ============================================
+    # CART SCHEMAS
+    # ============================================
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        subtotal:
+          type: number
+        discountAmount:
+          type: number
+        shippingCost:
+          type: number
+        total:
+          type: number
+        promoCode:
+          $ref: '#/components/schemas/AppliedPromoCode'
+        itemCount:
+          type: integer
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product:
+          $ref: '#/components/schemas/Product'
+        size:
+          type: string
+        quantity:
+          type: integer
+        unitPrice:
+          type: number
+        subtotal:
+          type: number
+
+    AppliedPromoCode:
+      type: object
+      properties:
+        code:
+          type: string
+        discountType:
+          type: string
+          enum: [PERCENTAGE, FIXED_AMOUNT]
+        discountValue:
+          type: number
+
+    CartResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Cart'
+
+    AddCartItemRequest:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId:
+          type: string
+          format: uuid
+        size:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+        cartId:
+          type: string
+          format: uuid
+          description: Cart ID for guest users
+
+    ShippingOption:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        cost:
+          type: number
+        minDeliveryDays:
+          type: integer
+        maxDeliveryDays:
+          type: integer
+
+    ShippingOptionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShippingOption'
+
+    # ============================================
+    # ORDER SCHEMAS
+    # ============================================
+    OrderStatus:
+      type: string
+      enum: [PENDING, PAID, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED]
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        orderNumber:
+          type: string
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        subtotal:
+          type: number
+        discountAmount:
+          type: number
+        shippingCost:
+          type: number
+        taxAmount:
+          type: number
+        total:
+          type: number
+        currency:
+          type: string
+        itemCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    OrderDetail:
+      allOf:
+        - $ref: '#/components/schemas/Order'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrderItem'
+            shippingAddress:
+              $ref: '#/components/schemas/Address'
+            billingAddress:
+              $ref: '#/components/schemas/Address'
+            trackingNumber:
+              type: string
+            trackingUrl:
+              type: string
+            promoCode:
+              type: string
+            customerEmail:
+              type: string
+            customerPhone:
+              type: string
+
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        productTitle:
+          type: string
+        productImage:
+          type: string
+        size:
+          type: string
+        quantity:
+          type: integer
+        unitPrice:
+          type: number
+        subtotal:
+          type: number
+
+    OrderListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    OrderDetailResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/OrderDetail'
+
+    CreateOrderRequest:
+      type: object
+      required: [shippingAddress]
+      properties:
+        cartId:
+          type: string
+          format: uuid
+          description: Required for guest checkout
+        shippingAddress:
+          $ref: '#/components/schemas/CreateAddressRequest'
+        billingAddress:
+          $ref: '#/components/schemas/CreateAddressRequest'
+        email:
+          type: string
+          format: email
+          description: Required for guest checkout
+        phone:
+          type: string
+          description: Required for guest checkout
+        saveAddress:
+          type: boolean
+          description: Save address to profile (authenticated users)
+        successUrl:
+          type: string
+          description: Redirect URL after successful payment
+        cancelUrl:
+          type: string
+          description: Redirect URL if payment is cancelled
+
+    CreateOrderResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            orderId:
+              type: string
+              format: uuid
+            orderNumber:
+              type: string
+            checkoutUrl:
+              type: string
+              description: Stripe Checkout URL
+
+    UpdateOrderRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        trackingNumber:
+          type: string
+        trackingUrl:
+          type: string
+        notes:
+          type: string
+
+    # ============================================
+    # PROMO CODE SCHEMAS
+    # ============================================
+    DiscountType:
+      type: string
+      enum: [PERCENTAGE, FIXED_AMOUNT]
+
+    PromoCode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        description:
+          type: string
+        discountType:
+          $ref: '#/components/schemas/DiscountType'
+        discountValue:
+          type: number
+        minOrderAmount:
+          type: number
+        maxDiscountAmount:
+          type: number
+        maxUses:
+          type: integer
+        maxUsesPerUser:
+          type: integer
+        currentUses:
+          type: integer
+        validFrom:
+          type: string
+          format: date-time
+        validUntil:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    PromoCodeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromoCode'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    CreatePromoCodeRequest:
+      type: object
+      required: [code, discountType, discountValue, validFrom]
+      properties:
+        code:
+          type: string
+          minLength: 3
+          maxLength: 50
+        description:
+          type: string
+        discountType:
+          $ref: '#/components/schemas/DiscountType'
+        discountValue:
+          type: number
+          minimum: 0
+        minOrderAmount:
+          type: number
+        maxDiscountAmount:
+          type: number
+        maxUses:
+          type: integer
+        maxUsesPerUser:
+          type: integer
+        validFrom:
+          type: string
+          format: date-time
+        validUntil:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+          default: true
+
+    UpdatePromoCodeRequest:
+      type: object
+      properties:
+        description:
+          type: string
+        discountValue:
+          type: number
+        minOrderAmount:
+          type: number
+        maxDiscountAmount:
+          type: number
+        maxUses:
+          type: integer
+        maxUsesPerUser:
+          type: integer
+        validFrom:
+          type: string
+          format: date-time
+        validUntil:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+
+    PromoCodeValidationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            valid:
+              type: boolean
+            code:
+              type: string
+            discountType:
+              $ref: '#/components/schemas/DiscountType'
+            discountValue:
+              type: number
+            calculatedDiscount:
+              type: number
+              description: Actual discount amount for the given order total
+            message:
+              type: string
+
+    PromoCodeStats:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            totalUses:
+              type: integer
+            totalDiscount:
+              type: number
+            totalRevenue:
+              type: number
+            averageOrderValue:
+              type: number
+            conversionRate:
+              type: number
+
+    # ============================================
+    # NEWSLETTER SCHEMAS
+    # ============================================
+    NewsletterSubscriber:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        isActive:
+          type: boolean
+        source:
+          type: string
+        subscribedAt:
+          type: string
+          format: date-time
+        unsubscribedAt:
+          type: string
+          format: date-time
+
+    NewsletterSubscriberListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewsletterSubscriber'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    # ============================================
+    # CONTACT SCHEMAS
+    # ============================================
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+        orderId:
+          type: string
+          format: uuid
+        isRead:
+          type: boolean
+        repliedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    ContactMessageListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactMessage'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    CreateContactMessageRequest:
+      type: object
+      required: [name, email, message]
+      properties:
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+          minLength: 10
+        orderId:
+          type: string
+          format: uuid
+          description: Related order if inquiry is about an order
+
+    # ============================================
+    # AI GENERATION SCHEMAS
+    # ============================================
+    GenerateImageRequest:
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: Text prompt for image generation
+        referenceImageUrl:
+          type: string
+          description: URL of reference image
+        variations:
+          type: integer
+          minimum: 1
+          maximum: 4
+          default: 1
+        style:
+          type: string
+          enum: [meme, cartoon, realistic]
+          default: meme
+
+    GenerateImageResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            images:
+              type: array
+              items:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  prompt:
+                    type: string
+
+    GenerateReviewsRequest:
+      type: object
+      required: [productContext]
+      properties:
+        productContext:
+          type: object
+          properties:
+            title:
+              type: string
+            type:
+              type: string
+            description:
+              type: string
+        count:
+          type: integer
+          minimum: 1
+          maximum: 5
+          default: 3
+
+    GenerateReviewsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            reviews:
+              type: array
+              items:
+                type: object
+                properties:
+                  authorName:
+                    type: string
+                  rating:
+                    type: integer
+                  comment:
+                    type: string
+
+    # ============================================
+    # UPLOAD SCHEMAS
+    # ============================================
+    UploadResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            url:
+              type: string
+            filename:
+              type: string
+            size:
+              type: integer
+            mimeType:
+              type: string
+
+    # ============================================
+    # DASHBOARD SCHEMAS
+    # ============================================
+    DashboardStats:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            orders:
+              type: object
+              properties:
+                total:
+                  type: integer
+                pending:
+                  type: integer
+                processing:
+                  type: integer
+                shipped:
+                  type: integer
+                delivered:
+                  type: integer
+            revenue:
+              type: object
+              properties:
+                total:
+                  type: number
+                average:
+                  type: number
+            products:
+              type: object
+              properties:
+                total:
+                  type: integer
+                active:
+                  type: integer
+            customers:
+              type: object
+              properties:
+                total:
+                  type: integer
+                new:
+                  type: integer
+            topProducts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  sales:
+                    type: integer
+                  revenue:
+                    type: number

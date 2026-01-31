@@ -137,3 +137,40 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+playwright-report/
+playwright/.cache/
+test-results/
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# Docker override
+docker-compose.override.yml
+
+# Secrets and credentials
+*.pem
+*.key
+credentials.json
+serviceAccount.json
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Turbo
+.turbo/
