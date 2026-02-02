@@ -77,7 +77,7 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Update the appropriate memory file (bugs, decisions, key_facts, or issues)
 - Follow the established format and style (bullet lists, dates, concise entries)
 
-## Related Documentation
+## 5. Related Documentation
 
 - [Architecture](./docs/ARQUITECTURA.md) - System architecture with diagrams
 - [Business Requirements](./docs/NEGOCIO.md) - Business context and requirements

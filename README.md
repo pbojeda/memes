@@ -649,6 +649,7 @@ kill -9 $(lsof -t -i:3000)
 - [Data Model](./ai-specs/specs/data-model.md) - Database schema documentation
 - [API Specification](./ai-specs/specs/api-spec.yaml) - OpenAPI specification
 - [Use Cases](./docs/use-cases.md) - Use Cases
+- [Development Guide](./ai-specs/specs/development-guide.yaml) - Development Guide
 
 ---
 
