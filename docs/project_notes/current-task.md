@@ -17,9 +17,28 @@ This file tracks the current work in progress. Updated automatically by the deve
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
 
-_Use "start task B0.4" to begin the next task._
+| Field | Value |
+|-------|-------|
+| Task ID | B0.4 |
+| Title | Configure Zod for env validation |
+| Sprint | 0 |
+| Branch | feature/sprint0-B0.4-zod-env |
+| Started | 2026-02-03 |
+| Step | 4 of 8 (Develop) |
+| Ticket | [docs/tickets/B0.4-zod-env.md](../tickets/B0.4-zod-env.md) |
+
+### Checklist Progress
+
+- [x] 1. Validate Task
+- [x] 2. Create Branch
+- [x] 3. Generate Ticket
+- [ ] 4. Develop (TDD) ← Current
+- [ ] 5. Validate Code
+- [ ] 6. Update Docs
+- [ ] 7. Commit
+- [ ] 8. PR & Merge
 
 <!--
 When a task is active, this section will show:
