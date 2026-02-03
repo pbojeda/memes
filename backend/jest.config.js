@@ -8,7 +8,8 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.test.ts',
-    '!src/server.ts'
+    '!src/server.ts',
+    '!src/generated/**'
   ],
   coverageDirectory: 'coverage',
   verbose: true

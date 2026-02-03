@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████      ] 20%
+Progress: [██████    ] 30%
 
-Completed: 4/20 tasks
+Completed: 6/20 tasks
 In Progress: 0 tasks
-Pending: 16 tasks
+Pending: 14 tasks
 Blocked: 0 tasks
 ```
 
@@ -28,10 +28,10 @@ Blocked: 0 tasks
 | B0.2 | Configure Prisma with PostgreSQL | High | ✅ | feature/sprint0-B0.2-prisma-setup | Completed 2026-02-03 |
 | B0.3 | Setup Pino logger | High | ✅ | feature/sprint0-B0.3-pino-logger | Completed 2026-02-03 |
 | B0.4 | Configure Zod for env validation | High | ✅ | feature/sprint0-B0.4-zod-env | Completed 2026-02-03 |
-| B0.5 | Setup Jest for testing | High | ⏳ | | |
+| B0.5 | Setup Jest for testing | High | ✅ | feature/sprint0-B0.5-jest-setup | Completed 2026-02-03 |
 | B0.6 | Configure ESLint + Prettier | Medium | ⏳ | | |
 | B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ⏳ | | |
-| B0.8 | Setup global error handling middleware | High | ⏳ | | |
+| B0.8 | Setup global error handling middleware | High | ✅ | feature/sprint0-B0.8-error-handling | Completed 2026-02-03 |
 | B0.9 | Create base response helpers | Medium | ⏳ | | |
 | B0.10 | Setup health check endpoint | Low | ⏳ | | |
 
