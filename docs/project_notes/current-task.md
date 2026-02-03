@@ -17,9 +17,28 @@ This file tracks the current work in progress. Updated automatically by the deve
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
 
-_Use "start task B0.2" to begin the next task._
+| Field | Value |
+|-------|-------|
+| Task ID | B0.2 |
+| Title | Configure Prisma with PostgreSQL |
+| Sprint | 0 |
+| Branch | feature/sprint0-B0.2-prisma-setup |
+| Started | 2026-02-03 |
+| Step | 7 of 8 (Commit) |
+| Ticket | [docs/tickets/B0.2-prisma-setup.md](../tickets/B0.2-prisma-setup.md) |
+
+### Checklist Progress
+
+- [x] 1. Validate Task
+- [x] 2. Create Branch
+- [x] 3. Generate Ticket
+- [x] 4. Develop (TDD)
+- [x] 5. Validate Code
+- [x] 6. Update Docs
+- [ ] 7. Commit ← Current
+- [ ] 8. PR & Merge
 
 <!--
 When a task is active, this section will show:
