@@ -10,35 +10,16 @@ This file tracks the current work in progress. Updated automatically by the deve
 |-------|-------|
 | Sprint | 0 - Project Setup & Infrastructure |
 | Tracker | [sprint-0-tracker.md](./sprint-0-tracker.md) |
-| Progress | 3/20 tasks (15%) |
+| Progress | 4/20 tasks (20%) |
 | Status | In Progress |
 
 ---
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** No active task
 
-| Field | Value |
-|-------|-------|
-| Task ID | B0.4 |
-| Title | Configure Zod for env validation |
-| Sprint | 0 |
-| Branch | feature/sprint0-B0.4-zod-env |
-| Started | 2026-02-03 |
-| Step | 4 of 8 (Develop) |
-| Ticket | [docs/tickets/B0.4-zod-env.md](../tickets/B0.4-zod-env.md) |
-
-### Checklist Progress
-
-- [x] 1. Validate Task
-- [x] 2. Create Branch
-- [x] 3. Generate Ticket
-- [ ] 4. Develop (TDD) ← Current
-- [ ] 5. Validate Code
-- [ ] 6. Update Docs
-- [ ] 7. Commit
-- [ ] 8. PR & Merge
+_Use "start task B0.5" to begin the next task._
 
 <!--
 When a task is active, this section will show:
@@ -77,9 +58,9 @@ When a task is active, this section will show:
 
 ## Last Completed
 
-**Task:** B0.3 - Setup Pino logger
+**Task:** B0.4 - Configure Zod for env validation
 **Completed:** 2026-02-03
-**Commit:** 6567a7d
+**Commit:** c7c3bb5
 
 ---
 
@@ -90,6 +71,7 @@ When a task is active, this section will show:
 | 2026-02-03 | B0.1 | Completed | - |
 | 2026-02-03 | B0.2 | Completed | - |
 | 2026-02-03 | B0.3 | Completed | - |
+| 2026-02-03 | B0.4 | Completed | - |
 
 <!--
 Example entries:
@@ -119,7 +101,7 @@ Example entries:
 | Metric | Value |
 |--------|-------|
 | Sprint | 0 |
-| Completed | 3/20 |
+| Completed | 4/20 |
 | Velocity | - |
 
 ### Estimation Accuracy (Last 5 Tasks)

@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [███       ] 15%
+Progress: [████      ] 20%
 
-Completed: 3/20 tasks
-In Progress: 1 task
-Pending: 17 tasks
+Completed: 4/20 tasks
+In Progress: 0 tasks
+Pending: 16 tasks
 Blocked: 0 tasks
 ```
 
@@ -27,7 +27,7 @@ Blocked: 0 tasks
 | B0.1 | Initialize Express + TypeScript project | High | ✅ | feature/sprint0-B0.1-express-setup | Completed 2026-02-03 |
 | B0.2 | Configure Prisma with PostgreSQL | High | ✅ | feature/sprint0-B0.2-prisma-setup | Completed 2026-02-03 |
 | B0.3 | Setup Pino logger | High | ✅ | feature/sprint0-B0.3-pino-logger | Completed 2026-02-03 |
-| B0.4 | Configure Zod for env validation | High | 🔄 | feature/sprint0-B0.4-zod-env | Started 2026-02-03 |
+| B0.4 | Configure Zod for env validation | High | ✅ | feature/sprint0-B0.4-zod-env | Completed 2026-02-03 |
 | B0.5 | Setup Jest for testing | High | ⏳ | | |
 | B0.6 | Configure ESLint + Prettier | Medium | ⏳ | | |
 | B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ⏳ | | |
