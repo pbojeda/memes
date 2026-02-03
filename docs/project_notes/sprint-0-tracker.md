@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████    ] 30%
+Progress: [███████   ] 35%
 
-Completed: 6/20 tasks
+Completed: 7/20 tasks
 In Progress: 0 tasks
-Pending: 14 tasks
+Pending: 13 tasks
 Blocked: 0 tasks
 ```
 
@@ -57,7 +57,7 @@ Example when active:
 | B0.6 | Configure ESLint + Prettier | Medium | ⏳ | | |
 | B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ⏳ | | |
 | B0.8 | Setup global error handling middleware | High | ✅ | feature/sprint0-B0.8-error-handling | Completed 2026-02-03 |
-| B0.9 | Create base response helpers | Medium | ⏳ | | |
+| B0.9 | Create base response helpers | Medium | ✅ | feature/sprint0-B0.9-response-helpers | Completed 2026-02-03 |
 | B0.10 | Setup health check endpoint | Low | ⏳ | | |
 
 ---
@@ -184,6 +184,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-03 | B0.2 | 796ba5a | Prisma 7 with PostgreSQL |
 | 2026-02-03 | B0.3 | 6567a7d | Pino logger + request middleware |
 | 2026-02-03 | B0.4 | c7c3bb5 | Zod env validation |
+| 2026-02-03 | B0.5 | 7587aa7 | Jest testing setup |
+| 2026-02-03 | B0.8 | 233b741 | Global error handling middleware |
+| 2026-02-03 | B0.9 | fce1d87 | Base response helpers |
 
 ---
 
