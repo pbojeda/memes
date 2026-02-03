@@ -10,8 +10,8 @@ This file tracks the current work in progress. Updated automatically by the deve
 |-------|-------|
 | Sprint | 0 - Project Setup & Infrastructure |
 | Tracker | [sprint-0-tracker.md](./sprint-0-tracker.md) |
-| Progress | 0/20 tasks (0%) |
-| Status | Not Started |
+| Progress | 1/20 tasks (5%) |
+| Status | In Progress |
 
 ---
 
@@ -21,13 +21,13 @@ This file tracks the current work in progress. Updated automatically by the deve
 
 | Field | Value |
 |-------|-------|
-| Task ID | B0.1 |
-| Title | Initialize Express + TypeScript project |
+| Task ID | B0.2 |
+| Title | Configure Prisma with PostgreSQL |
 | Sprint | 0 |
-| Branch | feature/sprint0-B0.1-express-setup |
+| Branch | feature/sprint0-B0.2-prisma-setup |
 | Started | 2026-02-03 |
 | Step | 7 of 8 (Commit) |
-| Ticket | [docs/tickets/B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
+| Ticket | [docs/tickets/B0.2-prisma-setup.md](../tickets/B0.2-prisma-setup.md) |
 
 ### Checklist Progress
 
@@ -77,9 +77,9 @@ When a task is active, this section will show:
 
 ## Last Completed
 
-**Task:** None yet
-**Completed:** -
-**Commit:** -
+**Task:** B0.1 - Initialize Express + TypeScript project
+**Completed:** 2026-02-03
+**Commit:** 778477e
 
 ---
 
@@ -87,7 +87,7 @@ When a task is active, this section will show:
 
 | Date | Task | Action | Duration |
 |------|------|--------|----------|
-| - | - | - | - |
+| 2026-02-03 | B0.1 | Completed | - |
 
 <!--
 Example entries:
@@ -117,7 +117,7 @@ Example entries:
 | Metric | Value |
 |--------|-------|
 | Sprint | 0 |
-| Completed | 0/20 |
+| Completed | 1/20 |
 | Velocity | - |
 
 ### Estimation Accuracy (Last 5 Tasks)
@@ -128,4 +128,4 @@ Example entries:
 
 ---
 
-*Last updated: 2026-02-02*
+*Last updated: 2026-02-03*
