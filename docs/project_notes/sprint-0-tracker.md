@@ -28,7 +28,7 @@ Blocked: 0 tasks
 |-------|-------|
 | Task | B0.6 - Configure ESLint + Prettier |
 | Branch | feature/sprint0-B0.6-eslint-prettier |
-| Step | 7/8 (Commit) |
+| Step | 8/8 (PR & Merge) |
 | Ticket | [B0.6-eslint-prettier.md](../tickets/B0.6-eslint-prettier.md) |
 
 ---
