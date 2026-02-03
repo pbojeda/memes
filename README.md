@@ -70,6 +70,18 @@ This platform enables the rapid creation and sale of meme-branded products (t-sh
 
 ```
 meme-store/
+├── .claude/                    # Claude Code configuration
+│   ├── agents/                 # Custom AI agents
+│   │   ├── production-code-validator.md
+│   │   ├── code-review-specialist.md
+│   │   ├── database-architect.md
+│   │   ├── backend-developer.md
+│   │   └── frontend-developer.md
+│   └── skills/                 # Custom skills
+│       ├── development-workflow/   # Task execution workflow
+│       ├── bug-workflow/           # Bug resolution workflow
+│       └── project-memory/         # Memory system templates
+│
 ├── backend/                    # Express API
 │   ├── prisma/
 │   │   ├── schema.prisma       # Database schema
@@ -194,8 +206,17 @@ meme-store/
 │   └── Dockerfile.backend
 │
 ├── docs/                       # Documentation
-│   ├── api/                    # API documentation
-│   └── guides/                 # Development guides
+│   ├── project_notes/          # Project memory system
+│   │   ├── current-task.md     # Current work in progress
+│   │   ├── sprint-N-tracker.md # Sprint progress
+│   │   ├── issues.md           # Work log
+│   │   ├── bugs.md             # Bug log
+│   │   ├── decisions.md        # ADRs
+│   │   └── key_facts.md        # Project config
+│   ├── ARQUITECTURA.md         # System architecture
+│   ├── NEGOCIO.md              # Business requirements
+│   ├── PLAN_DESARROLLO.md      # Development plan
+│   └── use-cases.md            # Use cases
 │
 ├── .github/                    # GitHub configuration
 │   └── workflows/
@@ -635,10 +656,15 @@ kill -9 $(lsof -t -i:3000)
 ## Contributing
 
 1. Follow the coding standards in `CLAUDE.md`
-2. Write tests for new functionality (TDD)
-3. Use conventional commits for commit messages
-4. Keep PRs focused and small
-5. Update documentation when needed
+2. Use `development-workflow` skill for task execution
+3. Use `bug-workflow` skill for bug resolution
+4. Write tests for new functionality (TDD mandatory)
+5. Validate code with `production-code-validator` before commits
+6. Use conventional commits for commit messages
+7. Keep PRs focused and small
+8. Update documentation when needed
+9. Document bugs in `docs/project_notes/bugs.md`
+10. Document architectural decisions in `docs/project_notes/decisions.md`
 
 ---
 
@@ -649,7 +675,80 @@ kill -9 $(lsof -t -i:3000)
 - [Data Model](./ai-specs/specs/data-model.md) - Database schema documentation
 - [API Specification](./ai-specs/specs/api-spec.yaml) - OpenAPI specification
 - [Use Cases](./docs/use-cases.md) - Use Cases
-- [Development Guide](./ai-specs/specs/development-guide.yaml) - Development Guide
+- [Development Guide](./ai-specs/specs/development-guide.md) - Development Guide
+- [Development Plan](./docs/PLAN_DESARROLLO.md) - Sprint-based development plan
+
+---
+
+## AI-Assisted Development
+
+This project uses Claude Code with custom skills and agents to streamline development.
+
+### Development Workflows
+
+| Workflow | Purpose | Commands |
+|----------|---------|----------|
+| **development-workflow** | Task execution from sprint plan | `start task B0.1`, `next task`, `workflow status` |
+| **bug-workflow** | Bug detection and resolution | `report bug`, `fix bug`, `hotfix needed` |
+
+### Available Skills
+
+| Skill | Description |
+|-------|-------------|
+| `/plan-backend-ticket` | Generate detailed backend task specification |
+| `/plan-frontend-ticket` | Generate detailed frontend task specification |
+| `/develop-backend` | Implement backend task with TDD |
+| `/develop-frontend` | Implement frontend task with TDD |
+| `/update-docs` | Update project documentation |
+
+### Available Agents
+
+| Agent | Purpose |
+|-------|---------|
+| `production-code-validator` | Validate code before production deployment |
+| `code-review-specialist` | Thorough code review |
+| `database-architect` | Schema design and query optimization |
+| `backend-developer` | DDD patterns and service implementation |
+| `frontend-developer` | React components and state management |
+
+### Project Memory System
+
+The project maintains institutional knowledge in `docs/project_notes/`:
+
+| File | Purpose |
+|------|---------|
+| `current-task.md` | Current work in progress |
+| `sprint-N-tracker.md` | Sprint progress tracking |
+| `issues.md` | Work log with completed tasks |
+| `bugs.md` | Bug log with solutions |
+| `decisions.md` | Architectural Decision Records (ADRs) |
+| `key_facts.md` | Project configuration and constants |
+
+### Development Workflow Process
+
+```
+1. Validate Task      → Check dependencies and decisions
+2. Create Branch      → feature/sprint{N}-{task-id}-{desc}
+3. Generate Ticket    → /plan-backend-ticket or /plan-frontend-ticket
+4. Develop (TDD)      → Write test → Implement → Refactor
+5. Validate Code      → production-code-validator
+6. Update Docs        → /update-docs (if applicable)
+7. Commit             → Conventional commit format
+8. PR & Merge         → Create PR, review, merge
+```
+
+### Bug Workflow Process
+
+| Severity | Response | Process |
+|----------|----------|---------|
+| 🔴 Critical | Immediate | Hotfix → Deploy → Post-mortem |
+| 🟠 High | Same day | Branch → Investigate → TDD Fix → PR |
+| 🟡 Medium | This sprint | Triage → Fix → Document |
+| 🟢 Low | Backlog | Quick fix when convenient |
+
+For detailed workflow documentation, see:
+- `.claude/skills/development-workflow/`
+- `.claude/skills/bug-workflow/`
 
 ---
 
@@ -659,5 +758,5 @@ Proprietary - All rights reserved
 
 ---
 
-*Document version: 1.0*
-*Last updated: January 2026*
+*Document version: 1.1*
+*Last updated: February 2026*
