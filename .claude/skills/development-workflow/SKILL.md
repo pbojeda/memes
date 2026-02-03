@@ -129,6 +129,12 @@ Generate a detailed work ticket with test specifications included.
 - Test specifications (TDD)
 - Files to create/modify
 - Dependencies and imports
+- Implementation steps
+- Definition of Done
+
+**Save Ticket:**
+- Save to `docs/tickets/<task-id>-<short-description>.md`
+- Example: `docs/tickets/B0.1-express-setup.md`
 
 **Auto-update Memory:**
 - Add entry to `docs/project_notes/issues.md` with status "In Progress"
@@ -278,6 +284,7 @@ Create pull request and merge to main branch.
 | `bugs.md` | Bug discovered and fixed during development |
 | `decisions.md` | Architectural decision made during implementation |
 | `key_facts.md` | New configuration or environment details added |
+| `docs/tickets/*.md` | Ticket generated (Step 3) |
 
 ### Before Each Task
 ```
