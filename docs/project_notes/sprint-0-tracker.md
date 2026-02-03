@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [███████   ] 35%
+Progress: [████████  ] 40%
 
-Completed: 7/20 tasks
+Completed: 8/20 tasks
 In Progress: 0 tasks
-Pending: 13 tasks
+Pending: 12 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,14 +22,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | B0.6 - Configure ESLint + Prettier |
-| Branch | feature/sprint0-B0.6-eslint-prettier |
-| Step | 7/8 (Commit) |
-| Ticket | [B0.6-eslint-prettier.md](../tickets/B0.6-eslint-prettier.md) |
+**Status:** No active task
 
 ---
 
@@ -42,7 +35,7 @@ Blocked: 0 tasks
 | B0.3 | Setup Pino logger | High | ✅ | feature/sprint0-B0.3-pino-logger | Completed 2026-02-03 |
 | B0.4 | Configure Zod for env validation | High | ✅ | feature/sprint0-B0.4-zod-env | Completed 2026-02-03 |
 | B0.5 | Setup Jest for testing | High | ✅ | feature/sprint0-B0.5-jest-setup | Completed 2026-02-03 |
-| B0.6 | Configure ESLint + Prettier | Medium | 🔄 | feature/sprint0-B0.6-eslint-prettier | |
+| B0.6 | Configure ESLint + Prettier | Medium | ✅ | feature/sprint0-B0.6-eslint-prettier | Completed 2026-02-03 |
 | B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ⏳ | | |
 | B0.8 | Setup global error handling middleware | High | ✅ | feature/sprint0-B0.8-error-handling | Completed 2026-02-03 |
 | B0.9 | Create base response helpers | Medium | ✅ | feature/sprint0-B0.9-response-helpers | Completed 2026-02-03 |
@@ -175,6 +168,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-03 | B0.5 | 7587aa7 | Jest testing setup |
 | 2026-02-03 | B0.8 | 233b741 | Global error handling middleware |
 | 2026-02-03 | B0.9 | fce1d87 | Base response helpers |
+| 2026-02-03 | B0.6 | e2980d3 | ESLint 9 + Prettier setup |
 
 ---
 
