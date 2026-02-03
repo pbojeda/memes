@@ -1,12 +1,10 @@
 import app from './app';
+import logger from './lib/logger';
 
 const PORT = process.env.PORT || 3000;
 
 const server = app.listen(PORT, () => {
-  // TODO: Replace with Pino logger in B0.3
-  if (process.env.NODE_ENV !== 'test') {
-    process.stdout.write(`Server running on port ${PORT}\n`);
-  }
+  logger.info({ port: PORT }, 'Server started');
 });
 
 export default server;

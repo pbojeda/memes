@@ -23,7 +23,33 @@ alwaysApply: true
     - Git commit messages
     - Test names and descriptions
 
-## 3. Specific standards
+## 3. Monorepo Directory Rules
+
+This project is a **monorepo** with separate directories for backend and frontend:
+
+```
+memes/
+├── backend/     ← Node.js/Express backend (has its own package.json)
+├── frontend/    ← Next.js frontend (will have its own package.json)
+└── docs/        ← Documentation (no package.json)
+```
+
+### Critical Rules
+
+- **ALWAYS verify the current directory** before running `npm install`, `npm test`, or any npm command
+- **NEVER install dependencies in the root directory** - each subproject has its own `package.json`
+- **Use absolute paths** when running commands: `cd /path/to/backend && npm install`
+- **Check pwd** if unsure: run `pwd` before npm commands
+
+### Directory-Specific Commands
+
+| Action | Correct | Wrong |
+|--------|---------|-------|
+| Install backend dep | `cd backend && npm install express` | `npm install express` (from root) |
+| Run backend tests | `cd backend && npm test` | `npm test` (from root) |
+| Install frontend dep | `cd frontend && npm install react` | `npm install react` (from root) |
+
+## 4. Specific Standards
 
 For detailed standards and guidelines specific to different areas of the project, refer to:
 
@@ -42,7 +68,7 @@ For detailed standards and guidelines specific to different areas of the project
 - For API changes, test with `curl` or Postman
 - For UI changes, verify in browser before committing -->
 
-## 4. Project Memory System
+## 5. Project Memory System
 
 This project maintains institutional knowledge in `docs/project_notes/` for consistency across sessions.
 
@@ -77,7 +103,7 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Update the appropriate memory file (bugs, decisions, key_facts, or issues)
 - Follow the established format and style (bullet lists, dates, concise entries)
 
-## 5. Related Documentation
+## 6. Related Documentation
 
 - [Architecture](./docs/ARQUITECTURA.md) - System architecture with diagrams
 - [Business Requirements](./docs/NEGOCIO.md) - Business context and requirements
