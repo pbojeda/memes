@@ -10,35 +10,16 @@ This file tracks the current work in progress. Updated automatically by the deve
 |-------|-------|
 | Sprint | 0 - Project Setup & Infrastructure |
 | Tracker | [sprint-0-tracker.md](./sprint-0-tracker.md) |
-| Progress | 2/20 tasks (10%) |
+| Progress | 3/20 tasks (15%) |
 | Status | In Progress |
 
 ---
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** No active task
 
-| Field | Value |
-|-------|-------|
-| Task ID | B0.3 |
-| Title | Setup Pino logger |
-| Sprint | 0 |
-| Branch | feature/sprint0-B0.3-pino-logger |
-| Started | 2026-02-03 |
-| Step | 4 of 8 (Develop) |
-| Ticket | [docs/tickets/B0.3-pino-logger.md](../tickets/B0.3-pino-logger.md) |
-
-### Checklist Progress
-
-- [x] 1. Validate Task
-- [x] 2. Create Branch
-- [x] 3. Generate Ticket
-- [ ] 4. Develop (TDD) ← Current
-- [ ] 5. Validate Code
-- [ ] 6. Update Docs
-- [ ] 7. Commit
-- [ ] 8. PR & Merge
+_Use "start task B0.4" to begin the next task._
 
 <!--
 When a task is active, this section will show:
@@ -77,9 +58,9 @@ When a task is active, this section will show:
 
 ## Last Completed
 
-**Task:** B0.2 - Configure Prisma with PostgreSQL
+**Task:** B0.3 - Setup Pino logger
 **Completed:** 2026-02-03
-**Commit:** 796ba5a
+**Commit:** 6567a7d
 
 ---
 
@@ -89,6 +70,7 @@ When a task is active, this section will show:
 |------|------|--------|----------|
 | 2026-02-03 | B0.1 | Completed | - |
 | 2026-02-03 | B0.2 | Completed | - |
+| 2026-02-03 | B0.3 | Completed | - |
 
 <!--
 Example entries:
@@ -118,7 +100,7 @@ Example entries:
 | Metric | Value |
 |--------|-------|
 | Sprint | 0 |
-| Completed | 2/20 |
+| Completed | 3/20 |
 | Velocity | - |
 
 ### Estimation Accuracy (Last 5 Tasks)
