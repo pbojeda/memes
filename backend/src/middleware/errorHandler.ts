@@ -41,24 +41,19 @@ interface ErrorResponse {
   };
 }
 
-export function errorHandler(
-  err: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-): void {
+export function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction): void {
   const isProduction = process.env.NODE_ENV === 'production';
   const isOperational = err instanceof AppError;
 
   // Log the error
   if (isOperational) {
-    logger.warn({ err, statusCode: (err as AppError).statusCode }, err.message);
+    logger.warn({ err, statusCode: err.statusCode }, err.message);
   } else {
     logger.error({ err }, 'Unexpected error occurred');
   }
 
   // Determine status code and message
-  const statusCode = isOperational ? (err as AppError).statusCode : 500;
+  const statusCode = isOperational ? err.statusCode : 500;
   const message = isOperational ? err.message : 'Internal Server Error';
 
   // Build response

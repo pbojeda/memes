@@ -57,11 +57,7 @@ export function noContent(res: Response): void {
   res.status(204).send();
 }
 
-export function paginated<T>(
-  res: Response,
-  data: T[],
-  pagination: PaginationInput
-): void {
+export function paginated<T>(res: Response, data: T[], pagination: PaginationInput): void {
   const { page, limit, total } = pagination;
   const totalPages = Math.ceil(total / limit);
 

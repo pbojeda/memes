@@ -22,26 +22,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
-
-_When a task is in progress, this section shows:_
-- Task ID and title
-- Branch name
-- Current workflow step
-- Link to ticket
-
-<!--
-Example when active:
-
 **Status:** In Progress
 
 | Field | Value |
 |-------|-------|
-| Task | B0.5 - Setup Jest for testing |
-| Branch | feature/sprint0-B0.5-jest-setup |
-| Step | 4/8 (Develop) |
-| Ticket | [B0.5-jest-setup.md](../tickets/B0.5-jest-setup.md) |
--->
+| Task | B0.6 - Configure ESLint + Prettier |
+| Branch | feature/sprint0-B0.6-eslint-prettier |
+| Step | 7/8 (Commit) |
+| Ticket | [B0.6-eslint-prettier.md](../tickets/B0.6-eslint-prettier.md) |
 
 ---
 
@@ -54,7 +42,7 @@ Example when active:
 | B0.3 | Setup Pino logger | High | ✅ | feature/sprint0-B0.3-pino-logger | Completed 2026-02-03 |
 | B0.4 | Configure Zod for env validation | High | ✅ | feature/sprint0-B0.4-zod-env | Completed 2026-02-03 |
 | B0.5 | Setup Jest for testing | High | ✅ | feature/sprint0-B0.5-jest-setup | Completed 2026-02-03 |
-| B0.6 | Configure ESLint + Prettier | Medium | ⏳ | | |
+| B0.6 | Configure ESLint + Prettier | Medium | 🔄 | feature/sprint0-B0.6-eslint-prettier | |
 | B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ⏳ | | |
 | B0.8 | Setup global error handling middleware | High | ✅ | feature/sprint0-B0.8-error-handling | Completed 2026-02-03 |
 | B0.9 | Create base response helpers | Medium | ✅ | feature/sprint0-B0.9-response-helpers | Completed 2026-02-03 |
