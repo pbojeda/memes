@@ -10,35 +10,16 @@ This file tracks the current work in progress. Updated automatically by the deve
 |-------|-------|
 | Sprint | 0 - Project Setup & Infrastructure |
 | Tracker | [sprint-0-tracker.md](./sprint-0-tracker.md) |
-| Progress | 0/20 tasks (0%) |
-| Status | Not Started |
+| Progress | 1/20 tasks (5%) |
+| Status | In Progress |
 
 ---
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** No active task
 
-| Field | Value |
-|-------|-------|
-| Task ID | B0.1 |
-| Title | Initialize Express + TypeScript project |
-| Sprint | 0 |
-| Branch | feature/sprint0-B0.1-express-setup |
-| Started | 2026-02-03 |
-| Step | 7 of 8 (Commit) |
-| Ticket | [docs/tickets/B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
-
-### Checklist Progress
-
-- [x] 1. Validate Task
-- [x] 2. Create Branch
-- [x] 3. Generate Ticket
-- [x] 4. Develop (TDD)
-- [x] 5. Validate Code
-- [x] 6. Update Docs
-- [ ] 7. Commit ← Current
-- [ ] 8. PR & Merge
+_Use "start task B0.2" to begin the next task._
 
 <!--
 When a task is active, this section will show:
@@ -77,9 +58,9 @@ When a task is active, this section will show:
 
 ## Last Completed
 
-**Task:** None yet
-**Completed:** -
-**Commit:** -
+**Task:** B0.1 - Initialize Express + TypeScript project
+**Completed:** 2026-02-03
+**Commit:** 778477e
 
 ---
 
@@ -87,7 +68,7 @@ When a task is active, this section will show:
 
 | Date | Task | Action | Duration |
 |------|------|--------|----------|
-| - | - | - | - |
+| 2026-02-03 | B0.1 | Completed | - |
 
 <!--
 Example entries:
@@ -117,7 +98,7 @@ Example entries:
 | Metric | Value |
 |--------|-------|
 | Sprint | 0 |
-| Completed | 0/20 |
+| Completed | 1/20 |
 | Velocity | - |
 
 ### Estimation Accuracy (Last 5 Tasks)
@@ -128,4 +109,4 @@ Example entries:
 
 ---
 
-*Last updated: 2026-02-02*
+*Last updated: 2026-02-03*

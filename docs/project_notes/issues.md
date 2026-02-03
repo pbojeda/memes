@@ -18,8 +18,10 @@ Each entry should include:
 <!-- Add work log entries below this line -->
 
 ### 2026-02-03 - B0.1: Initialize Express + TypeScript project
-- **Status**: In Progress
+- **Status**: ✅ Completed
 - **Sprint**: 0
 - **Branch**: feature/sprint0-B0.1-express-setup
+- **Commit**: 778477e
+- **PR**: Merged to main
 - **Description**: Setup Express server with TypeScript configuration
 
