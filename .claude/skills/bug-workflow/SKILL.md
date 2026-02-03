@@ -85,17 +85,18 @@ When bug requires significant refactoring or architectural changes.
 3. Capture error messages/logs
 4. Identify affected area
 
-**Update current-task.md:**
+**Update sprint tracker "Active Task" section (if working during a sprint):**
 ```markdown
-## Bug Detected
+## Active Task
+
+**Status:** Bug Fix
 
 | Field | Value |
 |-------|-------|
-| Reported | 2026-02-02 14:30 |
+| Bug | Session token validation issue |
 | Source | Development / User / Monitoring |
-| Area | Auth / Cart / API / UI |
-| Description | Brief description |
-| Reproduction | Steps to reproduce |
+| Area | Auth |
+| Severity | High |
 ```
 
 ---
@@ -374,9 +375,8 @@ authentication module to properly handle all token formats.
 
 | File | When |
 |------|------|
-| `current-task.md` | Bug being worked on |
+| `sprint-X-tracker.md` | Bug being worked on (Active Task section) |
 | `bugs.md` | Always (bug documented) |
-| `issues.md` | If escalated to task |
 | `decisions.md` | If architectural decision made |
 
 ### Bug Entry Template

@@ -18,9 +18,9 @@ Use this checklist for each task to ensure all steps are completed correctly.
 - [ ] Task validated against PLAN_DESARROLLO.md
 - [ ] Checked `decisions.md` for related architectural decisions
 - [ ] Checked `bugs.md` for known issues in this area
-- [ ] Verified dependencies are completed in `issues.md`
+- [ ] Verified dependencies are completed in sprint tracker
 - [ ] Created feature branch: `feature/sprint_-____-____`
-- [ ] Updated `issues.md` with "In Progress" status
+- [ ] Updated sprint tracker: task status to 🔄, "Active Task" section
 
 ---
 
@@ -89,7 +89,7 @@ Use this checklist for each task to ensure all steps are completed correctly.
 - [ ] Commit message follows conventional format
 - [ ] Commit type is correct (feat/fix/docs/etc.)
 - [ ] Co-Authored-By included
-- [ ] Updated `issues.md` to "Completed"
+- [ ] Updated sprint tracker: task status to ✅, Completion Log
 - [ ] Added bug to `bugs.md` if one was fixed
 - [ ] Added decision to `decisions.md` if one was made
 

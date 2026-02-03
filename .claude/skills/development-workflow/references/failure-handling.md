@@ -29,14 +29,9 @@
 4. **Re-run** all tests
 5. **Continue** workflow
 
-**Update current-task.md:**
+**Update sprint tracker "Active Task" section:**
 ```markdown
-### Issue Encountered
-- Type: Test Failure
-- Details: UserService.create test failing
-- Cause: Missing validation for email format
-- Resolution: Added email validation
-- Time Lost: 30 minutes
+_Issue: Test Failure - UserService.create test failing. Cause: Missing email validation. Resolution: Added email validation. Time Lost: 30m_
 ```
 
 **Do NOT:**
@@ -69,13 +64,9 @@
 | Hardcoded secret | Use secrets manager |
 | Empty catch block | Add proper error handling |
 
-**Update current-task.md:**
+**Update sprint tracker "Active Task" section:**
 ```markdown
-### Issue Encountered
-- Type: Validation Failure
-- Issues Found: 3 (1 HIGH, 2 MEDIUM)
-- Resolution: Fixed all issues
-- Time Added: 45 minutes
+_Issue: Validation Failure - 3 issues found (1 HIGH, 2 MEDIUM). Resolution: Fixed all issues. Time Added: 45m_
 ```
 
 ---
@@ -123,29 +114,27 @@ const user: User = { name: 'John', email: 'john@example.com' }; // Fixed
 
 **Recovery:**
 1. **Identify** the blocking task/resource
-2. **Document** the block in current-task.md
+2. **Document** the block in sprint tracker "Active Task" section
 3. **Options:**
    - Wait for blocker to resolve
    - Switch to different task
    - Create mock/stub to continue
 
-**Update current-task.md:**
-```markdown
-### Status: Blocked
-
-### Blocked By
-- Task: B0.2 (Configure Prisma)
-- Reason: Need database schema before implementing repository
-- Estimated Unblock: 2026-02-03
-
-### Workaround Attempted
-- Created in-memory mock for testing
-- Can continue with service logic
-```
-
 **Update sprint tracker:**
 - Change task status to 🚫 Blocked
-- Add blocker note
+- Update "Active Task" section:
+```markdown
+**Status:** Blocked
+
+| Field | Value |
+|-------|-------|
+| Task | B0.3 - Implement repository |
+| Branch | feature/sprint0-B0.3-repository |
+| Step | 4/8 (Develop) - Blocked |
+| Blocked By | B0.2 (need database schema) |
+
+_Workaround: Created in-memory mock for testing. Estimated unblock: 2026-02-03_
+```
 
 ---
 
@@ -174,13 +163,9 @@ const user: User = { name: 'John', email: 'john@example.com' }; // Fixed
 - **Prevention:** Add session persistence test
 ```
 
-**Update current-task.md:**
+**Update sprint tracker "Active Task" section notes:**
 ```markdown
-### Issue Encountered
-- Type: Critical Bug
-- Bug ID: Added to bugs.md
-- Impact on Task: Delayed by 2 hours
-- Resolution: Fixed before continuing
+_Issue: Critical Bug discovered - session not persisting. Impact: 2h delay. Fixed before continuing._
 ```
 
 ---
@@ -200,18 +185,12 @@ const user: User = { name: 'John', email: 'john@example.com' }; // Fixed
    - Split into multiple tasks
    - Discuss with team
 
-**Update current-task.md:**
-```markdown
-### Scope Change
-- Original Scope: Simple Express setup
-- Discovered: Need to handle CORS, compression, security headers
-- Decision: Split into B0.1a (basic) and B0.1b (middleware)
-- New Tasks Created: B0.1b added to sprint tracker
-```
-
 **Update sprint tracker:**
-- Add new task if splitting
-- Update notes for original task
+- Add new task if splitting (e.g., B0.1b)
+- Update "Active Task" section notes:
+```markdown
+_Scope Change: Discovered need for CORS, compression, security headers. Split into B0.1a (basic) and B0.1b (middleware)._
+```
 
 ---
 
@@ -286,24 +265,16 @@ npx prisma migrate resolve --rolled-back <migration-name>
 
 ### Abandonment Process
 
-1. **Document** reason in current-task.md
+1. **Document** reason in sprint tracker
 2. **Save** any useful work (stash or branch)
-3. **Update** sprint tracker to ❌ Abandoned
+3. **Update** sprint tracker task status to ❌ Abandoned
 4. **Clean up** branch
 5. **Create** replacement task if needed
 
-**Update current-task.md:**
-```markdown
-## Abandoned Task
-
-| Field | Value |
-|-------|-------|
-| Task ID | B0.1 |
-| Reason | Switching to Fastify instead of Express |
-| Work Saved | branch: archive/B0.1-express-attempt |
-| Replacement | B0.1-new: Initialize Fastify + TypeScript |
-| Decision | ADR-001 added to decisions.md |
-```
+**Update sprint tracker:**
+- Mark task status as ❌ Abandoned
+- Clear "Active Task" section
+- Add note in task table about reason
 
 **Update decisions.md:**
 ```markdown

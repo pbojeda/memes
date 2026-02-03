@@ -20,7 +20,7 @@ Each task should track:
 | Estimated | Original estimate (if any) |
 | Variance | Difference from estimate |
 
-### Update current-task.md with Time
+### Update Sprint Tracker "Active Task" Section
 
 ```markdown
 ## Active Task
@@ -29,51 +29,23 @@ Each task should track:
 
 | Field | Value |
 |-------|-------|
-| Task ID | B0.1 |
-| Title | Initialize Express + TypeScript project |
-| Sprint | 0 |
+| Task | B0.1 - Initialize Express + TypeScript project |
 | Branch | feature/sprint0-B0.1-express-setup |
+| Step | 4/8 (Develop) |
 | Started | 2026-02-02 10:30 |
 | Estimated | 2 hours |
-| Step | 4 of 8 (Develop) |
-
-### Time Log
-
-| Step | Started | Ended | Duration |
-|------|---------|-------|----------|
-| 1. Validate | 10:30 | 10:35 | 5m |
-| 2. Branch | 10:35 | 10:37 | 2m |
-| 3. Ticket | 10:37 | 10:55 | 18m |
-| 4. Develop | 10:55 | - | ongoing |
 ```
 
 ### On Completion
 
-```markdown
-## Last Completed
+Update sprint tracker:
+- Clear "Active Task" section
+- Update task status to ✅
+- Add entry to "Completion Log":
 
-| Field | Value |
-|-------|-------|
-| Task | B0.1: Initialize Express + TypeScript project |
-| Completed | 2026-02-02 12:45 |
-| Total Time | 2h 15m |
-| Estimated | 2h |
-| Variance | +15m (12.5% over) |
-
-### Time Breakdown
-
-| Step | Duration | % of Total |
-|------|----------|------------|
-| Validate | 5m | 4% |
-| Branch | 2m | 1% |
-| Ticket | 18m | 13% |
-| Develop | 1h 20m | 59% |
-| Validate Code | 10m | 7% |
-| Docs | 5m | 4% |
-| Commit | 5m | 4% |
-| PR & Merge | 10m | 7% |
-| **Total** | **2h 15m** | **100%** |
-```
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| 2026-02-02 | B0.1 | abc1234 | 2h 15m (estimated 2h) |
 
 ---
 
@@ -184,20 +156,16 @@ Velocity = Story Points completed per sprint
 
 ---
 
-## Issue Tracking Metrics
+## Sprint Completion Log Metrics
 
-### Update issues.md with Metrics
+### Sprint Tracker Completion Log
 
-```markdown
-### 2026-02-02 - B0.1: Initialize Express + TypeScript project
-- **Status**: Completed
-- **Sprint**: 0
-- **Estimated**: 2h
-- **Actual**: 2h 15m
-- **Variance**: +15m
-- **Complexity**: S
-- **Notes**: Slightly over due to logger decision
-```
+Track metrics in the Completion Log notes field:
+
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| 2026-02-02 | B0.1 | abc1234 | 2h 15m (est 2h), +15m variance |
+| 2026-02-02 | B0.2 | def5678 | 3h (est 3h), on target |
 
 ### Monthly Summary
 
@@ -268,9 +236,9 @@ Track which steps take longest:
 
 ### Daily Standup Data
 
-From current-task.md:
-- What was completed yesterday
-- What's in progress today
+From sprint tracker:
+- What was completed yesterday (Completion Log)
+- What's in progress today (Active Task section)
 - Any blockers
 
 ### Weekly Report

@@ -37,8 +37,8 @@ This document describes how the development-workflow skill integrates with other
 │                                                                      │
 │                      MEMORY LAYER                                    │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
-│  │ project-     │  │ current-     │  │ sprint-      │              │
-│  │ memory       │  │ task.md      │  │ tracker.md   │              │
+│  │ project-     │  │ sprint-      │  │ bugs.md      │              │
+│  │ memory       │  │ tracker.md   │  │ decisions.md │              │
 │  └──────────────┘  └──────────────┘  └──────────────┘              │
 │                                                                      │
 └─────────────────────────────────────────────────────────────────────┘
@@ -107,7 +107,7 @@ Output: Detailed ticket for "Implement login page"
 
 **Expected Context:**
 - Ticket generated from `/plan-backend-ticket`
-- Current task tracked in current-task.md
+- Current task tracked in sprint tracker "Active Task" section
 
 **Process:**
 1. Read ticket specifications
@@ -134,7 +134,7 @@ Action: Implements auth service with tests
 
 **Expected Context:**
 - Ticket generated from `/plan-frontend-ticket`
-- Current task tracked in current-task.md
+- Current task tracked in sprint tracker "Active Task" section
 
 **Process:**
 1. Read ticket specifications
@@ -388,19 +388,16 @@ validator ───────► Validated code
 /update-docs ────► Updated documentation
        │
        ▼
-current-task.md ◄► State tracking
-       │
-       ▼
-issues.md ───────► Work log
+sprint-tracker.md ◄► State tracking & work log
 ```
 
 ### State Sharing
 
 All skills share state through:
-- `docs/project_notes/current-task.md` - Current work
-- `docs/project_notes/sprint-N-tracker.md` - Sprint progress
-- `docs/project_notes/issues.md` - Work history
+- `docs/project_notes/sprint-N-tracker.md` - Sprint progress, active task, completion log
 - `docs/project_notes/decisions.md` - Architectural decisions
+- `docs/project_notes/bugs.md` - Bug log
+- `docs/project_notes/key_facts.md` - Project configuration
 
 ---
 
@@ -418,11 +415,20 @@ When creating new skills that integrate with the workflow:
 
 3. **Update memory:**
    - What should be logged?
-   - How does it affect current-task.md?
+   - How does it affect sprint tracker?
 
 4. **Document:**
    - Add to this integration guide
    - Add to SKILL.md agents reference
+
+### Memory Not Updating
+
+**Error:** Sprint tracker not reflecting changes
+
+**Solution:**
+1. Manually verify file content
+2. Check for file permission issues
+3. Ensure skill explicitly updates sprint tracker
 
 ---
 
@@ -446,11 +452,3 @@ When creating new skills that integrate with the workflow:
 2. Try simpler invocation
 3. Break down the request
 
-### Memory Not Updating
-
-**Error:** current-task.md not reflecting changes
-
-**Solution:**
-1. Manually verify file content
-2. Check for file permission issues
-3. Ensure skill explicitly updates memory

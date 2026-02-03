@@ -20,6 +20,31 @@ Blocked: 0 tasks
 
 ---
 
+## Active Task
+
+**Status:** No active task
+
+_When a task is in progress, this section shows:_
+- Task ID and title
+- Branch name
+- Current workflow step
+- Link to ticket
+
+<!--
+Example when active:
+
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | B0.5 - Setup Jest for testing |
+| Branch | feature/sprint0-B0.5-jest-setup |
+| Step | 4/8 (Develop) |
+| Ticket | [B0.5-jest-setup.md](../tickets/B0.5-jest-setup.md) |
+-->
+
+---
+
 ## Backend Tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
@@ -151,5 +176,16 @@ _Key learnings, issues, or observations:_
 
 ---
 
+## Completion Log
+
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| 2026-02-03 | B0.1 | 778477e | Express + TypeScript setup |
+| 2026-02-03 | B0.2 | 796ba5a | Prisma 7 with PostgreSQL |
+| 2026-02-03 | B0.3 | 6567a7d | Pino logger + request middleware |
+| 2026-02-03 | B0.4 | c7c3bb5 | Zod env validation |
+
+---
+
 *Created: 2026-02-02*
-*Last Updated: 2026-02-02*
+*Last Updated: 2026-02-03*

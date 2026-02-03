@@ -26,9 +26,9 @@ Read the sprint section from `docs/PLAN_DESARROLLO.md` and extract:
 - Start Date: Current date or planned start
 - End Date: Start + 2 weeks (sprint duration)
 
-### Step 4: Update Current Task File
+### Step 4: Start Working
 
-Add reference to active sprint in `docs/project_notes/current-task.md`
+Use "start task B0.1" to begin the first task. The sprint tracker's "Active Task" section will be updated automatically.
 
 ---
 
@@ -137,14 +137,7 @@ init sprint 0
    ...
    ```
 
-3. **Update current-task.md**:
-   ```markdown
-   ## Active Sprint
-
-   **Sprint:** 0 - Project Setup & Infrastructure
-   **Tracker:** docs/project_notes/sprint-0-tracker.md
-   **Progress:** 0/20 tasks (0%)
-   ```
+3. **Sprint tracker ready** - Use "start task B0.1" to begin working
 
 ### Output
 ```

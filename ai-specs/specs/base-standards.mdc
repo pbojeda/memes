@@ -74,10 +74,18 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 
 ### Memory Files
 
+- **sprint-X-tracker.md** - Sprint progress, active task, task status, and completion log
 - **bugs.md** - Bug log with dates, solutions, and prevention notes
 - **decisions.md** - Architectural Decision Records (ADRs) with context and trade-offs
 - **key_facts.md** - Project configuration, credentials, ports, important URLs
-- **issues.md** - Work log with ticket IDs, descriptions, and URLs
+
+### Workflow Tracking
+
+- **Sprint tracker** (`sprint-X-tracker.md`) is the single source of truth for:
+  - Current sprint progress
+  - Active task status
+  - Task completion log
+- **Tickets** (`docs/tickets/`) contain detailed task specifications
 
 ### Memory-Aware Protocols
 
@@ -95,12 +103,12 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Check `docs/project_notes/key_facts.md` for credentials, ports, URLs, service accounts
 - Prefer documented facts over assumptions
 
-**When completing work on tickets:**
-- Log completed work in `docs/project_notes/issues.md`
-- Include ticket ID, date, brief description, and URL
+**When completing work on tasks:**
+- Update the sprint tracker's "Active Task" section during work
+- Add entry to "Completion Log" when task is merged
 
 **When user requests memory updates:**
-- Update the appropriate memory file (bugs, decisions, key_facts, or issues)
+- Update the appropriate memory file (bugs, decisions, key_facts)
 - Follow the established format and style (bullet lists, dates, concise entries)
 
 ## 6. Related Documentation

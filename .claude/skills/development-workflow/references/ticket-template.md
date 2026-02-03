@@ -209,4 +209,4 @@ _Additional context, warnings, or considerations:_
 - [ ] No ESLint errors
 - [ ] Documentation updated (if applicable)
 - [ ] Commit created with conventional format
-- [ ] issues.md updated
+- [ ] Sprint tracker updated (task status ✅, completion log entry)
