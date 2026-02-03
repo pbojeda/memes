@@ -107,8 +107,7 @@ This skill manages the complete bug lifecycle from discovery to resolution, with
 | File | Updated When |
 |------|--------------|
 | `docs/project_notes/bugs.md` | Every bug (always) |
-| `docs/project_notes/current-task.md` | Bug in progress |
-| `docs/project_notes/issues.md` | If escalated to task |
+| `docs/project_notes/sprint-X-tracker.md` | Bug in progress (Active Task section) |
 
 ---
 

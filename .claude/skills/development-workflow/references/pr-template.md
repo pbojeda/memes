@@ -217,20 +217,12 @@ git pull
 git branch -d feature/sprint0-B0.1-express-setup
 ```
 
-### Step 4: Update Trackers
+### Step 4: Update Sprint Tracker
 
 1. **Update sprint tracker:**
-   - Mark task as ✅ Completed
-   - Add branch/PR reference
-
-2. **Update current-task.md:**
-   - Clear Active Task
-   - Update Last Completed
-   - Add to Session History
-
-3. **Update issues.md:**
-   - Mark task as Completed
-   - Add commit/PR reference
+   - Mark task status as ✅
+   - Clear "Active Task" section
+   - Add entry to "Completion Log" with date, task, commit, notes
 
 ---
 

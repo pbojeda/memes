@@ -25,13 +25,12 @@ Guía de Uso: Development Workflow Skill
                                                                                                                                       
   Tú: start task B0.1                                                                                                                 
                                                                                                                                       
-  Lo que sucede automáticamente:                                                                                                      
-  1. Verifico que no hay otra tarea activa                                                                                            
-  2. Leo B0.1 de PLAN_DESARROLLO.md                                                                                                   
-  3. Reviso decisions.md y bugs.md por contexto                                                                                       
-  4. Creo rama: feature/sprint0-B0.1-express-setup                                                                                    
-  5. Actualizo current-task.md con estado "In Progress"                                                                               
-  6. Actualizo sprint-0-tracker.md con 🔄                                                                                             
+  Lo que sucede automáticamente:
+  1. Verifico que no hay otra tarea activa en sprint tracker
+  2. Leo B0.1 de PLAN_DESARROLLO.md
+  3. Reviso decisions.md y bugs.md por contexto
+  4. Creo rama: feature/sprint0-B0.1-express-setup
+  5. Actualizo sprint-0-tracker.md: "Active Task" section y estado 🔄                                                                                             
                                                                                                                                       
   ---                                                                                                                                 
   2. Generar Ticket                                                                                                                   
@@ -110,19 +109,17 @@ Guía de Uso: Development Workflow Skill
                                                                                                                                       
   Tú: complete task                                                                                                                   
                                                                                                                                       
-  Actualizo automáticamente:                                                                                                          
-  - current-task.md → Limpio y añado a historial                                                                                      
-  - issues.md → Marca como "Completed"                                                                                                
-  - sprint-0-tracker.md → Marca ✅                                                                                                    
+  Actualizo automáticamente:
+  - sprint-0-tracker.md → Limpio "Active Task", marca ✅, añado a "Completion Log"
   - Calculo métricas de tiempo                                                                                                        
                                                                                                                                       
   ---                                                                                                                                 
   Comandos Útiles Durante el Trabajo                                                                                                  
                                                                                                                                       
-  Ver Estado Actual                                                                                                                   
-                                                                                                                                      
-  Tú: workflow status                                                                                                                 
-  → Muestra current-task.md con tarea activa, paso actual, tiempo                                                                     
+  Ver Estado Actual
+
+  Tú: workflow status
+  → Muestra sprint tracker con "Active Task", paso actual, tiempo                                                                     
                                                                                                                                       
   Pausar Trabajo                                                                                                                      
                                                                                                                                       
@@ -140,20 +137,16 @@ Guía de Uso: Development Workflow Skill
   → Muestra tareas completadas, en progreso, pendientes, bloqueadas                                                                   
                                                                                                                                       
   ---                                                                                                                                 
-  Archivos que se Actualizan Automáticamente                                                                                          
-  ┌─────────────────────┬────────────────────────────────────┐                                                                        
-  │       Archivo       │        Se Actualiza Cuando         │                                                                        
-  ├─────────────────────┼────────────────────────────────────┤                                                                        
-  │ current-task.md     │ Cada cambio de paso, pausa, resume │                                                                        
-  ├─────────────────────┼────────────────────────────────────┤                                                                        
-  │ sprint-0-tracker.md │ Inicio/fin de tarea                │                                                                        
-  ├─────────────────────┼────────────────────────────────────┤                                                                        
-  │ issues.md           │ Tarea iniciada/completada          │                                                                        
-  ├─────────────────────┼────────────────────────────────────┤                                                                        
-  │ bugs.md             │ Bug encontrado y resuelto          │                                                                        
-  ├─────────────────────┼────────────────────────────────────┤                                                                        
-  │ decisions.md        │ Decisión arquitectónica tomada     │                                                                        
-  └─────────────────────┴────────────────────────────────────┘                                                                        
+  Archivos que se Actualizan Automáticamente
+  ┌─────────────────────┬─────────────────────────────────────────────┐
+  │       Archivo       │           Se Actualiza Cuando               │
+  ├─────────────────────┼─────────────────────────────────────────────┤
+  │ sprint-0-tracker.md │ Cada cambio: paso, pausa, inicio/fin tarea  │
+  ├─────────────────────┼─────────────────────────────────────────────┤
+  │ bugs.md             │ Bug encontrado y resuelto                   │
+  ├─────────────────────┼─────────────────────────────────────────────┤
+  │ decisions.md        │ Decisión arquitectónica tomada              │
+  └─────────────────────┴─────────────────────────────────────────────┘                                                                        
   ---                                                                                                                                 
   Ejemplo de Sesión Completa                                                                                                          
                                                                                                                                       

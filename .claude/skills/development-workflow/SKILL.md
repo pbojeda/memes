@@ -26,19 +26,19 @@ This skill orchestrates the complete development lifecycle for each task, integr
 
 ## State Management
 
-### Current Task File
+### Sprint Tracker (Single Source of Truth)
 
-The file `docs/project_notes/current-task.md` always reflects the current state:
+The file `docs/project_notes/sprint-X-tracker.md` (where X is the current sprint number) always reflects the current state:
 
-- **Active task** with step progress
-- **Last completed** task
-- **Session history** for time tracking
+- **Active Task** section with step progress
+- **Task status** in the task tables
+- **Completion Log** for finished tasks
 
-**Always update this file when:**
-- Starting a task → Set as Active
-- Changing steps → Update Current Step
-- Pausing → Mark as Paused
-- Completing → Move to Last Completed
+**Always update the sprint tracker when:**
+- Starting a task → Update "Active Task" section and task status to 🔄
+- Changing steps → Update step in "Active Task" section
+- Pausing → Mark as Paused in "Active Task" section
+- Completing → Clear "Active Task", update task status to ✅, add to "Completion Log"
 
 ### State Transitions
 
@@ -63,25 +63,24 @@ The file `docs/project_notes/current-task.md` always reflects the current state:
 Before starting any task from `docs/PLAN_DESARROLLO.md`:
 
 **Actions:**
-1. Check `docs/project_notes/current-task.md` for active task (must be empty)
+1. Check sprint tracker's "Active Task" section (must show "No active task")
 2. Read the task from PLAN_DESARROLLO.md
 3. Check `docs/project_notes/decisions.md` for related architectural decisions
 4. Check `docs/project_notes/bugs.md` for known issues in this area
-5. Verify dependencies are completed (check `docs/project_notes/issues.md`)
+5. Verify dependencies are completed (check sprint tracker task status)
 
-**Update current-task.md:**
+**Update sprint tracker "Active Task" section:**
 ```markdown
 ## Active Task
 
-**Status:** Validating
+**Status:** In Progress
 
 | Field | Value |
 |-------|-------|
-| Task ID | B0.1 |
-| Title | [Task title] |
-| Sprint | 0 |
-| Started | [timestamp] |
-| Step | 1 of 8 (Validate) |
+| Task | B0.1 - Initialize Express + TypeScript project |
+| Branch | feature/sprint0-B0.1-express-setup |
+| Step | 1/8 (Validate) |
+| Ticket | [B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
 ```
 
 **Validation Checklist:**
@@ -111,9 +110,9 @@ feature/sprint<N>-<task-id>-<short-description>
 git checkout -b feature/sprint0-B0.1-express-setup
 ```
 
-**Update current-task.md:**
-- Add Branch field
-- Update Step to "2 of 8 (Branch)"
+**Update sprint tracker:**
+- Add Branch field in "Active Task" section
+- Update Step to "2/8 (Branch)"
 
 ---
 
@@ -136,9 +135,9 @@ Generate a detailed work ticket with test specifications included.
 - Save to `docs/tickets/<task-id>-<short-description>.md`
 - Example: `docs/tickets/B0.1-express-setup.md`
 
-**Auto-update Memory:**
-- Add entry to `docs/project_notes/issues.md` with status "In Progress"
-- Update `current-task.md` Step to "3 of 8 (Ticket)"
+**Update sprint tracker:**
+- Update "Active Task" section Step to "3/8 (Ticket)"
+- Update task status in table to 🔄 (In Progress)
 
 ---
 
@@ -163,9 +162,8 @@ Implement following strict Test-Driven Development.
 | React components | `frontend-developer` |
 | Code review needed | `code-review-specialist` |
 
-**Update current-task.md:**
-- Update Step to "4 of 8 (Develop)"
-- Track TDD cycles in Current Step section
+**Update sprint tracker:**
+- Update "Active Task" section Step to "4/8 (Develop)"
 
 ---
 
@@ -184,8 +182,8 @@ Run production validation before committing.
 
 **If issues found:** Fix before proceeding.
 
-**Update current-task.md:**
-- Update Step to "5 of 8 (Validate)"
+**Update sprint tracker:**
+- Update "Active Task" section Step to "5/8 (Validate)"
 
 ---
 
@@ -201,8 +199,8 @@ Only update docs when there are changes to:
 
 **Use skill:** `/update-docs`
 
-**Update current-task.md:**
-- Update Step to "6 of 8 (Docs)"
+**Update sprint tracker:**
+- Update "Active Task" section Step to "6/8 (Docs)"
 
 ---
 
@@ -220,13 +218,10 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 
 **Types:** feat, fix, docs, style, refactor, test, chore
 
-**Auto-update Memory:**
-- Update `docs/project_notes/issues.md` entry to "Completed"
+**Update sprint tracker:**
+- Update "Active Task" section Step to "7/8 (Commit)"
 - Add any bugs found to `docs/project_notes/bugs.md`
 - Add any decisions made to `docs/project_notes/decisions.md`
-
-**Update current-task.md:**
-- Update Step to "7 of 8 (Commit)"
 
 ---
 
@@ -263,13 +258,13 @@ Create pull request and merge to main branch.
 - [ ] Ready to merge
 ```
 
-**Update current-task.md:**
-- Update Step to "8 of 8 (PR & Merge)"
+**Update sprint tracker:**
+- Update "Active Task" section Step to "8/8 (PR & Merge)"
 
 **On Completion:**
-- Clear Active Task section
-- Update Last Completed section
-- Add entry to Session History
+- Clear "Active Task" section (set to "No active task")
+- Update task status in table to ✅
+- Add entry to "Completion Log" with date, task ID, commit hash, and notes
 
 ---
 
@@ -279,8 +274,7 @@ Create pull request and merge to main branch.
 
 | File | Updated When |
 |------|--------------|
-| `current-task.md` | Every step change, pause, resume, complete |
-| `issues.md` | Task started (In Progress), Task completed (Completed) |
+| `sprint-X-tracker.md` | Every step change, pause, resume, complete, task status |
 | `bugs.md` | Bug discovered and fixed during development |
 | `decisions.md` | Architectural decision made during implementation |
 | `key_facts.md` | New configuration or environment details added |
@@ -288,16 +282,16 @@ Create pull request and merge to main branch.
 
 ### Before Each Task
 ```
-1. Read docs/project_notes/current-task.md → Verify no active task
+1. Read docs/project_notes/sprint-X-tracker.md → Verify no active task
 2. Read docs/project_notes/decisions.md → Check for relevant decisions
 3. Read docs/project_notes/bugs.md → Check for known issues
-4. Read docs/project_notes/issues.md → Verify dependencies completed
+4. Check sprint tracker task tables → Verify dependencies completed
 ```
 
 ### After Each Task
 ```
-1. Update docs/project_notes/current-task.md → Clear active, update history
-2. Update docs/project_notes/issues.md → Mark task completed
+1. Update sprint tracker → Clear "Active Task", update task status to ✅
+2. Update sprint tracker → Add entry to "Completion Log"
 3. If bug fixed → Add to docs/project_notes/bugs.md
 4. If decision made → Add to docs/project_notes/decisions.md
 ```
@@ -310,32 +304,35 @@ Create pull request and merge to main branch.
 
 When you need to stop work temporarily:
 
-1. Save current progress in `current-task.md`
+1. Save current progress in sprint tracker "Active Task" section
 2. Add notes about where you left off
 3. Commit any work in progress (WIP commit if needed)
 
-**Update current-task.md:**
+**Update sprint tracker "Active Task" section:**
 ```markdown
 **Status:** Paused
 
-### Paused At
-- Step: 4 of 8 (Develop)
-- Last action: Completed test for user validation
-- Next action: Implement password hashing
-- Notes: Need to research bcrypt vs argon2
+| Field | Value |
+|-------|-------|
+| Task | B0.1 - Initialize Express + TypeScript project |
+| Branch | feature/sprint0-B0.1-express-setup |
+| Step | 4/8 (Develop) - Paused |
+| Ticket | [B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
+
+_Paused at: Completed test for user validation. Next: Implement password hashing._
 ```
 
 ### Resume Task
 
 When continuing paused work:
 
-1. Read `current-task.md` for context
+1. Read sprint tracker "Active Task" section for context
 2. Review where you left off
 3. Continue from the saved step
 
-**Update current-task.md:**
+**Update sprint tracker:**
 - Change Status back to "In Progress"
-- Update Session History with resume timestamp
+- Update step progress
 
 ---
 
@@ -345,17 +342,19 @@ When continuing paused work:
 
 When starting a new sprint:
 
-1. Create sprint tracker from `references/sprint-tracker.md`
+1. Create sprint tracker from `references/sprint-init-template.md`
 2. Save as `docs/project_notes/sprint-N-tracker.md`
 3. Populate with tasks from PLAN_DESARROLLO.md
 
 ### View Current Sprint Progress
 
-Read sprint tracker and cross-reference with `issues.md` to show:
+Read sprint tracker to see:
 - ✅ Completed tasks
-- 🔄 In-progress tasks
+- 🔄 In-progress tasks (check "Active Task" section)
 - ⏳ Pending tasks
 - 🚫 Blocked tasks
+
+The sprint tracker is the single source of truth for all task status.
 
 ---
 
@@ -401,4 +400,4 @@ See `references/workflow-example.md` for a complete step-by-step example.
 - **Type safety**: All code fully typed (TypeScript)
 - **English only**: All technical artifacts in English
 - **Memory first**: Always check project_notes before changes
-- **State always current**: Keep current-task.md updated at every step
+- **Sprint tracker is source of truth**: Keep sprint-X-tracker.md updated at every step

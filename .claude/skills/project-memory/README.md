@@ -22,11 +22,11 @@ cd your-project
 
 When invoked in a project, this skill:
 
-1. **Creates a memory infrastructure** in `docs/project_notes/` with four files:
+1. **Creates a memory infrastructure** in `docs/project_notes/` with:
    - `bugs.md` - Bug log with solutions and prevention notes
    - `decisions.md` - Architectural Decision Records (ADRs)
    - `key_facts.md` - Project configuration, credentials, ports, URLs
-   - `issues.md` - Work log with ticket IDs and descriptions
+   - `sprint-X-tracker.md` - Sprint progress, active task, completion log
 
 2. **Configures CLAUDE.md and AGENTS.md** to make Claude Code (and other AI tools) memory-aware:
    - Check memory files before proposing changes
@@ -247,7 +247,7 @@ Update key_facts.md with the new database connection string
 ```
 
 ```
-Log this completed ticket in issues.md
+Update sprint tracker: task status ✅, add to Completion Log
 ```
 
 ## File Structure After Setup
@@ -256,12 +256,12 @@ Log this completed ticket in issues.md
 your-project/
 ├── docs/
 │   └── project_notes/
-│       ├── bugs.md         # Bug log with solutions
-│       ├── decisions.md    # Architectural Decision Records
-│       ├── key_facts.md    # Project configuration
-│       └── issues.md       # Work log
-├── CLAUDE.md              # Updated with memory protocols
-└── AGENTS.md              # Updated with memory protocols (if exists)
+│       ├── bugs.md              # Bug log with solutions
+│       ├── decisions.md         # Architectural Decision Records
+│       ├── key_facts.md         # Project configuration
+│       └── sprint-X-tracker.md  # Sprint progress and task tracking
+├── CLAUDE.md                    # Updated with memory protocols
+└── AGENTS.md                    # Updated with memory protocols (if exists)
 ```
 
 ## Memory File Formats
@@ -312,14 +312,16 @@ your-project/
 - Credentials: Stored in `.env` file (not in git)
 ```
 
-### issues.md - Work Log
-```markdown
-### 2025-01-15 - PROJ-123: Implement Contact API
-- **Status**: Completed
-- **Description**: Created FastAPI endpoints for contact CRUD
-- **URL**: https://jira.company.com/browse/PROJ-123
-- **Notes**: Added unit tests, coverage at 85%
-```
+### sprint-X-tracker.md - Sprint Tracking
+The sprint tracker contains:
+- Task tables with status (⏳ pending, 🔄 in progress, ✅ completed)
+- Active Task section showing current work
+- Completion Log with dates, task IDs, commits, and notes
+
+Example Completion Log entry:
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| 2025-01-15 | B0.1 | abc1234 | Express + TypeScript setup |
 
 ## Verification
 
@@ -394,7 +396,7 @@ Once set up, Claude Code will:
 - ✅ Check `decisions.md` before proposing architectural changes
 - ✅ Search `bugs.md` for known solutions to errors
 - ✅ Reference `key_facts.md` for project configuration
-- ✅ Log completed work in `issues.md`
+- ✅ Log completed work in sprint tracker's Completion Log
 - ✅ Document new bugs, decisions, and facts as they arise
 
 ### Style Guidelines
@@ -555,8 +557,7 @@ project-memory/
 └── references/                 # Templates for memory files
     ├── bugs_template.md
     ├── decisions_template.md
-    ├── key_facts_template.md
-    └── issues_template.md
+    └── key_facts_template.md
 ```
 
 ## Design Philosophy
@@ -615,7 +616,7 @@ Memory files are **manually maintained**:
 - **bugs.md** - Remove very old entries (6+ months) that are no longer relevant
 - **decisions.md** - Keep all decisions (they're lightweight and provide historical context)
 - **key_facts.md** - Update when project configuration changes
-- **issues.md** - Archive completed work (3+ months old)
+- **sprint-X-tracker.md** - Archive old sprint trackers to `docs/project_notes/archive/`
 
 ## Integration with Other Skills
 

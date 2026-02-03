@@ -207,9 +207,7 @@ meme-store/
 │
 ├── docs/                       # Documentation
 │   ├── project_notes/          # Project memory system
-│   │   ├── current-task.md     # Current work in progress
-│   │   ├── sprint-N-tracker.md # Sprint progress
-│   │   ├── issues.md           # Work log
+│   │   ├── sprint-N-tracker.md # Sprint progress, active task, completion log
 │   │   ├── bugs.md             # Bug log
 │   │   ├── decisions.md        # ADRs
 │   │   └── key_facts.md        # Project config
@@ -717,9 +715,7 @@ The project maintains institutional knowledge in `docs/project_notes/`:
 
 | File | Purpose |
 |------|---------|
-| `current-task.md` | Current work in progress |
-| `sprint-N-tracker.md` | Sprint progress tracking |
-| `issues.md` | Work log with completed tasks |
+| `sprint-N-tracker.md` | Sprint progress, active task, task status, completion log |
 | `bugs.md` | Bug log with solutions |
 | `decisions.md` | Architectural Decision Records (ADRs) |
 | `key_facts.md` | Project configuration and constants |

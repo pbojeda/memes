@@ -43,7 +43,7 @@ This document walks through a complete example of executing the development work
 ### 1.4 Verify Dependencies
 
 ```bash
-# Check issues.md for blocking tasks
+# Check sprint tracker for blocking tasks
 ```
 
 **Result:** No dependencies. B0.1 is the first task.
@@ -141,15 +141,21 @@ describe('Express App', () => {
 5. Add tests
 ```
 
-### 3.3 Update Memory
+### 3.3 Update Sprint Tracker
 
-Add to `docs/project_notes/issues.md`:
+Update task status in sprint tracker to 🔄 (In Progress) and set "Active Task" section:
 
 ```markdown
-### 2026-02-02 - B0.1: Initialize Express + TypeScript project
-- **Status**: In Progress
-- **Description**: Setup Express server with TypeScript configuration
-- **Sprint**: 0
+## Active Task
+
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | B0.1 - Initialize Express + TypeScript project |
+| Branch | feature/sprint0-B0.1-express-setup |
+| Step | 4/8 (Develop) |
+| Ticket | [B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
 ```
 
 ---
@@ -412,18 +418,16 @@ EOF
 )"
 ```
 
-### 7.3 Update Memory
+### 7.3 Update Sprint Tracker
 
-Update `docs/project_notes/issues.md`:
+Update sprint tracker:
+- Set task B0.1 status to ✅
+- Clear "Active Task" section
+- Add entry to "Completion Log":
 
-```markdown
-### 2026-02-02 - B0.1: Initialize Express + TypeScript project
-- **Status**: Completed
-- **Description**: Setup Express server with TypeScript configuration
-- **Sprint**: 0
-- **Commit**: abc1234
-- **Notes**: Added health endpoint and Pino logger
-```
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| 2026-02-02 | B0.1 | abc1234 | Express + TypeScript setup, health endpoint |
 
 ---
 
@@ -453,9 +457,10 @@ backend/
     └── app.test.ts
 ```
 
-### Memory Updated
+### Sprint Tracker Updated
 
-- `issues.md`: Task marked as Completed
+- Task status: ✅
+- Completion Log: Entry added
 - No bugs found
 - No new architectural decisions needed
 

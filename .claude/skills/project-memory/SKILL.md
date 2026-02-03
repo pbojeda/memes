@@ -23,7 +23,7 @@ description: Set up and maintain a structured project memory system in docs/proj
 
 ## Overview
 
-Maintain institutional knowledge for projects by establishing a structured memory system in `docs/project_notes/`. This skill sets up four key memory files (bugs, decisions, key facts, issues) and configures CLAUDE.md and AGENTS.md to automatically reference and maintain them. The result is a project that remembers past decisions, solutions to problems, and important configuration details across coding sessions and across different AI tools.
+Maintain institutional knowledge for projects by establishing a structured memory system in `docs/project_notes/`. This skill sets up three key memory files (bugs, decisions, key facts) plus sprint trackers, and configures CLAUDE.md and AGENTS.md to automatically reference and maintain them. The result is a project that remembers past decisions, solutions to problems, and important configuration details across coding sessions and across different AI tools.
 
 ## When to Use This Skill
 
@@ -46,10 +46,10 @@ When invoked for the first time in a project, create the following structure:
 ```
 docs/
 └── project_notes/
-    ├── bugs.md         # Bug log with solutions
-    ├── decisions.md    # Architectural Decision Records
-    ├── key_facts.md    # Project configuration and constants
-    └── issues.md       # Work log with ticket references
+    ├── bugs.md              # Bug log with solutions
+    ├── decisions.md         # Architectural Decision Records
+    ├── key_facts.md         # Project configuration and constants
+    └── sprint-X-tracker.md  # Sprint progress, active task, completion log
 ```
 
 **Directory naming rationale:** Using `docs/project_notes/` instead of `memory/` makes it look like standard engineering organization, not AI-specific tooling. This increases adoption and maintenance by human developers.
@@ -58,7 +58,7 @@ docs/
 - Use `references/bugs_template.md` for initial `bugs.md`
 - Use `references/decisions_template.md` for initial `decisions.md`
 - Use `references/key_facts_template.md` for initial `key_facts.md`
-- Use `references/issues_template.md` for initial `issues.md`
+- Sprint tracker is created using the development-workflow skill
 
 Each template includes format examples and usage tips.
 
@@ -73,10 +73,10 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 
 ### Memory Files
 
+- **sprint-X-tracker.md** - Sprint progress, active task, task status, and completion log
 - **bugs.md** - Bug log with dates, solutions, and prevention notes
 - **decisions.md** - Architectural Decision Records (ADRs) with context and trade-offs
 - **key_facts.md** - Project configuration, credentials, ports, important URLs
-- **issues.md** - Work log with ticket IDs, descriptions, and URLs
 
 ### Memory-Aware Protocols
 
@@ -95,8 +95,8 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Prefer documented facts over assumptions
 
 **When completing work on tickets:**
-- Log completed work in `docs/project_notes/issues.md`
-- Include ticket ID, date, brief description, and URL
+- Update sprint tracker: task status to ✅, add to Completion Log
+- Include date, task ID, commit hash, and notes
 
 **When user requests memory updates:**
 - Update the appropriate memory file (bugs, decisions, key_facts, or issues)
@@ -194,21 +194,18 @@ When the user requests updates or when documenting resolved issues, update the a
 - Add URLs for easy navigation
 - See `references/key_facts_template.md` for security guidelines on what NOT to store
 
-**Adding work log entry:**
-```markdown
-### YYYY-MM-DD - TICKET-ID: Brief Description
-- **Status**: Completed / In Progress / Blocked
-- **Description**: 1-2 line summary
-- **URL**: https://jira.company.com/browse/TICKET-ID
-- **Notes**: Any important context
-```
+**Adding completion log entry (in sprint tracker):**
+
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| YYYY-MM-DD | B0.1 | abc1234 | Brief description of what was done |
 
 ### 6. Memory File Maintenance
 
 **Periodically clean old entries:**
 - User is responsible for manual cleanup (no automation)
 - Remove very old bug entries (6+ months) that are no longer relevant
-- Archive completed work from issues.md (3+ months old)
+- Archive old sprint trackers to a `docs/project_notes/archive/` folder
 - Keep all decisions (they're lightweight and provide historical context)
 - Update key_facts.md when project configuration changes
 
@@ -224,7 +221,8 @@ This skill includes template files in `references/` that demonstrate proper form
 - **references/bugs_template.md** - Bug entry format with examples
 - **references/decisions_template.md** - ADR format with examples
 - **references/key_facts_template.md** - Key facts organization with examples (includes security guidelines)
-- **references/issues_template.md** - Work log format with examples
+
+Sprint trackers are created using the development-workflow skill's sprint initialization.
 
 When creating initial memory files, copy these templates to `docs/project_notes/` and customize them for the project.
 
@@ -289,7 +287,8 @@ When using these skills together, consider updating memory files as a follow-up 
 
 This skill is successfully deployed when:
 
-- `docs/project_notes/` directory exists with all four memory files
+- `docs/project_notes/` directory exists with memory files (bugs.md, decisions.md, key_facts.md)
+- Sprint tracker (`sprint-X-tracker.md`) exists for active sprint
 - CLAUDE.md includes "Project Memory System" section with protocols
 - AGENTS.md includes the same protocols (if file exists or user requested)
 - Memory files follow template format and style guidelines

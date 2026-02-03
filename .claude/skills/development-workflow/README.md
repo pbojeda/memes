@@ -63,7 +63,7 @@ User: "Workflow status"
 │    ├─ Read task from PLAN_DESARROLLO.md                             │
 │    ├─ Check decisions.md for conflicts                              │
 │    ├─ Check bugs.md for known issues                                │
-│    └─ Verify dependencies in issues.md                              │
+│    └─ Verify dependencies in sprint tracker                         │
 └─────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
@@ -77,7 +77,7 @@ User: "Workflow status"
 │ 3. GENERATE TICKET                                                   │
 │    ├─ Backend → /plan-backend-ticket                                │
 │    ├─ Frontend → /plan-frontend-ticket                              │
-│    └─ Update issues.md → Status: "In Progress"                      │
+│    └─ Update sprint tracker → Task status: 🔄                       │
 └─────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
@@ -113,7 +113,7 @@ User: "Workflow status"
 ┌─────────────────────────────────────────────────────────────────────┐
 │ 7. COMMIT                                                            │
 │    ├─ Generate conventional commit message                          │
-│    └─ Update issues.md → Status: "Completed"                        │
+│    └─ Update sprint tracker → Task status: ✅, Completion Log       │
 └─────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
@@ -149,8 +149,8 @@ User: "Workflow status"
 
 4. **Verify dependencies**
    ```
-   Read docs/project_notes/issues.md
-   Confirm blocking tasks are completed
+   Read sprint tracker task tables
+   Confirm blocking tasks are completed (status: ✅)
    ```
 
 **Output:** Either "Task validated, ready to proceed" or a list of blockers.
@@ -201,14 +201,10 @@ git branch --show-current
 - [ ] Files to create or modify
 - [ ] Dependencies and imports needed
 
-**Memory Update:**
-Add entry to `docs/project_notes/issues.md`:
-```markdown
-### 2026-02-02 - B0.1: Initialize Express + TypeScript project
-- **Status**: In Progress
-- **Description**: Setup Express server with TypeScript configuration
-- **Sprint**: 0
-```
+**Sprint Tracker Update:**
+Update sprint tracker:
+- Set task status to 🔄 (In Progress) in the task table
+- Update "Active Task" section with task details
 
 ---
 
@@ -332,15 +328,15 @@ Includes unit tests for all token operations.
 Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 ```
 
-**Memory Update:**
-Update `docs/project_notes/issues.md`:
-```markdown
-### 2026-02-02 - B0.1: Initialize Express + TypeScript project
-- **Status**: Completed
-- **Description**: Setup Express server with TypeScript configuration
-- **Sprint**: 0
-- **Commit**: abc1234
-```
+**Sprint Tracker Update:**
+Update sprint tracker:
+- Set task status to ✅ in the task table
+- Clear "Active Task" section
+- Add entry to "Completion Log":
+
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| 2026-02-02 | B0.1 | abc1234 | Express + TypeScript setup |
 
 ---
 
@@ -356,10 +352,10 @@ The workflow automatically maintains project memory:
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  docs/project_notes/                                         │
-│  ├── issues.md      ◄── Task started/completed              │
-│  ├── bugs.md        ◄── Bugs found and fixed                │
-│  ├── decisions.md   ◄── Architectural decisions made        │
-│  └── key_facts.md   ◄── New configuration details           │
+│  ├── sprint-X-tracker.md ◄── Active task, status, log       │
+│  ├── bugs.md             ◄── Bugs found and fixed           │
+│  ├── decisions.md        ◄── Architectural decisions made   │
+│  └── key_facts.md        ◄── New configuration details      │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -368,17 +364,17 @@ The workflow automatically maintains project memory:
 
 | File | What to Check |
 |------|---------------|
+| `sprint-X-tracker.md` | Active task (must be empty), dependencies completed |
 | `decisions.md` | Existing decisions that might affect implementation |
 | `bugs.md` | Known issues in the area being worked on |
-| `issues.md` | Dependencies that must be completed first |
 | `key_facts.md` | Configuration details needed for the task |
 
 ### Memory Updates (After Task)
 
 | Event | Update To |
 |-------|-----------|
-| Task started | `issues.md` → Add with "In Progress" |
-| Task completed | `issues.md` → Update to "Completed" |
+| Task started | `sprint-X-tracker.md` → Active Task section, status 🔄 |
+| Task completed | `sprint-X-tracker.md` → Status ✅, Completion Log |
 | Bug found and fixed | `bugs.md` → Add entry |
 | Decision made | `decisions.md` → Add ADR |
 | New config added | `key_facts.md` → Add details |
@@ -416,7 +412,7 @@ The workflow automatically maintains project memory:
 To see current sprint status:
 
 1. Read `docs/PLAN_DESARROLLO.md` for sprint tasks
-2. Cross-reference with `docs/project_notes/issues.md`
+2. Read sprint tracker for task status
 3. Generate progress report
 
 ### Sprint Status Categories
@@ -447,7 +443,7 @@ See `references/workflow-example.md` for a complete step-by-step example of exec
 **Problem:** A task depends on another that isn't complete.
 
 **Solution:**
-1. Check `issues.md` for the blocking task
+1. Check sprint tracker for the blocking task status
 2. Either complete the dependency first, or
 3. Ask if the dependency can be worked around
 

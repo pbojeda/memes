@@ -55,7 +55,7 @@ When user runs "git commit":
 
 ### Hook 2: Post-Commit Memory Update
 
-**Purpose:** Automatically update issues.md after commits.
+**Purpose:** Automatically update sprint tracker after commits.
 
 **File:** `.claude/hooks/post-commit.md`
 
@@ -66,18 +66,18 @@ When user runs "git commit":
 After successful git commit
 
 ## Actions
-1. Read current-task.md for active task
+1. Read sprint tracker "Active Task" section
 2. If task is active:
    - Check if this is the final commit for the task
-   - If yes, update issues.md to "Completed"
-   - Update current-task.md history
-3. Add commit hash to current task
+   - If yes, update task status to ✅ and add to Completion Log
+   - Clear "Active Task" section
+3. Add commit hash to completion log
 
 ## Implementation
 After "git commit" succeeds:
 1. Extract commit message
 2. Parse task ID if present
-3. Update relevant memory files
+3. Update sprint tracker
 ```
 
 ### Hook 3: Task Start Automation
@@ -93,23 +93,24 @@ After "git commit" succeeds:
 When user says "start task X"
 
 ## Actions
-1. Verify no active task (check current-task.md)
+1. Verify no active task (check sprint tracker "Active Task" section)
 2. Validate task exists in PLAN_DESARROLLO.md
-3. Check dependencies in issues.md
+3. Check dependencies in sprint tracker task tables
 4. Create branch automatically
-5. Update current-task.md
-6. Update sprint tracker
-7. Start timer
+5. Update sprint tracker:
+   - Set "Active Task" section
+   - Update task status to 🔄
+6. Start timer
 
 ## Implementation
 1. Parse task ID from command
 2. Read PLAN_DESARROLLO.md for task details
-3. Check issues.md for blocking dependencies
+3. Check sprint tracker for blocking dependencies
 4. Run: git checkout -b feature/sprint{N}-{ID}-{slug}
-5. Update current-task.md with:
+5. Update sprint tracker "Active Task" section with:
    - Task details
-   - Started timestamp
-   - Step 1 of 8
+   - Branch name
+   - Step 1/8
 ```
 
 ### Hook 4: Task Complete Automation
@@ -126,22 +127,17 @@ When PR is merged or user says "complete task"
 
 ## Actions
 1. Calculate total time
-2. Update current-task.md:
-   - Clear active task
-   - Update Last Completed
-   - Add to Session History
-3. Update issues.md:
-   - Mark task Completed
-   - Add time metrics
-4. Update sprint tracker:
-   - Mark task ✅
+2. Update sprint tracker:
+   - Clear "Active Task" section
+   - Mark task status ✅
+   - Add entry to "Completion Log" with date, task, commit, notes
    - Update progress percentage
-5. Clean up branch
+3. Clean up branch
 
 ## Implementation
-1. Read current-task.md for active task
-2. Calculate duration from Started
-3. Update all memory files
+1. Read sprint tracker "Active Task" section
+2. Calculate duration
+3. Update sprint tracker (single file)
 4. Run: git branch -d {branch-name}
 5. Suggest next task
 ```
@@ -159,8 +155,7 @@ When PR is merged or user says "complete task"
 1. Read PLAN_DESARROLLO.md Sprint N section
 2. Create docs/project_notes/sprint-N-tracker.md
 3. Populate with tasks from plan
-4. Update current-task.md with sprint reference
-5. Output summary
+4. Output summary
 ```
 
 **Pseudo-code:**
@@ -175,7 +170,7 @@ function initSprint(sprintNumber) {
   const frontendTasks = parseTaskTable(sprintSection, 'Frontend');
 
   // 3. Create tracker from template
-  const template = readFile('.claude/skills/development-workflow/references/sprint-tracker.md');
+  const template = readFile('.claude/skills/development-workflow/references/sprint-init-template.md');
   const tracker = populateTemplate(template, {
     number: sprintNumber,
     goal: sprintSection.goal,
@@ -187,12 +182,6 @@ function initSprint(sprintNumber) {
 
   // 4. Write tracker
   writeFile(`docs/project_notes/sprint-${sprintNumber}-tracker.md`, tracker);
-
-  // 5. Update current-task.md
-  updateCurrentTask({
-    activeSprint: sprintNumber,
-    trackerPath: `sprint-${sprintNumber}-tracker.md`
-  });
 
   return {
     sprintNumber,
@@ -211,8 +200,7 @@ function initSprint(sprintNumber) {
 1. Read sprint tracker
 2. Count tasks by status
 3. Calculate percentage
-4. Update progress bar
-5. Update current-task.md summary
+4. Update progress bar in sprint tracker
 ```
 
 ### Script: Generate Daily Report
@@ -221,8 +209,8 @@ function initSprint(sprintNumber) {
 
 **Auto-actions:**
 ```
-1. Read current-task.md
-2. Read session history
+1. Read sprint tracker
+2. Read "Active Task" section and "Completion Log"
 3. Calculate work done today
 4. Format report
 5. Output or save
@@ -234,38 +222,37 @@ function initSprint(sprintNumber) {
 
 ### When to Update Each File
 
-| Event | current-task.md | issues.md | sprint-tracker.md | bugs.md | decisions.md |
-|-------|-----------------|-----------|-------------------|---------|--------------|
-| Start task | ✅ Active | ✅ In Progress | ✅ 🔄 | | |
-| Change step | ✅ Step | | | | |
-| Pause | ✅ Paused | | ✅ ⏸️ | | |
-| Resume | ✅ Active | | ✅ 🔄 | | |
-| Complete | ✅ History | ✅ Completed | ✅ ✅ | | |
-| Bug found | | | | ✅ Add | |
-| Decision made | | | | | ✅ Add |
-| Blocked | ✅ Blocked | | ✅ 🚫 | | |
+| Event | sprint-tracker.md | bugs.md | decisions.md |
+|-------|-------------------|---------|--------------|
+| Start task | ✅ Active Task, 🔄 status | | |
+| Change step | ✅ Active Task step | | |
+| Pause | ✅ Active Task (Paused) | | |
+| Resume | ✅ Active Task (In Progress) | | |
+| Complete | ✅ Clear Active, ✅ status, Completion Log | | |
+| Bug found | | ✅ Add | |
+| Decision made | | | ✅ Add |
+| Blocked | ✅ Active Task, 🚫 status | | |
 
 ### Update Templates
 
-**Add to issues.md (task started):**
+**Sprint tracker "Active Task" section (task started):**
 ```markdown
-### YYYY-MM-DD - {TASK_ID}: {Task Title}
-- **Status**: In Progress
-- **Sprint**: {N}
-- **Estimated**: {Xh}
-- **Started**: {timestamp}
+## Active Task
+
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | {TASK_ID} - {Task Title} |
+| Branch | feature/sprint{N}-{TASK_ID}-{slug} |
+| Step | 1/8 (Validate) |
+| Ticket | [{TASK_ID}-{slug}.md](../tickets/{TASK_ID}-{slug}.md) |
 ```
 
-**Update issues.md (task completed):**
-```markdown
-### YYYY-MM-DD - {TASK_ID}: {Task Title}
-- **Status**: Completed
-- **Sprint**: {N}
-- **Estimated**: {Xh}
-- **Actual**: {Xh Xm}
-- **Variance**: {±Xm}
-- **Commit**: {hash}
-```
+**Sprint tracker Completion Log (task completed):**
+| Date | Task | Commit | Notes |
+|------|------|--------|-------|
+| YYYY-MM-DD | {TASK_ID} | {hash} | Brief description |
 
 ---
 
