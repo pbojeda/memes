@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [███████████] 55%
+Progress: [████████████] 60%
 
-Completed: 11/20 tasks
+Completed: 12/20 tasks
 In Progress: 0 tasks
-Pending: 9 tasks
+Pending: 8 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,13 +22,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | F0.2 - Configure Tailwind CSS |
-| Branch | feature/sprint0-F0.2-tailwind-setup |
-| Ticket | [F0.2-tailwind-setup.md](../tickets/F0.2-tailwind-setup.md) |
+**Status:** No active task
 
 ---
 
@@ -54,7 +48,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F0.1 | Initialize Next.js 14 + TypeScript (App Router) | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Completed 2026-02-04 |
-| F0.2 | Configure Tailwind CSS | High | 🔄 | feature/sprint0-F0.2-tailwind-setup | |
+| F0.2 | Configure Tailwind CSS | High | ✅ | feature/sprint0-F0.2-tailwind-setup | Completed 2026-02-04 |
 | F0.3 | Setup Shadcn/UI | High | ⏳ | | |
 | F0.4 | Configure Axios client | High | ⏳ | | |
 | F0.5 | Setup Zustand stores (skeleton) | Medium | ⏳ | | |
@@ -178,6 +172,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-04 | B0.7 | 7651313 | Docker Compose PostgreSQL + Redis |
 | 2026-02-04 | B0.10 | d118a25 | Health check endpoint with DB status |
 | 2026-02-04 | F0.1 | 2780f73 | Next.js 16 + TypeScript + App Router |
+| 2026-02-04 | F0.2 | 395f3d0 | Tailwind CSS v4 |
 
 ---
 
