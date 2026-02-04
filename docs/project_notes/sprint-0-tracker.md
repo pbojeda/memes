@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [█████████ ] 45%
+Progress: [██████████ ] 50%
 
-Completed: 9/20 tasks
+Completed: 10/20 tasks
 In Progress: 0 tasks
-Pending: 11 tasks
+Pending: 10 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,14 +22,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | B0.10 - Setup health check endpoint |
-| Branch | feature/sprint0-B0.10-health-check |
-| Step | 7/8 (Commit) |
-| Ticket | [B0.10-health-check.md](../tickets/B0.10-health-check.md) |
+**Status:** No active task
 
 ---
 
@@ -46,7 +39,7 @@ Blocked: 0 tasks
 | B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ✅ | feature/sprint0-B0.7-docker-compose | Completed 2026-02-04 |
 | B0.8 | Setup global error handling middleware | High | ✅ | feature/sprint0-B0.8-error-handling | Completed 2026-02-03 |
 | B0.9 | Create base response helpers | Medium | ✅ | feature/sprint0-B0.9-response-helpers | Completed 2026-02-03 |
-| B0.10 | Setup health check endpoint | Low | 🔄 | feature/sprint0-B0.10-health-check | |
+| B0.10 | Setup health check endpoint | Low | ✅ | feature/sprint0-B0.10-health-check | Completed 2026-02-04 |
 
 ---
 
@@ -136,7 +129,7 @@ From PLAN_DESARROLLO.md:
 
 - [x] Working development environment
 - [x] Database connection verified
-- [ ] Basic API health endpoint responding
+- [x] Basic API health endpoint responding
 - [ ] Frontend rendering base layout
 - [ ] CI pipeline for linting and tests
 
@@ -177,8 +170,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-03 | B0.9 | fce1d87 | Base response helpers |
 | 2026-02-03 | B0.6 | e2980d3 | ESLint 9 + Prettier setup |
 | 2026-02-04 | B0.7 | 7651313 | Docker Compose PostgreSQL + Redis |
+| 2026-02-04 | B0.10 | d118a25 | Health check endpoint with DB status |
 
 ---
 
 *Created: 2026-02-02*
-*Last Updated: 2026-02-03*
+*Last Updated: 2026-02-04*
