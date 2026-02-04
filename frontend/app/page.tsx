@@ -1,9 +1,11 @@
 export default function Home() {
   return (
-    <main style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>MemeStore</h1>
-      <p>Meme Products E-commerce Platform</p>
-      <p style={{ marginTop: "1rem", color: "#666" }}>
+    <main className="min-h-screen flex flex-col items-center justify-center p-8">
+      <h1 className="text-4xl font-bold mb-4">MemeStore</h1>
+      <p className="text-lg text-gray-600 dark:text-gray-400">
+        Meme Products E-commerce Platform
+      </p>
+      <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">
         Coming soon...
       </p>
     </main>
