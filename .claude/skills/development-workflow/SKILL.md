@@ -1,213 +1,116 @@
 ---
 name: development-workflow
-description: "Orchestrates the complete development workflow for each task in the project. Use this skill when starting work on a new task from PLAN_DESARROLLO.md, when you need to track progress on current sprint, or when onboarding team members to the development process. Invoke with: 'start task B0.1', 'show sprint progress', 'next task', 'workflow status', 'pause task', or 'resume task'."
+description: "Orchestrates the complete development workflow for each task. Invoke with: 'start task B0.1', 'show sprint progress', 'next task', 'pause task', or 'resume task'."
 ---
 
 # Development Workflow Skill
 
 ## Overview
 
-This skill orchestrates the complete development lifecycle for each task, integrating with the project memory system for automatic traceability and using specialized agents for quality assurance.
+This skill orchestrates the development lifecycle for each task, integrating with the project memory system and using specialized agents for quality assurance.
 
-## When to Use
+## Commands
 
 | Command | Action |
 |---------|--------|
 | `start task B0.1` | Begin working on a specific task |
 | `next task` | Start the next pending task in current sprint |
 | `pause task` | Save progress and pause current work |
-| `resume task` | Continue the paused task |
-| `complete task` | Mark current task as done |
-| `workflow status` | Show current task status |
+| `resume task` | Continue a paused task |
 | `show sprint progress` | View sprint completion status |
-| `init sprint 0` | Initialize a new sprint tracker |
+| `init sprint N` | Initialize a new sprint tracker |
 
 ---
 
-## State Management
+## Task Complexity
 
-### Sprint Tracker (Single Source of Truth)
-
-The file `docs/project_notes/sprint-X-tracker.md` (where X is the current sprint number) always reflects the current state:
-
-- **Active Task** section with step progress
-- **Task status** in the task tables
-- **Completion Log** for finished tasks
-
-**Always update the sprint tracker when:**
-- Starting a task → Update "Active Task" section and task status to 🔄
-- Changing steps → Update step in "Active Task" section
-- Pausing → Mark as Paused in "Active Task" section
-- Completing → Clear "Active Task", update task status to ✅, add to "Completion Log"
-
-### State Transitions
+**IMPORTANT:** Before starting any task, ask the user to classify its complexity:
 
 ```
-[No Task] --start--> [Active: Step 1]
-                          |
-                          v
-[Active: Step N] --next step--> [Active: Step N+1]
-                          |
-                          +--pause--> [Paused]
-                          |               |
-                          |    <--resume--+
-                          v
-[Active: Step 7] --complete--> [No Task] + [Last Completed updated]
+"¿Qué complejidad tiene esta tarea?"
+- Simple (instalar librería, config básica, copiar template)
+- Standard (nuevo endpoint, componente, feature pequeña)
+- Complex (feature completa, refactor significativo, integración externa)
 ```
+
+### Workflow by Complexity
+
+| Step | Simple | Standard | Complex |
+|------|--------|----------|---------|
+| 1. Setup | Branch only | Branch + Ticket | Branch + Ticket + ADR review |
+| 2. Develop | Direct implementation | TDD with `/develop-*` skill | TDD with `/develop-*` skill |
+| 3. Finalize | Update ticket + Commit | Validate + Update ticket + Commit | Validate + Update ticket + Commit |
+| 4. Review | PR (auto-merge allowed) | PR + `code-review-specialist` + Human review | PR + `code-review-specialist` + Human review |
+| 5. Complete | Merge + Update tracker | Merge + Update tracker | Merge + Update tracker |
+
+### Skills Usage by Complexity
+
+| Complexity | Planning Skill | Development Skill | code-review-specialist |
+|------------|----------------|-------------------|------------------------|
+| Simple | ❌ Skip | ❌ Direct implementation | ❌ Skip |
+| Standard | ✅ `/plan-backend-ticket` or `/plan-frontend-ticket` | ✅ `/develop-backend` or `/develop-frontend` | ✅ Required |
+| Complex | ✅ Required + ADR review | ✅ Required | ✅ Required |
 
 ---
 
-## Workflow Steps
+## Workflow Steps (5 Steps)
 
-### Step 1: Validate Task
-Before starting any task from `docs/PLAN_DESARROLLO.md`:
+### Step 1: Setup
 
 **Actions:**
-1. Check sprint tracker's "Active Task" section (must show "No active task")
-2. Read the task from PLAN_DESARROLLO.md
-3. Check `docs/project_notes/decisions.md` for related architectural decisions
-4. Check `docs/project_notes/bugs.md` for known issues in this area
-5. Verify dependencies are completed (check sprint tracker task status)
+1. Verify no active task in sprint tracker
+2. Check dependencies are completed
+3. Create feature branch: `feature/sprint<N>-<task-id>-<short-description>`
+4. **For Standard/Complex:** Generate ticket using appropriate skill
+5. **For Complex:** Review `decisions.md` for related architectural decisions
+6. Update sprint tracker: task status to 🔄
 
-**Update sprint tracker "Active Task" section:**
-```markdown
-## Active Task
-
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | B0.1 - Initialize Express + TypeScript project |
-| Branch | feature/sprint0-B0.1-express-setup |
-| Step | 1/8 (Validate) |
-| Ticket | [B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
+**Branch naming:**
 ```
-
-**Validation Checklist:**
-- [ ] No other task in progress
-- [ ] Task exists in PLAN_DESARROLLO.md
-- [ ] No blocking dependencies
-- [ ] No conflicting architectural decisions
-
-**Output:** Confirmation or list of blockers
+feature/sprint0-B0.1-express-setup
+feature/sprint1-F1.2-login-page
+```
 
 ---
 
-### Step 2: Create Branch
-Create a feature branch for the task.
+### Step 2: Develop
 
-**Naming Convention:**
-```
-feature/sprint<N>-<task-id>-<short-description>
-```
+**For Simple tasks:**
+- Implement directly following TDD principles
+- Write tests for the configuration/setup
 
-**Examples:**
-- `feature/sprint0-B0.1-express-setup`
-- `feature/sprint1-B1.2-auth-service`
+**For Standard/Complex tasks:**
+- Use `/develop-backend` or `/develop-frontend` skill
+- Follow strict TDD: Red → Green → Refactor
+- Update documentation during development (not after):
+  - New API endpoints → `api-spec.yaml`
+  - Schema changes → `data-model.md`
+  - New env variables → `.env.example`
 
-**Command:**
-```bash
-git checkout -b feature/sprint0-B0.1-express-setup
-```
-
-**Update sprint tracker:**
-- Add Branch field in "Active Task" section
-- Update Step to "2/8 (Branch)"
-
----
-
-### Step 3: Generate Ticket
-Generate a detailed work ticket with test specifications included.
-
-**Use the appropriate skill:**
-- Backend tasks (B*.*) → `/plan-backend-ticket <task-id>`
-- Frontend tasks (F*.*) → `/plan-frontend-ticket <task-id>`
-
-**Ticket MUST include:**
-- Clear acceptance criteria
-- Test specifications (TDD)
-- Files to create/modify
-- Dependencies and imports
-- Implementation steps
-- Definition of Done
-
-**Save Ticket:**
-- Save to `docs/tickets/<task-id>-<short-description>.md`
-- Example: `docs/tickets/B0.1-express-setup.md`
-
-**Update sprint tracker:**
-- Update "Active Task" section Step to "3/8 (Ticket)"
-- Update task status in table to 🔄 (In Progress)
-
----
-
-### Step 4: Develop (TDD)
-Implement following strict Test-Driven Development.
-
-**TDD Cycle:**
-```
-1. Write failing test → 2. Minimum code to pass → 3. Refactor → 4. Repeat
-```
-
-**Use the appropriate skill:**
-- Backend tasks → `/develop-backend`
-- Frontend tasks → `/develop-frontend`
-
-**Use specialized agents when needed:**
+**Agents to use when needed:**
 
 | Situation | Agent |
 |-----------|-------|
 | Database schema design | `database-architect` |
 | Complex backend logic | `backend-developer` |
 | React components | `frontend-developer` |
-| Code review needed | `code-review-specialist` |
-
-**Update sprint tracker:**
-- Update "Active Task" section Step to "4/8 (Develop)"
 
 ---
 
-### Step 5: Validate Code
-Run production validation before committing.
+### Step 3: Finalize
 
-**Use Agent:** `production-code-validator`
+**Before committing, verify:**
+1. Tests pass: `npm test`
+2. Lint passes: `npm run lint`
+3. Build succeeds: `npm run build`
+4. **For Standard/Complex:** Run `production-code-validator`
 
-**Checks:**
-- No console.log or debug statements
-- No TODO/FIXME comments
-- No hardcoded credentials or URLs
-- No placeholder code
-- Proper error handling
-- Type safety complete
+**Update ticket:**
+- Mark each acceptance criterion as `[x]` when verified
+- Mark each Definition of Done item as `[x]`
+- **Never commit without updating the ticket first**
 
-**If issues found:** Fix before proceeding.
-
-**Update sprint tracker:**
-- Update "Active Task" section Step to "5/8 (Validate)"
-
----
-
-### Step 6: Update Documentation (Conditional)
-Only update docs when there are changes to:
-
-| Change Type | Documentation to Update |
-|-------------|------------------------|
-| New API endpoints | `ai-specs/specs/api-spec.yaml` |
-| Schema changes | `ai-specs/specs/data-model.md` |
-| New env variables | `.env.example`, README |
-| Setup changes | `README.md`, Development Guide |
-
-**Use skill:** `/update-docs`
-
-**Update sprint tracker:**
-- Update "Active Task" section Step to "6/8 (Docs)"
-
----
-
-### Step 7: Generate Commit
-Create commit following conventional commits format.
-
-**Format:**
+**Create commit:**
 ```
 <type>(<scope>): <description>
 
@@ -216,25 +119,24 @@ Create commit following conventional commits format.
 Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 ```
 
-**Types:** feat, fix, docs, style, refactor, test, chore
-
-**Update sprint tracker:**
-- Update "Active Task" section Step to "7/8 (Commit)"
-- Add any bugs found to `docs/project_notes/bugs.md`
-- Add any decisions made to `docs/project_notes/decisions.md`
+Types: feat, fix, docs, style, refactor, test, chore
 
 ---
 
-### Step 8: PR & Merge
-Create pull request and merge to main branch.
+### Step 4: Review
 
-**Actions:**
-1. Push branch to remote
+**For Simple tasks:**
+- Push branch
+- Create PR
+- Auto-merge allowed if all checks pass
+
+**For Standard/Complex tasks:**
+1. Push branch
 2. Create PR with description
-3. Run `code-review-specialist` agent if complex changes
-4. Address any review comments
-5. Merge PR
-6. Delete feature branch
+3. Run `code-review-specialist` agent
+4. **Wait for human review** (this is a team project)
+5. Address review comments if any
+6. Get approval before merging
 
 **PR Description Template:**
 ```markdown
@@ -244,57 +146,35 @@ Create pull request and merge to main branch.
 ## Task
 - Task ID: [B0.1]
 - Sprint: [0]
+- Complexity: [Simple/Standard/Complex]
 
 ## Changes
 - [List of changes]
 
 ## Testing
 - [x] All tests passing
-- [x] Validated with production-code-validator
+- [x] Lint passing
+- [x] Build succeeds
+- [x] Validated with production-code-validator (if Standard/Complex)
 
 ## Checklist
+- [ ] Ticket acceptance criteria updated
 - [ ] Code reviewed
-- [ ] Documentation updated (if applicable)
 - [ ] Ready to merge
 ```
 
-**Update sprint tracker:**
-- Update "Active Task" section Step to "8/8 (PR & Merge)"
-
-**On Completion:**
-- Clear "Active Task" section (set to "No active task")
-- Update task status in table to ✅
-- Add entry to "Completion Log" with date, task ID, commit hash, and notes
-
 ---
 
-## Memory System Integration
+### Step 5: Complete
 
-### Files Updated Automatically
-
-| File | Updated When |
-|------|--------------|
-| `sprint-X-tracker.md` | Every step change, pause, resume, complete, task status |
-| `bugs.md` | Bug discovered and fixed during development |
-| `decisions.md` | Architectural decision made during implementation |
-| `key_facts.md` | New configuration or environment details added |
-| `docs/tickets/*.md` | Ticket generated (Step 3) |
-
-### Before Each Task
-```
-1. Read docs/project_notes/sprint-X-tracker.md → Verify no active task
-2. Read docs/project_notes/decisions.md → Check for relevant decisions
-3. Read docs/project_notes/bugs.md → Check for known issues
-4. Check sprint tracker task tables → Verify dependencies completed
-```
-
-### After Each Task
-```
-1. Update sprint tracker → Clear "Active Task", update task status to ✅
-2. Update sprint tracker → Add entry to "Completion Log"
-3. If bug fixed → Add to docs/project_notes/bugs.md
-4. If decision made → Add to docs/project_notes/decisions.md
-```
+**After PR is merged:**
+1. Delete feature branch (local and remote)
+2. Update sprint tracker:
+   - Mark task status as ✅
+   - Add entry to Completion Log with date, task ID, commit hash, and notes
+   - Update progress percentage
+3. Record any bugs fixed in `bugs.md`
+4. Record any decisions made in `decisions.md`
 
 ---
 
@@ -304,100 +184,74 @@ Create pull request and merge to main branch.
 
 When you need to stop work temporarily:
 
-1. Save current progress in sprint tracker "Active Task" section
-2. Add notes about where you left off
-3. Commit any work in progress (WIP commit if needed)
+1. Commit any work in progress (WIP commit if needed)
+2. Update sprint tracker with pause context:
 
-**Update sprint tracker "Active Task" section:**
 ```markdown
-**Status:** Paused
+## Paused Task
 
 | Field | Value |
 |-------|-------|
 | Task | B0.1 - Initialize Express + TypeScript project |
 | Branch | feature/sprint0-B0.1-express-setup |
-| Step | 4/8 (Develop) - Paused |
-| Ticket | [B0.1-express-setup.md](../tickets/B0.1-express-setup.md) |
-
-_Paused at: Completed test for user validation. Next: Implement password hashing._
+| Paused At | Step 2 (Develop) |
+| Context | Completed user validation tests. Next: implement password hashing |
 ```
 
 ### Resume Task
 
 When continuing paused work:
-
-1. Read sprint tracker "Active Task" section for context
-2. Review where you left off
-3. Continue from the saved step
-
-**Update sprint tracker:**
-- Change Status back to "In Progress"
-- Update step progress
+1. Read sprint tracker for context
+2. Checkout the branch
+3. **Continue with the same agent** that was working on it
+4. Clear the "Paused Task" section when resuming
 
 ---
 
 ## Sprint Tracking
 
+### Single Source of Truth
+
+The sprint tracker (`docs/project_notes/sprint-X-tracker.md`) contains:
+- Task status in tables (⏳ Pending, 🔄 In Progress, ✅ Completed, 🚫 Blocked)
+- Completion Log with all finished tasks
+- Paused Task section (only when a task is paused)
+
 ### Initialize New Sprint
 
-When starting a new sprint:
-
-1. Create sprint tracker from `references/sprint-init-template.md`
+1. Use template from `references/sprint-init-template.md`
 2. Save as `docs/project_notes/sprint-N-tracker.md`
-3. Populate with tasks from PLAN_DESARROLLO.md
-
-### View Current Sprint Progress
-
-Read sprint tracker to see:
-- ✅ Completed tasks
-- 🔄 In-progress tasks (check "Active Task" section)
-- ⏳ Pending tasks
-- 🚫 Blocked tasks
-
-The sprint tracker is the single source of truth for all task status.
+3. Populate with tasks from `PLAN_DESARROLLO.md`
 
 ---
 
 ## Agents Reference
 
-| Agent | Use When |
-|-------|----------|
-| `production-code-validator` | Before every commit (Step 5) |
-| `code-review-specialist` | Complex implementations, PR reviews |
+| Agent | When to Use |
+|-------|-------------|
+| `production-code-validator` | Before commit (Standard/Complex tasks) |
+| `code-review-specialist` | Before merge (Standard/Complex tasks) |
 | `database-architect` | Schema design, migrations, query optimization |
 | `backend-developer` | DDD patterns, service implementation |
 | `frontend-developer` | React components, state management |
 
 ---
 
-## Templates & References
+## Templates
 
 | Document | Purpose |
 |----------|---------|
-| `references/task-checklist.md` | Checklist for each task |
-| `references/sprint-tracker.md` | Sprint progress tracking |
-| `references/sprint-init-template.md` | How to initialize new sprints |
-| `references/ticket-template.md` | Detailed ticket format |
-| `references/pr-template.md` | Pull request process and template |
-| `references/workflow-example.md` | Complete step-by-step example |
-| `references/failure-handling.md` | Error handling and rollback guide |
-| `references/skills-integration.md` | How skills and agents connect |
-| `references/metrics-tracking.md` | Time and metrics tracking |
-| `references/automation-hooks.md` | Automation and hooks guide |
-
----
-
-## Examples
-
-See `references/workflow-example.md` for a complete step-by-step example.
+| `references/ticket-template.md` | Ticket format for Standard/Complex tasks |
+| `references/sprint-init-template.md` | Initialize new sprints |
+| `references/pr-template.md` | PR process and body template |
 
 ---
 
 ## Constraints
 
-- **One task at a time**: Never start a new task before completing current
-- **TDD mandatory**: No code without tests first
+- **One task at a time**: Never start a new task before completing or pausing current
+- **TDD mandatory**: All code needs tests
 - **Type safety**: All code fully typed (TypeScript)
 - **English only**: All technical artifacts in English
-- **Memory first**: Always check project_notes before changes
-- **Sprint tracker is source of truth**: Keep sprint-X-tracker.md updated at every step
+- **Ticket first**: Always update ticket before committing
+- **Human review**: Standard/Complex tasks require human PR review
