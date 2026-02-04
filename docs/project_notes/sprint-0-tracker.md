@@ -22,7 +22,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | B0.7 - Create Docker Compose for PostgreSQL + Redis |
+| Branch | feature/sprint0-B0.7-docker-compose |
+| Step | 8/8 (PR & Merge) |
+| Ticket | [B0.7-docker-compose.md](../tickets/B0.7-docker-compose.md) |
 
 ---
 
@@ -36,7 +43,7 @@ Blocked: 0 tasks
 | B0.4 | Configure Zod for env validation | High | ✅ | feature/sprint0-B0.4-zod-env | Completed 2026-02-03 |
 | B0.5 | Setup Jest for testing | High | ✅ | feature/sprint0-B0.5-jest-setup | Completed 2026-02-03 |
 | B0.6 | Configure ESLint + Prettier | Medium | ✅ | feature/sprint0-B0.6-eslint-prettier | Completed 2026-02-03 |
-| B0.7 | Create Docker Compose for PostgreSQL + Redis | High | ⏳ | | |
+| B0.7 | Create Docker Compose for PostgreSQL + Redis | High | 🔄 | feature/sprint0-B0.7-docker-compose | |
 | B0.8 | Setup global error handling middleware | High | ✅ | feature/sprint0-B0.8-error-handling | Completed 2026-02-03 |
 | B0.9 | Create base response helpers | Medium | ✅ | feature/sprint0-B0.9-response-helpers | Completed 2026-02-03 |
 | B0.10 | Setup health check endpoint | Low | ⏳ | | |

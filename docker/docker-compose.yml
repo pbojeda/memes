@@ -1,7 +1,7 @@
 # Docker Compose for Development Environment
-# Usage: docker-compose -f docker/docker-compose.yml up -d
-
-version: '3.8'
+# WARNING: This configuration contains hardcoded credentials for LOCAL DEVELOPMENT ONLY
+# DO NOT use this configuration in production environments
+# Usage: docker compose -f docker/docker-compose.yml up -d
 
 services:
   postgres:

@@ -20,7 +20,12 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "docker:up": "docker compose -f ../docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f ../docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f ../docker/docker-compose.yml logs -f",
+    "docker:ps": "docker compose -f ../docker/docker-compose.yml ps",
+    "docker:clean": "docker compose -f ../docker/docker-compose.yml down -v"
   },
   "keywords": [
     "ecommerce",
