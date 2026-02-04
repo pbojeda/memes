@@ -80,11 +80,63 @@ tags:
     description: External service webhooks
   - name: Upload
     description: File upload operations
+  - name: Health
+    description: API health check and monitoring
 
 security:
   - BearerAuth: []
 
 paths:
+  # ============================================
+  # HEALTH ENDPOINTS
+  # ============================================
+  /health:
+    get:
+      tags: [Health]
+      summary: Check API and services health status
+      description: |
+        Returns the health status of the API and its dependencies (database).
+        Used for container orchestration health probes, load balancer checks,
+        and monitoring systems.
+      operationId: getHealth
+      security: []
+      responses:
+        '200':
+          description: All services are healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                success: true
+                data:
+                  status: healthy
+                  version: "0.1.0"
+                  timestamp: "2026-02-04T10:30:00.000Z"
+                  services:
+                    database:
+                      status: healthy
+                      latency: 5
+        '503':
+          description: One or more services are unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                success: false
+                error:
+                  message: Service unhealthy
+                  code: SERVICE_UNAVAILABLE
+                data:
+                  status: unhealthy
+                  version: "0.1.0"
+                  timestamp: "2026-02-04T10:30:00.000Z"
+                  services:
+                    database:
+                      status: unhealthy
+                      error: Connection refused
+
   # ============================================
   # AUTH ENDPOINTS
   # ============================================
@@ -2448,6 +2500,56 @@ components:
           type: string
         en:
           type: string
+
+    # ============================================
+    # HEALTH SCHEMAS
+    # ============================================
+    HealthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            code:
+              type: string
+        data:
+          $ref: '#/components/schemas/HealthData'
+
+    HealthData:
+      type: object
+      required: [status, version, timestamp, services]
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+        version:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        services:
+          type: object
+          properties:
+            database:
+              $ref: '#/components/schemas/ServiceHealth'
+
+    ServiceHealth:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+        latency:
+          type: integer
+          description: Response time in milliseconds (only when healthy)
+        error:
+          type: string
+          description: Error message (only when unhealthy)
 
     # ============================================
     # AUTH SCHEMAS
