@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [█████████████] 65%
+Progress: [██████████████] 70%
 
-Completed: 13/20 tasks
+Completed: 14/20 tasks
 In Progress: 0 tasks
-Pending: 7 tasks
+Pending: 6 tasks
 Blocked: 0 tasks
 ```
 
@@ -50,7 +50,7 @@ Blocked: 0 tasks
 | F0.1 | Initialize Next.js 14 + TypeScript (App Router) | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Completed 2026-02-04 |
 | F0.2 | Configure Tailwind CSS | High | ✅ | feature/sprint0-F0.2-tailwind-setup | Completed 2026-02-04 |
 | F0.3 | Setup Shadcn/UI | High | ✅ | feature/sprint0-F0.3-shadcn-setup | Completed 2026-02-04 |
-| F0.4 | Configure Axios client | High | ⏳ | | |
+| F0.4 | Configure Axios client | High | ✅ | feature/sprint0-F0.4-axios-setup | Completed 2026-02-04 |
 | F0.5 | Setup Zustand stores (skeleton) | Medium | ⏳ | | |
 | F0.6 | Configure TanStack Query | Medium | ⏳ | | |
 | F0.7 | Setup Jest + React Testing Library | High | ⏳ | | |
