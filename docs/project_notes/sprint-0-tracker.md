@@ -22,7 +22,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | F0.1 - Initialize Next.js 14 + TypeScript |
+| Branch | feature/sprint0-F0.1-nextjs-setup |
+| Step | 1/5 (Create Next.js Project) |
+| Ticket | [F0.1-nextjs-setup.md](../tickets/F0.1-nextjs-setup.md) |
 
 ---
 
@@ -47,7 +54,7 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F0.1 | Initialize Next.js 14 + TypeScript (App Router) | High | ⏳ | | |
+| F0.1 | Initialize Next.js 14 + TypeScript (App Router) | High | 🔄 | feature/sprint0-F0.1-nextjs-setup | |
 | F0.2 | Configure Tailwind CSS | High | ⏳ | | |
 | F0.3 | Setup Shadcn/UI | High | ⏳ | | |
 | F0.4 | Configure Axios client | High | ⏳ | | |
