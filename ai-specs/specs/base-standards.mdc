@@ -6,14 +6,18 @@ alwaysApply: true
 ## 1. Core Principles
 
 - **Small tasks, one at a time**: Always work in baby steps, one at a time. Never go forward more than one step.
-- **Test-Driven Development**: Start with failing tests for any new functionality (TDD), according to the task details.
-- **Type Safety**: All code must be fully typed.
+- **Test-Driven Development**: Write tests before implementation code.
+  - For setup tasks (installing deps, config): Test the resulting configuration works
+  - For logic/services: Red-Green-Refactor cycle strictly
+  - For UI components: Test user interactions, not implementation details
+- **Type Safety**: All code must be fully typed. Never use `any` unless absolutely necessary.
 - **Clear Naming**: Use clear, descriptive names for all variables and functions.
 - **Incremental Changes**: Prefer incremental, focused changes over large, complex modifications.
 - **Question Assumptions**: Always question assumptions and inferences.
 - **Pattern Detection**: Detect and highlight repeated code patterns.
 
 ## 2. Language Standards
+
 - **English Only**: All technical artifacts must always use English, including:
     - Code (variables, functions, classes, comments, error messages, log messages)
     - Documentation (README, guides, API docs)
@@ -30,7 +34,7 @@ This project is a **monorepo** with separate directories for backend and fronten
 ```
 memes/
 ├── backend/     ← Node.js/Express backend (has its own package.json)
-├── frontend/    ← Next.js frontend (will have its own package.json)
+├── frontend/    ← Next.js frontend (has its own package.json)
 └── docs/        ← Documentation (no package.json)
 ```
 
@@ -49,26 +53,31 @@ memes/
 | Run backend tests | `cd backend && npm test` | `npm test` (from root) |
 | Install frontend dep | `cd frontend && npm install react` | `npm install react` (from root) |
 
-## 4. Specific Standards
+## 4. Pre-Commit Checklist
 
-For detailed standards and guidelines specific to different areas of the project, refer to:
+Before every commit, verify ALL of the following:
 
-- [Backend Standards](./backend-standards.mdc) - API development, database patterns, testing, security and backend best practices
-- [Frontend Standards](./frontend-standards.mdc) - React components, UI/UX guidelines, and frontend architecture
-- [Documentation Standards](./documentation-standards.mdc) - Technical documentation structure, formatting, and maintenance guidelines, including AI standards like this document
+1. **Tests pass**: `npm test`
+2. **Lint passes**: `npm run lint`
+3. **Build succeeds**: `npm run build`
+4. **Production validator passed**: Run `production-code-validator` agent for significant changes
+5. **Ticket updated**: Mark acceptance criteria as `[x]` for each completed item
 
-<!-- ## Workflow
-- Start complex tasks in Plan mode
-- Get plan approval before implementation
-- Break large changes into reviewable chunks
+**Never commit if any step fails.** Fix issues first.
 
-## Verification Requirements
-- Run `npm test` after code changes
-- Run `npm run typecheck` before marking complete
-- For API changes, test with `curl` or Postman
-- For UI changes, verify in browser before committing -->
+## 5. Quality Gates
 
-## 5. Project Memory System
+For significant code changes, use these specialized agents:
+
+| Agent | When to Use |
+|-------|-------------|
+| `production-code-validator` | Before every commit - checks for debug code, TODOs, hardcoded values |
+| `code-review-specialist` | For complex implementations or before merging PRs |
+| `database-architect` | Schema design, migrations, query optimization |
+| `backend-developer` | DDD patterns, service implementation |
+| `frontend-developer` | React components, state management |
+
+## 6. Project Memory System
 
 This project maintains institutional knowledge in `docs/project_notes/` for consistency across sessions.
 
@@ -103,6 +112,10 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Check `docs/project_notes/key_facts.md` for credentials, ports, URLs, service accounts
 - Prefer documented facts over assumptions
 
+**When completing task steps:**
+- Update ticket acceptance criteria with `[x]` as each item is verified
+- Never commit without updating the ticket first
+
 **When completing work on tasks:**
 - Update the sprint tracker's "Active Task" section during work
 - Add entry to "Completion Log" when task is merged
@@ -111,11 +124,27 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Update the appropriate memory file (bugs, decisions, key_facts)
 - Follow the established format and style (bullet lists, dates, concise entries)
 
-## 6. Related Documentation
+## 7. Anti-Patterns (Avoid)
+
+- **Not updating ticket acceptance criteria** `[x]` as each item is completed
+- **Installing dependencies in root directory** instead of `backend/` or `frontend/`
+- **Creating new files** when existing ones can be extended
+- **Adding features or "improvements"** not explicitly requested
+- **Using `any` type** in TypeScript without explicit justification
+
+## 8. Specific Standards
+
+For detailed standards and guidelines specific to different areas of the project, refer to:
+
+- [Backend Standards](./ai-specs/specs/backend-standards.mdc) - API development, database patterns, testing, security and backend best practices
+- [Frontend Standards](./ai-specs/specs/frontend-standards.mdc) - React components, UI/UX guidelines, and frontend architecture
+- [Documentation Standards](./ai-specs/specs/documentation-standards.mdc) - Technical documentation structure, formatting, and maintenance guidelines
+
+## 9. Related Documentation
 
 - [Architecture](./docs/ARQUITECTURA.md) - System architecture with diagrams
 - [Business Requirements](./docs/NEGOCIO.md) - Business context and requirements
 - [Data Model](./ai-specs/specs/data-model.md) - Database schema documentation
 - [API Specification](./ai-specs/specs/api-spec.yaml) - OpenAPI specification
 - [Use Cases](./docs/use-cases.md) - Use Cases
-- [Development Guide](./ai-specs/specs/development-guide.yaml) - Development Guide
+- [Development Guide](./ai-specs/specs/development-guide.md) - Development Guide
