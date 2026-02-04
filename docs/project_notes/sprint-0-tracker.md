@@ -22,7 +22,13 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | F0.2 - Configure Tailwind CSS |
+| Branch | feature/sprint0-F0.2-tailwind-setup |
+| Ticket | [F0.2-tailwind-setup.md](../tickets/F0.2-tailwind-setup.md) |
 
 ---
 
@@ -48,7 +54,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F0.1 | Initialize Next.js 14 + TypeScript (App Router) | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Completed 2026-02-04 |
-| F0.2 | Configure Tailwind CSS | High | ⏳ | | |
+| F0.2 | Configure Tailwind CSS | High | 🔄 | feature/sprint0-F0.2-tailwind-setup | |
 | F0.3 | Setup Shadcn/UI | High | ⏳ | | |
 | F0.4 | Configure Axios client | High | ⏳ | | |
 | F0.5 | Setup Zustand stores (skeleton) | Medium | ⏳ | | |
