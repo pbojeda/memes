@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████] 60%
+Progress: [█████████████] 65%
 
-Completed: 12/20 tasks
+Completed: 13/20 tasks
 In Progress: 0 tasks
-Pending: 8 tasks
+Pending: 7 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,13 +22,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | F0.3 - Setup Shadcn/UI |
-| Branch | feature/sprint0-F0.3-shadcn-setup |
-| Ticket | [F0.3-shadcn-setup.md](../tickets/F0.3-shadcn-setup.md) |
+**Status:** No active task
 
 ---
 
@@ -55,7 +49,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | F0.1 | Initialize Next.js 14 + TypeScript (App Router) | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Completed 2026-02-04 |
 | F0.2 | Configure Tailwind CSS | High | ✅ | feature/sprint0-F0.2-tailwind-setup | Completed 2026-02-04 |
-| F0.3 | Setup Shadcn/UI | High | 🔄 | feature/sprint0-F0.3-shadcn-setup | |
+| F0.3 | Setup Shadcn/UI | High | ✅ | feature/sprint0-F0.3-shadcn-setup | Completed 2026-02-04 |
 | F0.4 | Configure Axios client | High | ⏳ | | |
 | F0.5 | Setup Zustand stores (skeleton) | Medium | ⏳ | | |
 | F0.6 | Configure TanStack Query | Medium | ⏳ | | |
@@ -179,6 +173,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-04 | B0.10 | d118a25 | Health check endpoint with DB status |
 | 2026-02-04 | F0.1 | 2780f73 | Next.js 16 + TypeScript + App Router |
 | 2026-02-04 | F0.2 | 395f3d0 | Tailwind CSS v4 |
+| 2026-02-04 | F0.3 | 5e03a56 | Shadcn/UI + Button component |
 
 ---
 
