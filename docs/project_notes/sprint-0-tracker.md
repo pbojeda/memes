@@ -175,6 +175,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-04 | F0.2 | 395f3d0 | Tailwind CSS v4 |
 | 2026-02-04 | F0.3 | 5e03a56 | Shadcn/UI + Button component |
 | 2026-02-04 | F0.4 | 784b71f | Axios client with interceptors |
+| 2026-02-04 | F0.5 | 8eeb04f | Zustand + example store |
 
 ---
 
