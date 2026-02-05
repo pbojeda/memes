@@ -9,3 +9,43 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  TARGET
+  MANAGER
+  ADMIN
+  MARKETING
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+model User {
+  id                   String    @id @default(uuid())
+  email                String    @unique
+  passwordHash         String?   @map("password_hash")
+  firstName            String?   @map("first_name")
+  lastName             String?   @map("last_name")
+  phone                String?
+  role                 UserRole  @default(TARGET)
+  isActive             Boolean   @default(true) @map("is_active")
+  stripeCustomerId     String?   @unique @map("stripe_customer_id")
+  emailVerifiedAt      DateTime? @map("email_verified_at")
+  passwordResetToken   String?   @map("password_reset_token")
+  passwordResetExpires DateTime? @map("password_reset_expires")
+  lastLoginAt          DateTime? @map("last_login_at")
+  refreshTokenHash     String?   @map("refresh_token_hash")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  deletedAt            DateTime? @map("deleted_at")
+
+  @@index([email])
+  @@index([role])
+  @@index([stripeCustomerId])
+  @@map("users")
+}
