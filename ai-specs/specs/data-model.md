@@ -54,6 +54,11 @@ Stores all user types with role-based differentiation.
 | `role` | ENUM | NOT NULL, DEFAULT 'TARGET' | User role (TARGET, MANAGER, ADMIN, MARKETING) |
 | `is_active` | BOOLEAN | NOT NULL, DEFAULT true | Account status |
 | `stripe_customer_id` | VARCHAR(255) | NULL, UNIQUE | Stripe customer reference |
+| `email_verified_at` | TIMESTAMP | NULL | Email verification timestamp |
+| `password_reset_token` | VARCHAR(255) | NULL | Hashed password reset token |
+| `password_reset_expires` | TIMESTAMP | NULL | Password reset token expiration |
+| `last_login_at` | TIMESTAMP | NULL | Last successful login timestamp |
+| `refresh_token_hash` | VARCHAR(255) | NULL | Hashed refresh token (single session) |
 | `created_at` | TIMESTAMP | NOT NULL, DEFAULT now() | Creation timestamp |
 | `updated_at` | TIMESTAMP | NOT NULL | Last update timestamp |
 | `deleted_at` | TIMESTAMP | NULL | Soft delete timestamp |
@@ -408,6 +413,11 @@ erDiagram
         enum role
         boolean is_active
         string stripe_customer_id UK
+        timestamp email_verified_at
+        string password_reset_token
+        timestamp password_reset_expires
+        timestamp last_login_at
+        string refresh_token_hash
         timestamp deleted_at
     }
 
@@ -594,10 +604,15 @@ model User {
   phone            String?
   role             UserRole  @default(TARGET)
   isActive         Boolean   @default(true) @map("is_active")
-  stripeCustomerId String?   @unique @map("stripe_customer_id")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  deletedAt        DateTime? @map("deleted_at")
+  stripeCustomerId     String?   @unique @map("stripe_customer_id")
+  emailVerifiedAt      DateTime? @map("email_verified_at")
+  passwordResetToken   String?   @map("password_reset_token")
+  passwordResetExpires DateTime? @map("password_reset_expires")
+  lastLoginAt          DateTime? @map("last_login_at")
+  refreshTokenHash     String?   @map("refresh_token_hash")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  deletedAt            DateTime? @map("deleted_at")
 
   // Relations
   addresses        Address[]

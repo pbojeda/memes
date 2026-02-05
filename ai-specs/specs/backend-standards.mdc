@@ -837,6 +837,20 @@ app.use(cors(corsOptions));
 
 ## Database Patterns
 
+### Data Model Documentation
+
+Before modifying any Prisma model or creating migrations:
+1. **Read** `ai-specs/specs/data-model.md` to understand existing design decisions
+2. Verify proposed changes align with the documented schema design
+3. After completing changes, **update** `data-model.md` to reflect:
+   - New or modified entities
+   - New fields with types and constraints
+   - New indexes
+   - Updated relationships
+   - New design decisions (add to section 1)
+
+**Important:** Do NOT save changes to `data-model.md` until the user has reviewed and approved them. Show the proposed changes and wait for explicit approval before writing the file.
+
 ### Prisma Schema
 
 - **Single Source of Truth**: `prisma/schema.prisma` is the single source of truth for database structure
