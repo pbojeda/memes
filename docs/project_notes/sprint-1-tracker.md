@@ -150,7 +150,7 @@ _Key learnings, issues, or observations:_
 
 | Date | Task | Commit | Notes |
 |------|------|--------|-------|
-| 2026-02-05 | B1.1 | 7d34bbd | User model with auth fields |
+| 2026-02-05 | B1.1 | 950e528 | User model with auth fields + workflow restored |
 
 ---
 
