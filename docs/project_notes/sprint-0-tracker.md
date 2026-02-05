@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [███████████████] 75%
+Progress: [██████████████████] 90%
 
-Completed: 15/20 tasks
+Completed: 18/20 tasks
 In Progress: 0 tasks
-Pending: 5 tasks
+Pending: 2 tasks
 Blocked: 0 tasks
 ```
 
@@ -52,9 +52,9 @@ Blocked: 0 tasks
 | F0.3 | Setup Shadcn/UI | High | ✅ | feature/sprint0-F0.3-shadcn-setup | Completed 2026-02-04 |
 | F0.4 | Configure Axios client | High | ✅ | feature/sprint0-F0.4-axios-setup | Completed 2026-02-04 |
 | F0.5 | Setup Zustand stores (skeleton) | Medium | ✅ | feature/sprint0-F0.5-zustand-setup | Completed 2026-02-04 |
-| F0.6 | Configure TanStack Query | Medium | ⏳ | | |
-| F0.7 | Setup Jest + React Testing Library | High | ⏳ | | |
-| F0.8 | Configure Playwright | Medium | ⏳ | | |
+| F0.6 | Configure TanStack Query | Medium | ✅ | feature/sprint0-F0.6-tanstack-query | Completed 2026-02-05 |
+| F0.7 | Setup Jest + React Testing Library | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Included in F0.1 |
+| F0.8 | Configure Playwright | Medium | ✅ | feature/sprint0-F0.8-playwright | Completed 2026-02-05 |
 | F0.9 | Create base layout components (Header, Footer) | Medium | ⏳ | | |
 | F0.10 | Setup ESLint + Prettier | Medium | ⏳ | | |
 
@@ -176,8 +176,11 @@ _Key learnings, issues, or observations:_
 | 2026-02-04 | F0.3 | 5e03a56 | Shadcn/UI + Button component |
 | 2026-02-04 | F0.4 | 784b71f | Axios client with interceptors |
 | 2026-02-04 | F0.5 | 8eeb04f | Zustand + example store |
+| 2026-02-05 | F0.6 | ce366a5 | TanStack Query + QueryProvider |
+| 2026-02-05 | F0.7 | - | Already included in F0.1 |
+| 2026-02-05 | F0.8 | - | Playwright E2E testing |
 
 ---
 
 *Created: 2026-02-02*
-*Last Updated: 2026-02-04*
+*Last Updated: 2026-02-05*
