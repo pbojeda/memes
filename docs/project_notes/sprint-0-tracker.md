@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████████████████] 90%
+Progress: [███████████████████] 95%
 
-Completed: 18/20 tasks
+Completed: 19/20 tasks
 In Progress: 0 tasks
-Pending: 2 tasks
+Pending: 1 task
 Blocked: 0 tasks
 ```
 
@@ -55,7 +55,7 @@ Blocked: 0 tasks
 | F0.6 | Configure TanStack Query | Medium | ✅ | feature/sprint0-F0.6-tanstack-query | Completed 2026-02-05 |
 | F0.7 | Setup Jest + React Testing Library | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Included in F0.1 |
 | F0.8 | Configure Playwright | Medium | ✅ | feature/sprint0-F0.8-playwright | Completed 2026-02-05 |
-| F0.9 | Create base layout components (Header, Footer) | Medium | ⏳ | | |
+| F0.9 | Create base layout components (Header, Footer) | Medium | ✅ | feature/sprint0-F0.9-layout-components | Completed 2026-02-05 |
 | F0.10 | Setup ESLint + Prettier | Medium | ⏳ | | |
 
 ---
@@ -130,7 +130,7 @@ From PLAN_DESARROLLO.md:
 - [x] Working development environment
 - [x] Database connection verified
 - [x] Basic API health endpoint responding
-- [ ] Frontend rendering base layout
+- [x] Frontend rendering base layout
 - [ ] CI pipeline for linting and tests
 
 ---
@@ -178,7 +178,8 @@ _Key learnings, issues, or observations:_
 | 2026-02-04 | F0.5 | 8eeb04f | Zustand + example store |
 | 2026-02-05 | F0.6 | ce366a5 | TanStack Query + QueryProvider |
 | 2026-02-05 | F0.7 | - | Already included in F0.1 |
-| 2026-02-05 | F0.8 | - | Playwright E2E testing |
+| 2026-02-05 | F0.8 | e3a17b9 | Playwright E2E testing |
+| 2026-02-05 | F0.9 | - | Header + Footer layout components |
 
 ---
 
