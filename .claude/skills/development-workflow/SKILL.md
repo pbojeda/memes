@@ -117,19 +117,20 @@ git checkout -b feature/sprint0-B0.1-express-setup
 ---
 
 ### Step 3: Generate Ticket
-Generate a detailed work ticket with test specifications included.
+Generate a detailed work ticket following the template.
 
-**Use the appropriate skill:**
-- Backend tasks (B*.*) → `/plan-backend-ticket <task-id>`
-- Frontend tasks (F*.*) → `/plan-frontend-ticket <task-id>`
+**For backend tasks (B*.*)**:
+- Adopt the role of `.claude/agents/backend-developer.md`
+- Apply DDD and backend best practices from `/ai-specs/specs`
 
-**Ticket MUST include:**
-- Clear acceptance criteria
-- Test specifications (TDD)
-- Files to create/modify
-- Dependencies and imports
-- Implementation steps
-- Definition of Done
+**For frontend tasks (F*.*)**:
+- Adopt the role of `.claude/agents/frontend-developer.md`
+- Apply React/Next.js and frontend best practices from `/ai-specs/specs`
+
+**Rules:**
+- Do not write code yet; provide only the plan
+- The ticket must be detailed enough for autonomous implementation
+- Use template from `references/ticket-template.md`
 
 **Save Ticket:**
 - Save to `docs/tickets/<task-id>-<short-description>.md`
@@ -138,6 +139,8 @@ Generate a detailed work ticket with test specifications included.
 **Update sprint tracker:**
 - Update "Active Task" section Step to "3/8 (Ticket)"
 - Update task status in table to 🔄 (In Progress)
+
+**⏸️ WAIT FOR USER REVIEW before proceeding to Step 4.**
 
 ---
 
@@ -149,18 +152,17 @@ Implement following strict Test-Driven Development.
 1. Write failing test → 2. Minimum code to pass → 3. Refactor → 4. Repeat
 ```
 
-**Use the appropriate skill:**
-- Backend tasks → `/develop-backend`
-- Frontend tasks → `/develop-frontend`
+**IMPORTANT: Use the Task tool with the appropriate agent:**
+- Backend tasks (B*.*) → Use `backend-developer` agent
+- Frontend tasks (F*.*) → Use `frontend-developer` agent
 
-**Use specialized agents when needed:**
+**Additional specialized agents:**
 
 | Situation | Agent |
 |-----------|-------|
 | Database schema design | `database-architect` |
-| Complex backend logic | `backend-developer` |
-| React components | `frontend-developer` |
-| Code review needed | `code-review-specialist` |
+| Code review (Standard/Complex tasks) | `code-review-specialist` |
+| Production validation | `production-code-validator` |
 
 **Update sprint tracker:**
 - Update "Active Task" section Step to "4/8 (Develop)"
@@ -374,11 +376,11 @@ The sprint tracker is the single source of truth for all task status.
 
 | Document | Purpose |
 |----------|---------|
-| `references/task-checklist.md` | Checklist for each task |
-| `references/sprint-tracker.md` | Sprint progress tracking |
+| `references/ticket-template.md` | Template for creating task tickets |
 | `references/sprint-init-template.md` | How to initialize new sprints |
-| `references/ticket-template.md` | Detailed ticket format |
+| `references/sprint-tracker.md` | Sprint progress tracking format |
 | `references/pr-template.md` | Pull request process and template |
+| `references/task-checklist.md` | Checklist for each task |
 | `references/workflow-example.md` | Complete step-by-step example |
 | `references/failure-handling.md` | Error handling and rollback guide |
 | `references/skills-integration.md` | How skills and agents connect |
@@ -401,3 +403,6 @@ See `references/workflow-example.md` for a complete step-by-step example.
 - **English only**: All technical artifacts in English
 - **Memory first**: Always check project_notes before changes
 - **Sprint tracker is source of truth**: Keep sprint-X-tracker.md updated at every step
+- **User review required**: ALWAYS wait for user review after generating tickets (Step 3) before proceeding to development (Step 4)
+- **Adopt correct role**: Backend tasks adopt `backend-developer` role, frontend tasks adopt `frontend-developer` role
+- **Use ticket template**: Always use `references/ticket-template.md` for local tickets
