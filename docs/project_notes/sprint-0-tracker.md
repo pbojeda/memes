@@ -3,18 +3,18 @@
 **Goal:** Establish project foundation and development environment.
 **Start Date:** 2026-02-02
 **End Date:** 2026-02-16
-**Status:** In Progress
+**Status:** Completed
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [███████████████████] 95%
+Progress: [████████████████████] 100%
 
-Completed: 19/20 tasks
+Completed: 20/20 tasks
 In Progress: 0 tasks
-Pending: 1 task
+Pending: 0 tasks
 Blocked: 0 tasks
 ```
 
@@ -56,7 +56,7 @@ Blocked: 0 tasks
 | F0.7 | Setup Jest + React Testing Library | High | ✅ | feature/sprint0-F0.1-nextjs-setup | Included in F0.1 |
 | F0.8 | Configure Playwright | Medium | ✅ | feature/sprint0-F0.8-playwright | Completed 2026-02-05 |
 | F0.9 | Create base layout components (Header, Footer) | Medium | ✅ | feature/sprint0-F0.9-layout-components | Completed 2026-02-05 |
-| F0.10 | Setup ESLint + Prettier | Medium | ⏳ | | |
+| F0.10 | Setup ESLint + Prettier | Medium | ✅ | feature/sprint0-F0.10-eslint-prettier | Completed 2026-02-05 |
 
 ---
 
@@ -179,7 +179,8 @@ _Key learnings, issues, or observations:_
 | 2026-02-05 | F0.6 | ce366a5 | TanStack Query + QueryProvider |
 | 2026-02-05 | F0.7 | - | Already included in F0.1 |
 | 2026-02-05 | F0.8 | e3a17b9 | Playwright E2E testing |
-| 2026-02-05 | F0.9 | - | Header + Footer layout components |
+| 2026-02-05 | F0.9 | fe13205 | Header + Footer layout components |
+| 2026-02-05 | F0.10 | - | ESLint 9 + Prettier |
 
 ---
 

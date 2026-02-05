@@ -39,11 +39,15 @@ describe("Header", () => {
 
     // Open menu
     fireEvent.click(menuButton);
-    expect(screen.getByRole("button", { name: /close menu/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /close menu/i })
+    ).toBeInTheDocument();
 
     // Close menu
     fireEvent.click(menuButton);
-    expect(screen.getByRole("button", { name: /open menu/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /open menu/i })
+    ).toBeInTheDocument();
   });
 
   it("should have correct href for logo", () => {

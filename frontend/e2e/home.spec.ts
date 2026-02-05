@@ -3,7 +3,9 @@ import { test, expect } from "@playwright/test";
 test.describe("Homepage", () => {
   test("should display the main heading", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "MemeStore" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "MemeStore" })
+    ).toBeVisible();
   });
 
   test("should display the tagline", async ({ page }) => {
@@ -15,8 +17,12 @@ test.describe("Homepage", () => {
 
   test("should have Get Started and Learn More buttons", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("button", { name: "Get Started" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Learn More" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Get Started" })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Learn More" })
+    ).toBeVisible();
   });
 });
 

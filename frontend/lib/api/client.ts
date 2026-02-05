@@ -38,12 +38,7 @@ function createApiClient(): AxiosInstance {
     (error: AxiosError<ApiError>) => {
       if (error.response?.data?.error) {
         const { code, message, details } = error.response.data.error;
-        throw new ApiException(
-          code,
-          message,
-          error.response.status,
-          details
-        );
+        throw new ApiException(code, message, error.response.status, details);
       }
 
       // Network error or no response

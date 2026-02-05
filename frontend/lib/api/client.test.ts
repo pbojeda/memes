@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient, API_BASE_URL } from "./client";
 import { ApiException } from "./types";
 
