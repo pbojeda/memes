@@ -124,7 +124,18 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Update the appropriate memory file (bugs, decisions, key_facts)
 - Follow the established format and style (bullet lists, dates, concise entries)
 
-## 7. Anti-Patterns (Avoid)
+## 7. Post-Compact Protocol
+
+After any context compaction (`/compact` or automatic), BEFORE continuing work:
+
+1. **Read the active skill file** (`.claude/skills/*/SKILL.md`) to restore workflow knowledge
+2. **Read sprint tracker** (`docs/project_notes/sprint-X-tracker.md`) to verify current step and pending checkpoints
+3. **Do NOT proceed past any 🛑 checkpoint** without explicit user confirmation
+4. **If "Active Task" shows a pending checkpoint**, ask user for approval before continuing
+
+This protocol exists because compaction summaries capture *what* you were doing but lose *how* to do it correctly. The skill files define the "how".
+
+## 8. Anti-Patterns (Avoid)
 
 - **Not updating ticket acceptance criteria** `[x]` as each item is completed
 - **Installing dependencies in root directory** instead of `backend/` or `frontend/`
@@ -132,7 +143,7 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - **Adding features or "improvements"** not explicitly requested
 - **Using `any` type** in TypeScript without explicit justification
 
-## 8. Specific Standards
+## 9. Specific Standards
 
 For detailed standards and guidelines specific to different areas of the project, refer to:
 
@@ -140,7 +151,7 @@ For detailed standards and guidelines specific to different areas of the project
 - [Frontend Standards](./ai-specs/specs/frontend-standards.mdc) - React components, UI/UX guidelines, and frontend architecture
 - [Documentation Standards](./ai-specs/specs/documentation-standards.mdc) - Technical documentation structure, formatting, and maintenance guidelines
 
-## 9. Related Documentation
+## 10. Related Documentation
 
 - [Architecture](./docs/ARQUITECTURA.md) - System architecture with diagrams
 - [Business Requirements](./docs/NEGOCIO.md) - Business context and requirements

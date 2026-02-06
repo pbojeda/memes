@@ -22,7 +22,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | B1.9 - Implement role-based access control |
+| Branch | feature/sprint1-B1.9-rbac |
+| Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
+| Ticket | [B1.9-rbac.md](../tickets/B1.9-rbac.md) |
 
 ---
 
@@ -38,7 +45,7 @@ Blocked: 0 tasks
 | B1.6 | Create auth controller and routes | High | ✅ | feature/sprint1-B1.6-auth-controller | Completed 2026-02-06 |
 | B1.7 | Implement password reset flow | Medium | ⏳ | | |
 | B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Medium | ⏳ | | |
-| B1.9 | Implement role-based access control | High | ⏳ | | |
+| B1.9 | Implement role-based access control | High | 🔄 | feature/sprint1-B1.9-rbac | |
 | B1.10 | Write auth integration tests | High | ⏳ | | |
 
 ---

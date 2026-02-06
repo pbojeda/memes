@@ -151,10 +151,17 @@ When presenting complexity options, remind the user they can select "Chat about 
 
 **Update sprint tracker:**
 - Update task status in table to 🔄 (In Progress)
+- Update Active Task step to: `1/5 (Setup) - 🛑 Awaiting ticket approval`
 
-**⏸️ WAIT FOR USER REVIEW before proceeding to Step 2.**
+---
 
-Ask: "Please review the ticket. Reply 'approved' to proceed with implementation."
+### 🛑 CHECKPOINT: TICKET APPROVAL REQUIRED
+
+**Do NOT proceed to Step 2 until user explicitly approves.**
+
+Ask: "Please review the ticket at `docs/tickets/[task-id].md`. Reply 'approved' to proceed with implementation."
+
+If user requests changes, update the ticket and ask again.
 
 ---
 
@@ -214,7 +221,15 @@ Ask: "Please review the ticket. Reply 'approved' to proceed with implementation.
 - Files modified (with what changed)
 - Key points to review (security, breaking changes, dependencies, etc.)
 
-**⏸️ WAIT FOR USER ACKNOWLEDGMENT before creating commit.**
+---
+
+### 🛑 CHECKPOINT: COMMIT APPROVAL REQUIRED
+
+**Do NOT create commit until user acknowledges the changes.**
+
+Ask: "Ready to commit. Reply 'yes' to proceed or request changes."
+
+---
 
 **Create commit:**
 ```
