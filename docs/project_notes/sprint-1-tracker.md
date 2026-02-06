@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██                  ] 10%
+Progress: [████                ] 10%
 
-Completed: 1/20 tasks
+Completed: 2/20 tasks
 In Progress: 0 tasks
-Pending: 19 tasks
+Pending: 18 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,16 +22,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** Paused
-**Task:** B1.2 - Implement auth service (register, login, logout)
-**Branch:** feature/sprint1-B1.2-auth-service
-**Step:** 4 - Review (pending commit of password fix + tech debt doc)
-**Complexity:** Standard
-**Context:**
-- PR #22 creado y pushed
-- Code review completado
-- Pendiente: commit de password strength fix + tech-debt.md
-- Cambios locales sin commit: authValidator.ts, tests, tech-debt.md
+**Status:** No active task
 
 ---
 
@@ -40,7 +31,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | B1.1 | Create User model and migration | High | ✅ | feature/sprint1-B1.1-user-model | Completed 2026-02-05 |
-| B1.2 | Implement auth service (register, login, logout) | High | 🔄 | feature/sprint1-B1.2-auth-service | |
+| B1.2 | Implement auth service (register, login, logout) | High | ✅ | feature/sprint1-B1.2-auth-service | Completed 2026-02-06 |
 | B1.3 | Implement JWT token service | High | ⏳ | | |
 | B1.4 | Create auth middleware | High | ⏳ | | |
 | B1.5 | Implement refresh token rotation | High | ⏳ | | |
@@ -160,8 +151,9 @@ _Key learnings, issues, or observations:_
 | Date | Task | Commit | Notes |
 |------|------|--------|-------|
 | 2026-02-05 | B1.1 | 950e528 | User model with auth fields + workflow restored |
+| 2026-02-06 | B1.2 | 91b3343 | Auth service (register, login, logout) + password policy + tech-debt.md |
 
 ---
 
 *Created: 2026-02-05*
-*Last Updated: 2026-02-05*
+*Last Updated: 2026-02-06*
