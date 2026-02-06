@@ -1,11 +1,13 @@
 import bcrypt from 'bcrypt';
-import { register, login, logout } from './authService';
+import { register, login, logout, requestPasswordReset, resetPassword } from './authService';
 import prisma from '../../lib/prisma';
 import {
   InvalidCredentialsError,
   EmailAlreadyExistsError,
   UserNotActiveError,
   UserNotFoundError,
+  PasswordResetTokenInvalidError,
+  PasswordResetTokenExpiredError,
 } from '../../domain/errors/AuthError';
 import { UserRole } from '../../generated/prisma/enums';
 
@@ -23,6 +25,12 @@ jest.mock('../../lib/prisma', () => ({
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
   compare: jest.fn(),
+}));
+
+jest.mock('crypto', () => ({
+  randomBytes: jest.fn(() => ({
+    toString: jest.fn(() => 'a'.repeat(64)),
+  })),
 }));
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
@@ -331,6 +339,209 @@ describe('authService', () => {
       });
 
       await expect(logout(userId)).resolves.not.toThrow();
+    });
+  });
+
+  describe('requestPasswordReset', () => {
+    const mockExistingUser = {
+      id: 'uuid-123',
+      email: 'test@example.com',
+      passwordHash: 'hashed_password',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: null,
+      role: 'TARGET' as UserRole,
+      isActive: true,
+      stripeCustomerId: null,
+      emailVerifiedAt: null,
+      passwordResetToken: null,
+      passwordResetExpires: null,
+      lastLoginAt: null,
+      refreshTokenHash: null,
+      createdAt: new Date('2026-02-05'),
+      updatedAt: new Date('2026-02-05'),
+      deletedAt: null,
+    };
+
+    it('should generate and store hashed token when user exists', async () => {
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(mockExistingUser);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('hashed_reset_token');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue({
+        ...mockExistingUser,
+        passwordResetToken: 'hashed_reset_token',
+        passwordResetExpires: new Date(),
+      });
+
+      await requestPasswordReset('test@example.com');
+
+      expect(mockBcrypt.hash).toHaveBeenCalledWith('a'.repeat(64), 10);
+      expect(mockPrisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'uuid-123' },
+        data: {
+          passwordResetToken: 'hashed_reset_token',
+          passwordResetExpires: expect.any(Date),
+        },
+      });
+    });
+
+    it('should not throw when user does not exist (security)', async () => {
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(requestPasswordReset('nonexistent@example.com')).resolves.not.toThrow();
+      expect(mockPrisma.user.update).not.toHaveBeenCalled();
+    });
+
+    it('should normalize email to lowercase', async () => {
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(mockExistingUser);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('hashed_reset_token');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue(mockExistingUser);
+
+      await requestPasswordReset('TEST@EXAMPLE.COM');
+
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+        where: { email: 'test@example.com' },
+      });
+    });
+
+    it('should set expiration to 1 hour from now', async () => {
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(mockExistingUser);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('hashed_reset_token');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue(mockExistingUser);
+
+      const beforeCall = Date.now();
+      await requestPasswordReset('test@example.com');
+      const afterCall = Date.now();
+
+      const updateCall = (mockPrisma.user.update as jest.Mock).mock.calls[0][0];
+      const expiresAt = updateCall.data.passwordResetExpires.getTime();
+      const oneHourMs = 60 * 60 * 1000;
+
+      expect(expiresAt).toBeGreaterThanOrEqual(beforeCall + oneHourMs);
+      expect(expiresAt).toBeLessThanOrEqual(afterCall + oneHourMs);
+    });
+
+    it('should return the plain token for logging/email', async () => {
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(mockExistingUser);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('hashed_reset_token');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue(mockExistingUser);
+
+      const result = await requestPasswordReset('test@example.com');
+
+      expect(result).toBe('a'.repeat(64));
+    });
+
+    it('should return null when user does not exist', async () => {
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+
+      const result = await requestPasswordReset('nonexistent@example.com');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('resetPassword', () => {
+    const validToken = 'a'.repeat(64);
+    const newPassword = 'NewPassword123!';
+
+    const mockUserWithResetToken = {
+      id: 'uuid-123',
+      email: 'test@example.com',
+      passwordHash: 'old_hashed_password',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: null,
+      role: 'TARGET' as UserRole,
+      isActive: true,
+      stripeCustomerId: null,
+      emailVerifiedAt: null,
+      passwordResetToken: 'hashed_reset_token',
+      passwordResetExpires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
+      lastLoginAt: null,
+      refreshTokenHash: null,
+      createdAt: new Date('2026-02-05'),
+      updatedAt: new Date('2026-02-05'),
+      deletedAt: null,
+    };
+
+    beforeEach(() => {
+      (mockPrisma.user.findFirst as jest.Mock) = jest.fn();
+    });
+
+    it('should update password when token is valid', async () => {
+      (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(mockUserWithResetToken);
+      (mockBcrypt.compare as jest.Mock).mockResolvedValue(true);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('new_hashed_password');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue({
+        ...mockUserWithResetToken,
+        passwordHash: 'new_hashed_password',
+        passwordResetToken: null,
+        passwordResetExpires: null,
+      });
+
+      await resetPassword(validToken, newPassword);
+
+      expect(mockPrisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'uuid-123' },
+        data: {
+          passwordHash: 'new_hashed_password',
+          passwordResetToken: null,
+          passwordResetExpires: null,
+        },
+      });
+    });
+
+    it('should throw PasswordResetTokenInvalidError when no user found with reset token', async () => {
+      (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(null);
+
+      await expect(resetPassword(validToken, newPassword)).rejects.toThrow(
+        PasswordResetTokenInvalidError
+      );
+    });
+
+    it('should throw PasswordResetTokenInvalidError when token does not match', async () => {
+      (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(mockUserWithResetToken);
+      (mockBcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+      await expect(resetPassword(validToken, newPassword)).rejects.toThrow(
+        PasswordResetTokenInvalidError
+      );
+    });
+
+    it('should throw PasswordResetTokenExpiredError when token is expired', async () => {
+      const expiredUser = {
+        ...mockUserWithResetToken,
+        passwordResetExpires: new Date(Date.now() - 1000), // 1 second ago
+      };
+      (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(expiredUser);
+      (mockBcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await expect(resetPassword(validToken, newPassword)).rejects.toThrow(
+        PasswordResetTokenExpiredError
+      );
+    });
+
+    it('should hash new password with cost factor 12', async () => {
+      (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(mockUserWithResetToken);
+      (mockBcrypt.compare as jest.Mock).mockResolvedValue(true);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('new_hashed_password');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue(mockUserWithResetToken);
+
+      await resetPassword(validToken, newPassword);
+
+      expect(mockBcrypt.hash).toHaveBeenCalledWith(newPassword, 12);
+    });
+
+    it('should clear reset token fields after successful reset', async () => {
+      (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(mockUserWithResetToken);
+      (mockBcrypt.compare as jest.Mock).mockResolvedValue(true);
+      (mockBcrypt.hash as jest.Mock).mockResolvedValue('new_hashed_password');
+      (mockPrisma.user.update as jest.Mock).mockResolvedValue(mockUserWithResetToken);
+
+      await resetPassword(validToken, newPassword);
+
+      const updateCall = (mockPrisma.user.update as jest.Mock).mock.calls[0][0];
+      expect(updateCall.data.passwordResetToken).toBeNull();
+      expect(updateCall.data.passwordResetExpires).toBeNull();
     });
   });
 });

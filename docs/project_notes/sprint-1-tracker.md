@@ -22,14 +22,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** 🛑 Awaiting Commit Approval
 
 | Field | Value |
 |-------|-------|
-| Task | B1.9 - Implement role-based access control |
-| Branch | feature/sprint1-B1.9-rbac |
-| Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
-| Ticket | [B1.9-rbac.md](../tickets/B1.9-rbac.md) |
+| Task | B1.7 - Implement password reset flow |
+| Branch | feature/sprint1-B1.7-password-reset |
+| Step | 3/5 (Validate) - CHECKPOINT |
+| Ticket | [B1.7-password-reset.md](../tickets/B1.7-password-reset.md) |
 
 ---
 
@@ -43,9 +43,9 @@ Blocked: 0 tasks
 | B1.4 | Create auth middleware | High | ✅ | feature/sprint1-B1.4-auth-middleware | Completed 2026-02-06 |
 | B1.5 | Implement refresh token rotation | High | ✅ | feature/sprint1-B1.3-jwt-token-service | Done in B1.3 |
 | B1.6 | Create auth controller and routes | High | ✅ | feature/sprint1-B1.6-auth-controller | Completed 2026-02-06 |
-| B1.7 | Implement password reset flow | Medium | ⏳ | | |
+| B1.7 | Implement password reset flow | Medium | 🔄 | feature/sprint1-B1.7-password-reset | |
 | B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Medium | ⏳ | | |
-| B1.9 | Implement role-based access control | High | 🔄 | feature/sprint1-B1.9-rbac | |
+| B1.9 | Implement role-based access control | High | ⏳ | | |
 | B1.10 | Write auth integration tests | High | ⏳ | | |
 
 ---

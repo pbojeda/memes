@@ -245,10 +245,14 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /auth/password/forgot:
+  /auth/forgot-password:
     post:
       tags: [Auth]
-      summary: Request password reset email
+      summary: Request password reset
+      description: |
+        Initiates a password reset flow. For security, always returns 200
+        regardless of whether the email exists. Token is generated and stored
+        (email sending not yet implemented).
       operationId: forgotPassword
       security: []
       requestBody:
@@ -262,18 +266,39 @@ paths:
                 email:
                   type: string
                   format: email
+                  example: user@example.com
       responses:
         '200':
-          description: Reset email sent (always returns 200 for security)
+          description: Request processed (always returns 200 for security)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: If an account with that email exists, a password reset link has been sent.
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
 
-  /auth/password/reset:
+  /auth/reset-password:
     post:
       tags: [Auth]
       summary: Reset password with token
+      description: |
+        Resets the user's password using a valid reset token.
+        Token must not be expired (1 hour validity).
+        Password must meet complexity requirements.
       operationId: resetPassword
       security: []
       requestBody:
@@ -282,20 +307,35 @@ paths:
           application/json:
             schema:
               type: object
-              required: [token, password]
+              required: [token, newPassword]
               properties:
                 token:
                   type: string
-                password:
+                  minLength: 32
+                  description: Reset token from password reset email
+                  example: a1b2c3d4e5f6...
+                newPassword:
                   type: string
-                  minLength: 8
+                  minLength: 12
+                  description: New password (12+ chars, uppercase, lowercase, number)
+                  example: NewSecurePass123!
       responses:
         '200':
           description: Password reset successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Password has been reset successfully.
         '400':
           $ref: '#/components/responses/ValidationError'
 

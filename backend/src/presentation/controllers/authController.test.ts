@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { register, login, logout, refresh } from './authController';
+import { register, login, logout, refresh, forgotPassword, resetPassword } from './authController';
 import * as authService from '../../application/services/authService';
 import * as tokenService from '../../application/services/tokenService';
 import * as authValidator from '../../application/validators/authValidator';
@@ -10,6 +10,8 @@ import {
   UserNotFoundError,
   ValidationError,
   InvalidTokenError,
+  PasswordResetTokenInvalidError,
+  PasswordResetTokenExpiredError,
 } from '../../domain/errors/AuthError';
 import { UserRole } from '../../generated/prisma/enums';
 
@@ -360,6 +362,175 @@ describe('authController', () => {
       (tokenService.refreshTokens as jest.Mock).mockRejectedValue(unexpectedError);
 
       await refresh(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(unexpectedError);
+    });
+  });
+
+  describe('forgotPassword', () => {
+    beforeEach(() => {
+      mockRequest = {
+        body: {
+          email: 'test@example.com',
+        },
+      };
+    });
+
+    it('should return 200 with generic message on successful request', async () => {
+      const validatedInput = { email: 'test@example.com' };
+      (authValidator.validateForgotPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.requestPasswordReset as jest.Mock).mockResolvedValue('reset-token-123');
+
+      await forgotPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(authValidator.validateForgotPasswordInput).toHaveBeenCalledWith(mockRequest.body);
+      expect(authService.requestPasswordReset).toHaveBeenCalledWith('test@example.com');
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: {
+          message: 'If an account with that email exists, a password reset link has been sent.',
+        },
+      });
+    });
+
+    it('should return 200 with same message when user does not exist (security)', async () => {
+      const validatedInput = { email: 'nonexistent@example.com' };
+      (authValidator.validateForgotPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.requestPasswordReset as jest.Mock).mockResolvedValue(null);
+
+      await forgotPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: {
+          message: 'If an account with that email exists, a password reset link has been sent.',
+        },
+      });
+    });
+
+    it('should return 400 when validation fails', async () => {
+      const validationError = new ValidationError('Email is required', 'email');
+      (authValidator.validateForgotPasswordInput as jest.Mock).mockImplementation(() => {
+        throw validationError;
+      });
+
+      await forgotPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Email is required',
+          code: 'VALIDATION_ERROR',
+          field: 'email',
+        },
+      });
+    });
+
+    it('should call next(error) for unexpected errors', async () => {
+      const validatedInput = { email: 'test@example.com' };
+      const unexpectedError = new Error('Database connection failed');
+      (authValidator.validateForgotPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.requestPasswordReset as jest.Mock).mockRejectedValue(unexpectedError);
+
+      await forgotPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(unexpectedError);
+    });
+  });
+
+  describe('resetPassword', () => {
+    const validToken = 'a'.repeat(64);
+
+    beforeEach(() => {
+      mockRequest = {
+        body: {
+          token: validToken,
+          newPassword: 'NewPassword123!',
+        },
+      };
+    });
+
+    it('should return 200 on successful password reset', async () => {
+      const validatedInput = { token: validToken, newPassword: 'NewPassword123!' };
+      (authValidator.validateResetPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.resetPassword as jest.Mock).mockResolvedValue(undefined);
+
+      await resetPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(authValidator.validateResetPasswordInput).toHaveBeenCalledWith(mockRequest.body);
+      expect(authService.resetPassword).toHaveBeenCalledWith(validToken, 'NewPassword123!');
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: {
+          message: 'Password has been reset successfully.',
+        },
+      });
+    });
+
+    it('should return 400 when validation fails', async () => {
+      const validationError = new ValidationError('Reset token is required', 'token');
+      (authValidator.validateResetPasswordInput as jest.Mock).mockImplementation(() => {
+        throw validationError;
+      });
+
+      await resetPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Reset token is required',
+          code: 'VALIDATION_ERROR',
+          field: 'token',
+        },
+      });
+    });
+
+    it('should return 400 when token is invalid', async () => {
+      const validatedInput = { token: validToken, newPassword: 'NewPassword123!' };
+      (authValidator.validateResetPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.resetPassword as jest.Mock).mockRejectedValue(new PasswordResetTokenInvalidError());
+
+      await resetPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Invalid password reset token',
+          code: 'PASSWORD_RESET_TOKEN_INVALID',
+        },
+      });
+    });
+
+    it('should return 400 when token is expired', async () => {
+      const validatedInput = { token: validToken, newPassword: 'NewPassword123!' };
+      (authValidator.validateResetPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.resetPassword as jest.Mock).mockRejectedValue(new PasswordResetTokenExpiredError());
+
+      await resetPassword(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Password reset token has expired',
+          code: 'PASSWORD_RESET_TOKEN_EXPIRED',
+        },
+      });
+    });
+
+    it('should call next(error) for unexpected errors', async () => {
+      const validatedInput = { token: validToken, newPassword: 'NewPassword123!' };
+      const unexpectedError = new Error('Database connection failed');
+      (authValidator.validateResetPasswordInput as jest.Mock).mockReturnValue(validatedInput);
+      (authService.resetPassword as jest.Mock).mockRejectedValue(unexpectedError);
+
+      await resetPassword(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(unexpectedError);
     });

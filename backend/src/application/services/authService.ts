@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import prisma from '../../lib/prisma';
 import { env } from '../../config/env';
 import { validateRegisterInput, validateLoginInput } from '../validators/authValidator';
@@ -7,6 +8,8 @@ import {
   EmailAlreadyExistsError,
   UserNotActiveError,
   UserNotFoundError,
+  PasswordResetTokenInvalidError,
+  PasswordResetTokenExpiredError,
 } from '../../domain/errors/AuthError';
 import type { UserRole } from '../../generated/prisma/enums';
 
@@ -147,5 +150,88 @@ export async function logout(userId: string): Promise<void> {
   await prisma.user.update({
     where: { id: userId },
     data: { refreshTokenHash: null },
+  });
+}
+
+const PASSWORD_RESET_TOKEN_EXPIRY_HOURS = 1;
+const PASSWORD_RESET_HASH_ROUNDS = 10;
+
+/**
+ * Initiates password reset by generating a token and storing its hash.
+ * Returns the plain token for logging/email, or null if user doesn't exist.
+ * Always completes without error to prevent user enumeration.
+ */
+export async function requestPasswordReset(email: string): Promise<string | null> {
+  const normalizedEmail = email.toLowerCase().trim();
+
+  const user = await prisma.user.findUnique({
+    where: { email: normalizedEmail },
+  });
+
+  // Security: Don't reveal if email exists
+  if (!user) {
+    return null;
+  }
+
+  // Generate secure random token
+  const token = crypto.randomBytes(32).toString('hex');
+
+  // Hash the token before storing
+  const hashedToken = await bcrypt.hash(token, PASSWORD_RESET_HASH_ROUNDS);
+
+  // Set expiration to 1 hour from now
+  const expiresAt = new Date(Date.now() + PASSWORD_RESET_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordResetToken: hashedToken,
+      passwordResetExpires: expiresAt,
+    },
+  });
+
+  return token;
+}
+
+/**
+ * Resets user password using a valid reset token.
+ * @throws {PasswordResetTokenInvalidError} If token is invalid or doesn't match
+ * @throws {PasswordResetTokenExpiredError} If token has expired
+ */
+export async function resetPassword(token: string, newPassword: string): Promise<void> {
+  // Find user with a password reset token that hasn't been cleared
+  const user = await prisma.user.findFirst({
+    where: {
+      passwordResetToken: { not: null },
+    },
+  });
+
+  if (!user || !user.passwordResetToken) {
+    throw new PasswordResetTokenInvalidError();
+  }
+
+  // Verify token matches
+  const isTokenValid = await bcrypt.compare(token, user.passwordResetToken);
+
+  if (!isTokenValid) {
+    throw new PasswordResetTokenInvalidError();
+  }
+
+  // Check expiration
+  if (!user.passwordResetExpires || user.passwordResetExpires < new Date()) {
+    throw new PasswordResetTokenExpiredError();
+  }
+
+  // Hash new password
+  const newPasswordHash = await bcrypt.hash(newPassword, env.BCRYPT_SALT_ROUNDS);
+
+  // Update password and clear reset token
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      passwordHash: newPasswordHash,
+      passwordResetToken: null,
+      passwordResetExpires: null,
+    },
   });
 }
