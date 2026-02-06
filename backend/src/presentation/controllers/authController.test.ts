@@ -298,14 +298,17 @@ describe('authController', () => {
     });
 
     it('should return 200 with new tokens on successful refresh', async () => {
+      const validatedInput = { refreshToken: validRefreshToken, userId: validUserId };
       const newTokens = {
         accessToken: 'new.access.token',
         refreshToken: 'new-refresh-token',
       };
+      (authValidator.validateRefreshInput as jest.Mock).mockReturnValue(validatedInput);
       (tokenService.refreshTokens as jest.Mock).mockResolvedValue(newTokens);
 
       await refresh(mockRequest as Request, mockResponse as Response, mockNext);
 
+      expect(authValidator.validateRefreshInput).toHaveBeenCalledWith(mockRequest.body);
       expect(tokenService.refreshTokens).toHaveBeenCalledWith(validRefreshToken, validUserId);
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalledWith({
@@ -314,8 +317,11 @@ describe('authController', () => {
       });
     });
 
-    it('should return 400 when refresh token is missing', async () => {
-      mockRequest.body = { userId: validUserId };
+    it('should return 400 when validation fails', async () => {
+      const validationError = new ValidationError('Refresh token is required', 'refreshToken');
+      (authValidator.validateRefreshInput as jest.Mock).mockImplementation(() => {
+        throw validationError;
+      });
 
       await refresh(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -325,71 +331,14 @@ describe('authController', () => {
         error: {
           message: 'Refresh token is required',
           code: 'VALIDATION_ERROR',
-        },
-      });
-    });
-
-    it('should return 400 when refresh token is not a string', async () => {
-      mockRequest.body = { refreshToken: 12345, userId: validUserId };
-
-      await refresh(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          message: 'Refresh token is required',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-    });
-
-    it('should return 400 when refresh token has invalid length (too short)', async () => {
-      mockRequest.body = { refreshToken: 'short', userId: validUserId };
-
-      await refresh(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          message: 'Invalid refresh token format',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-    });
-
-    it('should return 400 when userId is missing', async () => {
-      mockRequest.body = { refreshToken: validRefreshToken };
-
-      await refresh(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          message: 'User ID is required',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-    });
-
-    it('should return 400 when userId is not a valid UUID', async () => {
-      mockRequest.body = { refreshToken: validRefreshToken, userId: 'not-a-uuid' };
-
-      await refresh(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          message: 'Invalid user ID format',
-          code: 'VALIDATION_ERROR',
+          field: 'refreshToken',
         },
       });
     });
 
     it('should return 401 when refresh token is invalid', async () => {
+      const validatedInput = { refreshToken: validRefreshToken, userId: validUserId };
+      (authValidator.validateRefreshInput as jest.Mock).mockReturnValue(validatedInput);
       (tokenService.refreshTokens as jest.Mock).mockRejectedValue(new InvalidTokenError());
 
       await refresh(mockRequest as Request, mockResponse as Response, mockNext);
@@ -405,7 +354,9 @@ describe('authController', () => {
     });
 
     it('should call next(error) for unexpected errors', async () => {
+      const validatedInput = { refreshToken: validRefreshToken, userId: validUserId };
       const unexpectedError = new Error('Database connection failed');
+      (authValidator.validateRefreshInput as jest.Mock).mockReturnValue(validatedInput);
       (tokenService.refreshTokens as jest.Mock).mockRejectedValue(unexpectedError);
 
       await refresh(mockRequest as Request, mockResponse as Response, mockNext);

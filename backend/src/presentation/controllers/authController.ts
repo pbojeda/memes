@@ -4,6 +4,7 @@ import * as tokenService from '../../application/services/tokenService';
 import {
   validateRegisterInput,
   validateLoginInput,
+  validateRefreshInput,
 } from '../../application/validators/authValidator';
 import {
   InvalidCredentialsError,
@@ -164,63 +165,26 @@ export async function logout(req: Request, res: Response, next: NextFunction): P
  */
 export async function refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { refreshToken, userId } = req.body;
-
-    // Validate refreshToken
-    if (!refreshToken || typeof refreshToken !== 'string') {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: 'Refresh token is required',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-      return;
-    }
-
-    if (refreshToken.length < 32 || refreshToken.length > 256) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: 'Invalid refresh token format',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-      return;
-    }
-
-    // Validate userId
-    if (!userId || typeof userId !== 'string') {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: 'User ID is required',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-      return;
-    }
-
-    // Basic UUID format validation (Prisma default ID format)
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(userId)) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: 'Invalid user ID format',
-          code: 'VALIDATION_ERROR',
-        },
-      });
-      return;
-    }
-
-    const tokens = await tokenService.refreshTokens(refreshToken, userId);
+    const validatedInput = validateRefreshInput(req.body);
+    const tokens = await tokenService.refreshTokens(validatedInput.refreshToken, validatedInput.userId);
 
     res.status(200).json({
       success: true,
       data: tokens,
     });
   } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({
+        success: false,
+        error: {
+          message: error.message,
+          code: error.code,
+          field: error.field,
+        },
+      });
+      return;
+    }
+
     if (error instanceof InvalidTokenError) {
       res.status(401).json({
         success: false,
