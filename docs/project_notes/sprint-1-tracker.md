@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████            ] 20%
+Progress: [██████████          ] 25%
 
-Completed: 4/20 tasks
+Completed: 5/20 tasks
 In Progress: 0 tasks
-Pending: 16 tasks
+Pending: 15 tasks
 Blocked: 0 tasks
 ```
 
@@ -34,7 +34,7 @@ Blocked: 0 tasks
 | B1.2 | Implement auth service (register, login, logout) | High | ✅ | feature/sprint1-B1.2-auth-service | Completed 2026-02-06 |
 | B1.3 | Implement JWT token service | High | ✅ | feature/sprint1-B1.3-jwt-token-service | Completed 2026-02-06 |
 | B1.4 | Create auth middleware | High | ✅ | feature/sprint1-B1.4-auth-middleware | Completed 2026-02-06 |
-| B1.5 | Implement refresh token rotation | High | ⏳ | | |
+| B1.5 | Implement refresh token rotation | High | ✅ | feature/sprint1-B1.3-jwt-token-service | Done in B1.3 |
 | B1.6 | Create auth controller and routes | High | ⏳ | | |
 | B1.7 | Implement password reset flow | Medium | ⏳ | | |
 | B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Medium | ⏳ | | |
@@ -154,6 +154,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-06 | B1.2 | 91b3343 | Auth service (register, login, logout) + password policy + tech-debt.md |
 | 2026-02-06 | B1.3 | 757ed8a | JWT token service + runtime validation + refresh token rotation |
 | 2026-02-06 | B1.4 | 0889f2f | Auth middleware + Express Request type extension |
+| 2026-02-06 | B1.5 | 757ed8a | Verified: already implemented in B1.3 (refreshTokens function) |
 
 ---
 
