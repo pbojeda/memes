@@ -34,10 +34,29 @@ export interface ValidatedRefreshInput {
   userId: string;
 }
 
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ValidatedForgotPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  token: string;
+  newPassword: string;
+}
+
+export interface ValidatedResetPasswordInput {
+  token: string;
+  newPassword: string;
+}
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const REFRESH_TOKEN_MIN_LENGTH = 32;
 const REFRESH_TOKEN_MAX_LENGTH = 256;
+const RESET_TOKEN_MIN_LENGTH = 32;
 const MIN_PASSWORD_LENGTH = 12;
 const MAX_NAME_LENGTH = 100;
 
@@ -165,5 +184,68 @@ export function validateRefreshInput(input: RefreshInput): ValidatedRefreshInput
   return {
     refreshToken,
     userId,
+  };
+}
+
+export function validateForgotPasswordInput(input: ForgotPasswordInput): ValidatedForgotPasswordInput {
+  const email = validateEmail(input.email);
+
+  return { email };
+}
+
+function validateNewPassword(password: string | undefined): string {
+  if (!password || password === '') {
+    throw new ValidationError('Password is required', 'newPassword');
+  }
+
+  if (password.length < PASSWORD_REQUIREMENTS.minLength) {
+    throw new ValidationError(
+      `Password must be at least ${PASSWORD_REQUIREMENTS.minLength} characters`,
+      'newPassword'
+    );
+  }
+
+  if (PASSWORD_REQUIREMENTS.requireUppercase && !/[A-Z]/.test(password)) {
+    throw new ValidationError(
+      'Password must contain at least one uppercase letter',
+      'newPassword'
+    );
+  }
+
+  if (PASSWORD_REQUIREMENTS.requireLowercase && !/[a-z]/.test(password)) {
+    throw new ValidationError(
+      'Password must contain at least one lowercase letter',
+      'newPassword'
+    );
+  }
+
+  if (PASSWORD_REQUIREMENTS.requireNumber && !/[0-9]/.test(password)) {
+    throw new ValidationError(
+      'Password must contain at least one number',
+      'newPassword'
+    );
+  }
+
+  return password;
+}
+
+export function validateResetPasswordInput(input: ResetPasswordInput): ValidatedResetPasswordInput {
+  const { token, newPassword } = input;
+
+  // Validate token
+  if (!token || typeof token !== 'string') {
+    throw new ValidationError('Reset token is required', 'token');
+  }
+
+  if (token.length < RESET_TOKEN_MIN_LENGTH) {
+    throw new ValidationError('Invalid reset token format', 'token');
+  }
+
+  // Validate newPassword with complexity rules
+  const validatedPassword = validateNewPassword(newPassword);
+
+  return {
+    token,
+    newPassword: validatedPassword,
   };
 }

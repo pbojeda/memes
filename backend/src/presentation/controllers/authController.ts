@@ -5,6 +5,8 @@ import {
   validateRegisterInput,
   validateLoginInput,
   validateRefreshInput,
+  validateForgotPasswordInput,
+  validateResetPasswordInput,
 } from '../../application/validators/authValidator';
 import {
   InvalidCredentialsError,
@@ -13,6 +15,8 @@ import {
   UserNotFoundError,
   ValidationError,
   InvalidTokenError,
+  PasswordResetTokenInvalidError,
+  PasswordResetTokenExpiredError,
 } from '../../domain/errors/AuthError';
 
 /**
@@ -187,6 +191,95 @@ export async function refresh(req: Request, res: Response, next: NextFunction): 
 
     if (error instanceof InvalidTokenError) {
       res.status(401).json({
+        success: false,
+        error: {
+          message: error.message,
+          code: error.code,
+        },
+      });
+      return;
+    }
+
+    next(error);
+  }
+}
+
+/**
+ * Handle forgot password request.
+ * POST /api/auth/forgot-password
+ */
+export async function forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const validatedInput = validateForgotPasswordInput(req.body);
+
+    // Request password reset - returns token for logging/email, null if user doesn't exist
+    // We always return success to prevent user enumeration
+    await authService.requestPasswordReset(validatedInput.email);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        message: 'If an account with that email exists, a password reset link has been sent.',
+      },
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({
+        success: false,
+        error: {
+          message: error.message,
+          code: error.code,
+          field: error.field,
+        },
+      });
+      return;
+    }
+
+    next(error);
+  }
+}
+
+/**
+ * Handle password reset.
+ * POST /api/auth/reset-password
+ */
+export async function resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const validatedInput = validateResetPasswordInput(req.body);
+    await authService.resetPassword(validatedInput.token, validatedInput.newPassword);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        message: 'Password has been reset successfully.',
+      },
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({
+        success: false,
+        error: {
+          message: error.message,
+          code: error.code,
+          field: error.field,
+        },
+      });
+      return;
+    }
+
+    if (error instanceof PasswordResetTokenInvalidError) {
+      res.status(400).json({
+        success: false,
+        error: {
+          message: error.message,
+          code: error.code,
+        },
+      });
+      return;
+    }
+
+    if (error instanceof PasswordResetTokenExpiredError) {
+      res.status(400).json({
         success: false,
         error: {
           message: error.message,

@@ -1,4 +1,10 @@
-import { validateRegisterInput, validateLoginInput, validateRefreshInput } from './authValidator';
+import {
+  validateRegisterInput,
+  validateLoginInput,
+  validateRefreshInput,
+  validateForgotPasswordInput,
+  validateResetPasswordInput,
+} from './authValidator';
 import { ValidationError } from '../../domain/errors/AuthError';
 
 describe('authValidator', () => {
@@ -528,6 +534,199 @@ describe('authValidator', () => {
         } catch (error) {
           expect(error).toBeInstanceOf(ValidationError);
           expect((error as ValidationError).field).toBe('userId');
+        }
+      });
+    });
+  });
+
+  describe('validateForgotPasswordInput', () => {
+    describe('valid inputs', () => {
+      it('should return validated email when valid', () => {
+        const input = { email: 'test@example.com' };
+
+        const result = validateForgotPasswordInput(input);
+
+        expect(result).toEqual({ email: 'test@example.com' });
+      });
+
+      it('should normalize email to lowercase', () => {
+        const input = { email: 'TEST@EXAMPLE.COM' };
+
+        const result = validateForgotPasswordInput(input);
+
+        expect(result.email).toBe('test@example.com');
+      });
+
+      it('should trim whitespace from email', () => {
+        const input = { email: '  test@example.com  ' };
+
+        const result = validateForgotPasswordInput(input);
+
+        expect(result.email).toBe('test@example.com');
+      });
+    });
+
+    describe('email validation', () => {
+      it('should throw ValidationError when email is missing', () => {
+        const input = {};
+
+        expect(() => validateForgotPasswordInput(input as never)).toThrow(ValidationError);
+        expect(() => validateForgotPasswordInput(input as never)).toThrow('Email is required');
+      });
+
+      it('should throw ValidationError when email is empty', () => {
+        const input = { email: '' };
+
+        expect(() => validateForgotPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateForgotPasswordInput(input)).toThrow('Email is required');
+      });
+
+      it('should throw ValidationError when email format is invalid', () => {
+        const input = { email: 'invalid-email' };
+
+        expect(() => validateForgotPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateForgotPasswordInput(input)).toThrow('Invalid email format');
+      });
+    });
+  });
+
+  describe('validateResetPasswordInput', () => {
+    const validToken = 'a'.repeat(64);
+
+    describe('valid inputs', () => {
+      it('should return validated data when all fields are valid', () => {
+        const input = {
+          token: validToken,
+          newPassword: 'NewPassword123!',
+        };
+
+        const result = validateResetPasswordInput(input);
+
+        expect(result).toEqual({
+          token: validToken,
+          newPassword: 'NewPassword123!',
+        });
+      });
+
+      it('should accept token at minimum length (32)', () => {
+        const input = {
+          token: 'a'.repeat(32),
+          newPassword: 'NewPassword123!',
+        };
+
+        const result = validateResetPasswordInput(input);
+
+        expect(result.token).toHaveLength(32);
+      });
+    });
+
+    describe('token validation', () => {
+      it('should throw ValidationError when token is missing', () => {
+        const input = { newPassword: 'NewPassword123!' };
+
+        expect(() => validateResetPasswordInput(input as never)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input as never)).toThrow('Reset token is required');
+      });
+
+      it('should throw ValidationError when token is empty', () => {
+        const input = { token: '', newPassword: 'NewPassword123!' };
+
+        expect(() => validateResetPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input)).toThrow('Reset token is required');
+      });
+
+      it('should throw ValidationError when token is too short', () => {
+        const input = {
+          token: 'a'.repeat(31),
+          newPassword: 'NewPassword123!',
+        };
+
+        expect(() => validateResetPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input)).toThrow('Invalid reset token format');
+      });
+
+      it('should throw ValidationError when token is not a string', () => {
+        const input = {
+          token: 12345,
+          newPassword: 'NewPassword123!',
+        };
+
+        expect(() => validateResetPasswordInput(input as never)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input as never)).toThrow('Reset token is required');
+      });
+    });
+
+    describe('newPassword validation', () => {
+      it('should throw ValidationError when newPassword is missing', () => {
+        const input = { token: validToken };
+
+        expect(() => validateResetPasswordInput(input as never)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input as never)).toThrow('Password is required');
+      });
+
+      it('should throw ValidationError when newPassword is too short', () => {
+        const input = {
+          token: validToken,
+          newPassword: 'Short1pass',
+        };
+
+        expect(() => validateResetPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input)).toThrow('Password must be at least 12 characters');
+      });
+
+      it('should throw ValidationError when newPassword has no uppercase', () => {
+        const input = {
+          token: validToken,
+          newPassword: 'alllowercase123',
+        };
+
+        expect(() => validateResetPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input)).toThrow('Password must contain at least one uppercase letter');
+      });
+
+      it('should throw ValidationError when newPassword has no lowercase', () => {
+        const input = {
+          token: validToken,
+          newPassword: 'ALLUPPERCASE123',
+        };
+
+        expect(() => validateResetPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input)).toThrow('Password must contain at least one lowercase letter');
+      });
+
+      it('should throw ValidationError when newPassword has no number', () => {
+        const input = {
+          token: validToken,
+          newPassword: 'NoNumbersHereAbc',
+        };
+
+        expect(() => validateResetPasswordInput(input)).toThrow(ValidationError);
+        expect(() => validateResetPasswordInput(input)).toThrow('Password must contain at least one number');
+      });
+    });
+
+    describe('ValidationError properties', () => {
+      it('should include field property for token errors', () => {
+        const input = { token: '', newPassword: 'NewPassword123!' };
+
+        try {
+          validateResetPasswordInput(input);
+          fail('Expected ValidationError to be thrown');
+        } catch (error) {
+          expect(error).toBeInstanceOf(ValidationError);
+          expect((error as ValidationError).field).toBe('token');
+        }
+      });
+
+      it('should include field property for newPassword errors', () => {
+        const input = { token: validToken, newPassword: 'weak' };
+
+        try {
+          validateResetPasswordInput(input);
+          fail('Expected ValidationError to be thrown');
+        } catch (error) {
+          expect(error).toBeInstanceOf(ValidationError);
+          expect((error as ValidationError).field).toBe('newPassword');
         }
       });
     });

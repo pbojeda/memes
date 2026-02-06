@@ -94,3 +94,23 @@ export class JwtSecretNotConfiguredError extends AuthError {
     this.name = 'JwtSecretNotConfiguredError';
   }
 }
+
+/**
+ * Thrown when a password reset token is invalid.
+ */
+export class PasswordResetTokenInvalidError extends AuthError {
+  constructor() {
+    super('Invalid password reset token', 'PASSWORD_RESET_TOKEN_INVALID');
+    this.name = 'PasswordResetTokenInvalidError';
+  }
+}
+
+/**
+ * Thrown when a password reset token has expired.
+ */
+export class PasswordResetTokenExpiredError extends AuthError {
+  constructor() {
+    super('Password reset token has expired', 'PASSWORD_RESET_TOKEN_EXPIRED');
+    this.name = 'PasswordResetTokenExpiredError';
+  }
+}
