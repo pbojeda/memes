@@ -142,6 +142,13 @@ Ask: "Please review the ticket. Reply 'approved' to proceed with implementation.
 
 **If issues found:** Fix before proceeding.
 
+**Provide change summary to user:**
+- Files created (with purpose)
+- Files modified (with what changed)
+- Key points to review (security, breaking changes, dependencies, etc.)
+
+**⏸️ WAIT FOR USER ACKNOWLEDGMENT before creating commit.**
+
 **Create commit:**
 ```
 <type>(<scope>): <description>

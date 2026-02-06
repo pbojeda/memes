@@ -22,7 +22,11 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+**Task:** B1.2 - Implement auth service (register, login, logout)
+**Branch:** feature/sprint1-B1.2-auth-service
+**Step:** 1 - Setup (Ticket generation, awaiting approval)
+**Complexity:** Standard
 
 ---
 
@@ -31,7 +35,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | B1.1 | Create User model and migration | High | ✅ | feature/sprint1-B1.1-user-model | Completed 2026-02-05 |
-| B1.2 | Implement auth service (register, login, logout) | High | ⏳ | | |
+| B1.2 | Implement auth service (register, login, logout) | High | 🔄 | feature/sprint1-B1.2-auth-service | |
 | B1.3 | Implement JWT token service | High | ⏳ | | |
 | B1.4 | Create auth middleware | High | ⏳ | | |
 | B1.5 | Implement refresh token rotation | High | ⏳ | | |
