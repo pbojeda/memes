@@ -22,7 +22,11 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+**Task:** B1.3 - Implement JWT token service
+**Branch:** feature/sprint1-B1.3-jwt-token-service
+**Step:** 1 - Setup (Ticket generation, awaiting approval)
+**Complexity:** Standard
 
 ---
 
@@ -32,7 +36,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | B1.1 | Create User model and migration | High | ✅ | feature/sprint1-B1.1-user-model | Completed 2026-02-05 |
 | B1.2 | Implement auth service (register, login, logout) | High | ✅ | feature/sprint1-B1.2-auth-service | Completed 2026-02-06 |
-| B1.3 | Implement JWT token service | High | ⏳ | | |
+| B1.3 | Implement JWT token service | High | 🔄 | feature/sprint1-B1.3-jwt-token-service | |
 | B1.4 | Create auth middleware | High | ⏳ | | |
 | B1.5 | Implement refresh token rotation | High | ⏳ | | |
 | B1.6 | Create auth controller and routes | High | ⏳ | | |
