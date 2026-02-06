@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████████████      ] 30%
+Progress: [███████████████     ] 35%
 
-Completed: 6/20 tasks
+Completed: 7/20 tasks
 In Progress: 0 tasks
-Pending: 14 tasks
+Pending: 13 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,14 +22,9 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** 🛑 Awaiting Commit Approval
+**Status:** No active task
 
-| Field | Value |
-|-------|-------|
-| Task | B1.7 - Implement password reset flow |
-| Branch | feature/sprint1-B1.7-password-reset |
-| Step | 3/5 (Validate) - CHECKPOINT |
-| Ticket | [B1.7-password-reset.md](../tickets/B1.7-password-reset.md) |
+_Use `start task B1.8` to begin the next task._
 
 ---
 
@@ -43,7 +38,7 @@ Blocked: 0 tasks
 | B1.4 | Create auth middleware | High | ✅ | feature/sprint1-B1.4-auth-middleware | Completed 2026-02-06 |
 | B1.5 | Implement refresh token rotation | High | ✅ | feature/sprint1-B1.3-jwt-token-service | Done in B1.3 |
 | B1.6 | Create auth controller and routes | High | ✅ | feature/sprint1-B1.6-auth-controller | Completed 2026-02-06 |
-| B1.7 | Implement password reset flow | Medium | 🔄 | feature/sprint1-B1.7-password-reset | |
+| B1.7 | Implement password reset flow | Medium | ✅ | feature/sprint1-B1.7-password-reset | Completed 2026-02-06 |
 | B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Medium | ⏳ | | |
 | B1.9 | Implement role-based access control | High | ⏳ | | |
 | B1.10 | Write auth integration tests | High | ⏳ | | |
@@ -163,6 +158,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-06 | B1.4 | 0889f2f | Auth middleware + Express Request type extension |
 | 2026-02-06 | B1.5 | 757ed8a | Verified: already implemented in B1.3 (refreshTokens function) |
 | 2026-02-06 | B1.6 | e5e9e60 | Auth controller + routes + validateRefreshInput extraction |
+| 2026-02-06 | B1.7 | 9475341 | Password reset flow + secure token handling |
 
 ---
 
