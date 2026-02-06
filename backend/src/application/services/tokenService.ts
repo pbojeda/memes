@@ -113,6 +113,8 @@ export function verifyAccessToken(token: string): TokenPayload {
       if (error.name === 'TokenExpiredError') {
         throw new TokenExpiredError();
       }
+      // Zod validation errors and JWT errors (malformed, invalid signature)
+      // are all treated as invalid tokens
     }
     throw new InvalidTokenError();
   }

@@ -235,6 +235,17 @@ describe('tokenService', () => {
 
       (env as { JWT_SECRET: string | undefined }).JWT_SECRET = originalSecret;
     });
+
+    it('should throw InvalidTokenError for valid JWT with invalid payload structure', () => {
+      const invalidPayload = {
+        userId: 'user-uuid-123',
+        email: 'test@example.com',
+        // Missing 'role' field - Zod validation should fail
+      };
+      (mockJwt.verify as jest.Mock).mockReturnValue(invalidPayload);
+
+      expect(() => verifyAccessToken('valid.signature.but.invalid.payload')).toThrow(InvalidTokenError);
+    });
   });
 
   describe('refreshTokens', () => {
