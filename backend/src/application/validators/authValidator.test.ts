@@ -1,4 +1,4 @@
-import { validateRegisterInput, validateLoginInput } from './authValidator';
+import { validateRegisterInput, validateLoginInput, validateRefreshInput } from './authValidator';
 import { ValidationError } from '../../domain/errors/AuthError';
 
 describe('authValidator', () => {
@@ -320,6 +320,215 @@ describe('authValidator', () => {
         const result = validateLoginInput(input);
 
         expect(result.password).toBe('a');
+      });
+    });
+  });
+
+  describe('validateRefreshInput', () => {
+    const validRefreshToken = 'a'.repeat(64); // 64 hex chars (32 bytes)
+    const validUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+    describe('valid inputs', () => {
+      it('should return validated data when all fields are valid', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: validUserId,
+        };
+
+        const result = validateRefreshInput(input);
+
+        expect(result).toEqual({
+          refreshToken: validRefreshToken,
+          userId: validUserId,
+        });
+      });
+
+      it('should accept refresh token at minimum length (32)', () => {
+        const input = {
+          refreshToken: 'a'.repeat(32),
+          userId: validUserId,
+        };
+
+        const result = validateRefreshInput(input);
+
+        expect(result.refreshToken).toHaveLength(32);
+      });
+
+      it('should accept refresh token at maximum length (256)', () => {
+        const input = {
+          refreshToken: 'a'.repeat(256),
+          userId: validUserId,
+        };
+
+        const result = validateRefreshInput(input);
+
+        expect(result.refreshToken).toHaveLength(256);
+      });
+
+      it('should accept valid UUID in lowercase', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: '123e4567-e89b-12d3-a456-426614174000',
+        };
+
+        const result = validateRefreshInput(input);
+
+        expect(result.userId).toBe('123e4567-e89b-12d3-a456-426614174000');
+      });
+
+      it('should accept valid UUID in uppercase', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: '123E4567-E89B-12D3-A456-426614174000',
+        };
+
+        const result = validateRefreshInput(input);
+
+        expect(result.userId).toBe('123E4567-E89B-12D3-A456-426614174000');
+      });
+    });
+
+    describe('refreshToken validation', () => {
+      it('should throw ValidationError when refreshToken is missing', () => {
+        const input = {
+          userId: validUserId,
+        };
+
+        expect(() => validateRefreshInput(input as never)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input as never)).toThrow('Refresh token is required');
+      });
+
+      it('should throw ValidationError when refreshToken is null', () => {
+        const input = {
+          refreshToken: null,
+          userId: validUserId,
+        };
+
+        expect(() => validateRefreshInput(input as never)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input as never)).toThrow('Refresh token is required');
+      });
+
+      it('should throw ValidationError when refreshToken is not a string', () => {
+        const input = {
+          refreshToken: 12345,
+          userId: validUserId,
+        };
+
+        expect(() => validateRefreshInput(input as never)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input as never)).toThrow('Refresh token is required');
+      });
+
+      it('should throw ValidationError when refreshToken is too short', () => {
+        const input = {
+          refreshToken: 'a'.repeat(31),
+          userId: validUserId,
+        };
+
+        expect(() => validateRefreshInput(input)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input)).toThrow('Invalid refresh token format');
+      });
+
+      it('should throw ValidationError when refreshToken is too long', () => {
+        const input = {
+          refreshToken: 'a'.repeat(257),
+          userId: validUserId,
+        };
+
+        expect(() => validateRefreshInput(input)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input)).toThrow('Invalid refresh token format');
+      });
+    });
+
+    describe('userId validation', () => {
+      it('should throw ValidationError when userId is missing', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+        };
+
+        expect(() => validateRefreshInput(input as never)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input as never)).toThrow('User ID is required');
+      });
+
+      it('should throw ValidationError when userId is null', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: null,
+        };
+
+        expect(() => validateRefreshInput(input as never)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input as never)).toThrow('User ID is required');
+      });
+
+      it('should throw ValidationError when userId is not a string', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: 12345,
+        };
+
+        expect(() => validateRefreshInput(input as never)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input as never)).toThrow('User ID is required');
+      });
+
+      it('should throw ValidationError when userId is not a valid UUID', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: 'not-a-valid-uuid',
+        };
+
+        expect(() => validateRefreshInput(input)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input)).toThrow('Invalid user ID format');
+      });
+
+      it('should throw ValidationError when userId is empty', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: '',
+        };
+
+        expect(() => validateRefreshInput(input)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input)).toThrow('User ID is required');
+      });
+
+      it('should throw ValidationError when UUID has wrong format', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: '123e4567e89b12d3a456426614174000', // Missing hyphens
+        };
+
+        expect(() => validateRefreshInput(input)).toThrow(ValidationError);
+        expect(() => validateRefreshInput(input)).toThrow('Invalid user ID format');
+      });
+    });
+
+    describe('ValidationError properties', () => {
+      it('should include field property for refreshToken errors', () => {
+        const input = {
+          refreshToken: '',
+          userId: validUserId,
+        };
+
+        try {
+          validateRefreshInput(input as never);
+          fail('Expected ValidationError to be thrown');
+        } catch (error) {
+          expect(error).toBeInstanceOf(ValidationError);
+          expect((error as ValidationError).field).toBe('refreshToken');
+        }
+      });
+
+      it('should include field property for userId errors', () => {
+        const input = {
+          refreshToken: validRefreshToken,
+          userId: 'invalid',
+        };
+
+        try {
+          validateRefreshInput(input);
+          fail('Expected ValidationError to be thrown');
+        } catch (error) {
+          expect(error).toBeInstanceOf(ValidationError);
+          expect((error as ValidationError).field).toBe('userId');
+        }
       });
     });
   });

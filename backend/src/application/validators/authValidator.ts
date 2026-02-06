@@ -24,7 +24,20 @@ export interface ValidatedLoginInput {
   password: string;
 }
 
+export interface RefreshInput {
+  refreshToken: string;
+  userId: string;
+}
+
+export interface ValidatedRefreshInput {
+  refreshToken: string;
+  userId: string;
+}
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const REFRESH_TOKEN_MIN_LENGTH = 32;
+const REFRESH_TOKEN_MAX_LENGTH = 256;
 const MIN_PASSWORD_LENGTH = 12;
 const MAX_NAME_LENGTH = 100;
 
@@ -125,5 +138,32 @@ export function validateLoginInput(input: LoginInput): ValidatedLoginInput {
   return {
     email,
     password,
+  };
+}
+
+export function validateRefreshInput(input: RefreshInput): ValidatedRefreshInput {
+  const { refreshToken, userId } = input;
+
+  // Validate refreshToken
+  if (!refreshToken || typeof refreshToken !== 'string') {
+    throw new ValidationError('Refresh token is required', 'refreshToken');
+  }
+
+  if (refreshToken.length < REFRESH_TOKEN_MIN_LENGTH || refreshToken.length > REFRESH_TOKEN_MAX_LENGTH) {
+    throw new ValidationError('Invalid refresh token format', 'refreshToken');
+  }
+
+  // Validate userId
+  if (!userId || typeof userId !== 'string') {
+    throw new ValidationError('User ID is required', 'userId');
+  }
+
+  if (!UUID_REGEX.test(userId)) {
+    throw new ValidationError('Invalid user ID format', 'userId');
+  }
+
+  return {
+    refreshToken,
+    userId,
   };
 }
