@@ -19,6 +19,9 @@ const envSchema = z.object({
 
   // Redis
   REDIS_URL: z.string().optional(),
+
+  // Security
+  BCRYPT_SALT_ROUNDS: z.coerce.number().min(10).max(14).default(12),
 });
 
 const parsed = envSchema.safeParse(process.env);
