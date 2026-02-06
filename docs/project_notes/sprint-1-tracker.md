@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████              ] 15%
+Progress: [████████            ] 20%
 
-Completed: 3/20 tasks
+Completed: 4/20 tasks
 In Progress: 0 tasks
-Pending: 17 tasks
+Pending: 16 tasks
 Blocked: 0 tasks
 ```
 
@@ -22,14 +22,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | B1.4 - Create auth middleware |
-| Branch | feature/sprint1-B1.4-auth-middleware |
-| Step | 7/8 (Commit) |
-| Ticket | [B1.4-auth-middleware.md](../tickets/B1.4-auth-middleware.md) |
+**Status:** No active task
 
 ---
 
@@ -40,7 +33,7 @@ Blocked: 0 tasks
 | B1.1 | Create User model and migration | High | ✅ | feature/sprint1-B1.1-user-model | Completed 2026-02-05 |
 | B1.2 | Implement auth service (register, login, logout) | High | ✅ | feature/sprint1-B1.2-auth-service | Completed 2026-02-06 |
 | B1.3 | Implement JWT token service | High | ✅ | feature/sprint1-B1.3-jwt-token-service | Completed 2026-02-06 |
-| B1.4 | Create auth middleware | High | 🔄 | feature/sprint1-B1.4-auth-middleware | |
+| B1.4 | Create auth middleware | High | ✅ | feature/sprint1-B1.4-auth-middleware | Completed 2026-02-06 |
 | B1.5 | Implement refresh token rotation | High | ⏳ | | |
 | B1.6 | Create auth controller and routes | High | ⏳ | | |
 | B1.7 | Implement password reset flow | Medium | ⏳ | | |
@@ -160,6 +153,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-05 | B1.1 | 950e528 | User model with auth fields + workflow restored |
 | 2026-02-06 | B1.2 | 91b3343 | Auth service (register, login, logout) + password policy + tech-debt.md |
 | 2026-02-06 | B1.3 | 757ed8a | JWT token service + runtime validation + refresh token rotation |
+| 2026-02-06 | B1.4 | 0889f2f | Auth middleware + Express Request type extension |
 
 ---
 
