@@ -12,16 +12,16 @@ const envSchema = z.object({
   // Logging
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error', 'silent']).optional(),
 
-  // JWT (required in production)
-  JWT_SECRET: z.string().optional(),
-  JWT_ACCESS_EXPIRATION: z.string().optional(),
-  JWT_REFRESH_EXPIRATION: z.string().optional(),
+  // JWT Authentication
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters').optional(),
+  JWT_ACCESS_EXPIRATION: z.string().default('15m'),
 
   // Redis
   REDIS_URL: z.string().optional(),
 
   // Security
   BCRYPT_SALT_ROUNDS: z.coerce.number().min(10).max(14).default(12),
+  REFRESH_TOKEN_BYTES: z.coerce.number().min(16).max(64).default(32),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -33,6 +33,11 @@ if (!parsed.success) {
     .join('\n');
 
   throw new Error(`Environment validation failed:\n${errorMessage}`);
+}
+
+// Require JWT_SECRET in production
+if (parsed.data.NODE_ENV === 'production' && !parsed.data.JWT_SECRET) {
+  throw new Error('JWT_SECRET is required in production environment');
 }
 
 export const env = parsed.data;

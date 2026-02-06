@@ -64,3 +64,33 @@ export class ValidationError extends AuthError {
     this.name = 'ValidationError';
   }
 }
+
+/**
+ * Thrown when a JWT token has expired.
+ */
+export class TokenExpiredError extends AuthError {
+  constructor() {
+    super('Token has expired', 'TOKEN_EXPIRED');
+    this.name = 'TokenExpiredError';
+  }
+}
+
+/**
+ * Thrown when a token is invalid (malformed, wrong signature, etc.).
+ */
+export class InvalidTokenError extends AuthError {
+  constructor() {
+    super('Invalid token', 'INVALID_TOKEN');
+    this.name = 'InvalidTokenError';
+  }
+}
+
+/**
+ * Thrown when JWT_SECRET is not configured.
+ */
+export class JwtSecretNotConfiguredError extends AuthError {
+  constructor() {
+    super('JWT_SECRET is not configured', 'JWT_SECRET_NOT_CONFIGURED');
+    this.name = 'JwtSecretNotConfiguredError';
+  }
+}
