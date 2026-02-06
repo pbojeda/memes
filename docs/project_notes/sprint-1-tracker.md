@@ -22,11 +22,16 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** Paused
 **Task:** B1.2 - Implement auth service (register, login, logout)
 **Branch:** feature/sprint1-B1.2-auth-service
-**Step:** 1 - Setup (Ticket generation, awaiting approval)
+**Step:** 4 - Review (pending commit of password fix + tech debt doc)
 **Complexity:** Standard
+**Context:**
+- PR #22 creado y pushed
+- Code review completado
+- Pendiente: commit de password strength fix + tech-debt.md
+- Cambios locales sin commit: authValidator.ts, tests, tech-debt.md
 
 ---
 

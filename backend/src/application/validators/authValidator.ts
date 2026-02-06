@@ -25,8 +25,15 @@ export interface ValidatedLoginInput {
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 8;
+const MIN_PASSWORD_LENGTH = 12;
 const MAX_NAME_LENGTH = 100;
+
+const PASSWORD_REQUIREMENTS = {
+  minLength: MIN_PASSWORD_LENGTH,
+  requireUppercase: true,
+  requireLowercase: true,
+  requireNumber: true,
+};
 
 function validateEmail(email: string | undefined): string {
   if (!email || email.trim() === '') {
@@ -42,16 +49,39 @@ function validateEmail(email: string | undefined): string {
   return normalizedEmail;
 }
 
-function validatePassword(password: string | undefined, enforceMinLength: boolean): string {
+function validatePassword(password: string | undefined, enforceComplexity: boolean): string {
   if (!password || password === '') {
     throw new ValidationError('Password is required', 'password');
   }
 
-  if (enforceMinLength && password.length < MIN_PASSWORD_LENGTH) {
-    throw new ValidationError(
-      `Password must be at least ${MIN_PASSWORD_LENGTH} characters`,
-      'password'
-    );
+  if (enforceComplexity) {
+    if (password.length < PASSWORD_REQUIREMENTS.minLength) {
+      throw new ValidationError(
+        `Password must be at least ${PASSWORD_REQUIREMENTS.minLength} characters`,
+        'password'
+      );
+    }
+
+    if (PASSWORD_REQUIREMENTS.requireUppercase && !/[A-Z]/.test(password)) {
+      throw new ValidationError(
+        'Password must contain at least one uppercase letter',
+        'password'
+      );
+    }
+
+    if (PASSWORD_REQUIREMENTS.requireLowercase && !/[a-z]/.test(password)) {
+      throw new ValidationError(
+        'Password must contain at least one lowercase letter',
+        'password'
+      );
+    }
+
+    if (PASSWORD_REQUIREMENTS.requireNumber && !/[0-9]/.test(password)) {
+      throw new ValidationError(
+        'Password must contain at least one number',
+        'password'
+      );
+    }
   }
 
   return password;

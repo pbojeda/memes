@@ -105,12 +105,14 @@ export async function login(input: LoginInput): Promise<AuthUser> {
     where: { email: validated.email },
   });
 
+  // NOTE: There's a known timing difference between "user not found" and
+  // "user found but inactive" - see docs/project_notes/tech-debt.md TD-001
   if (!user || !user.passwordHash) {
     throw new InvalidCredentialsError();
   }
 
   // Check active status before password to prevent timing attacks
-  // that could reveal if an email exists with inactive account
+  // that could reveal if an email exists with correct password but inactive account
   if (!user.isActive || user.deletedAt) {
     throw new UserNotActiveError();
   }

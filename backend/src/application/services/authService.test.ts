@@ -36,7 +36,7 @@ describe('authService', () => {
   describe('register', () => {
     const validInput = {
       email: 'test@example.com',
-      password: 'password123',
+      password: 'Password123!',
       firstName: 'John',
       lastName: 'Doe',
     };
@@ -68,7 +68,7 @@ describe('authService', () => {
 
       const result = await register(validInput);
 
-      expect(mockBcrypt.hash).toHaveBeenCalledWith('password123', 12);
+      expect(mockBcrypt.hash).toHaveBeenCalledWith('Password123!', 12);
       expect(mockPrisma.user.create).toHaveBeenCalledWith({
         data: {
           email: 'test@example.com',
@@ -132,7 +132,7 @@ describe('authService', () => {
         lastName: null,
       });
 
-      await register({ email: 'test@example.com', password: 'password123' });
+      await register({ email: 'test@example.com', password: 'Password123!' });
 
       expect(mockPrisma.user.create).toHaveBeenCalledWith({
         data: {
@@ -148,7 +148,7 @@ describe('authService', () => {
   describe('login', () => {
     const validInput = {
       email: 'test@example.com',
-      password: 'password123',
+      password: 'Password123!',
     };
 
     const mockExistingUser = {
@@ -267,7 +267,7 @@ describe('authService', () => {
         lastLoginAt: new Date(),
       });
 
-      await login({ email: 'TEST@EXAMPLE.COM', password: 'password123' });
+      await login({ email: 'TEST@EXAMPLE.COM', password: 'Password123!' });
 
       expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
         where: { email: 'test@example.com' },
