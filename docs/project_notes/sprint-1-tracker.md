@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████████    ] 40%
+Progress: [█████████████████   ] 45%
 
-Completed: 8/20 tasks
+Completed: 9/20 tasks
 In Progress: 0 tasks
-Pending: 11 tasks
+Pending: 10 tasks
 Deferred: 1 task (B1.8)
 Blocked: 0 tasks
 ```
@@ -23,14 +23,9 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** No active task
 
-| Field | Value |
-|-------|-------|
-| Task | B1.10 - Write auth integration tests |
-| Branch | feature/sprint1-B1.10-auth-integration-tests |
-| Step | 2/5 (Develop) |
-| Ticket | [B1.10-auth-integration-tests.md](../tickets/B1.10-auth-integration-tests.md) |
+_All Sprint 1 backend tasks completed (B1.8 deferred to post-MVP). Ready to start frontend tasks._
 
 ---
 
@@ -47,7 +42,7 @@ Blocked: 0 tasks
 | B1.7 | Implement password reset flow | Medium | ✅ | feature/sprint1-B1.7-password-reset | Completed 2026-02-06 |
 | B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Low | 🔜 | | Post-MVP |
 | B1.9 | Implement role-based access control | High | ✅ | feature/sprint1-B1.9-rbac | Completed 2026-02-09 |
-| B1.10 | Write auth integration tests | High | ⏳ | | |
+| B1.10 | Write auth integration tests | High | ✅ | feature/sprint1-B1.10-auth-integration-tests | Completed 2026-02-09 |
 
 ---
 
@@ -167,6 +162,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-06 | B1.6 | e5e9e60 | Auth controller + routes + validateRefreshInput extraction |
 | 2026-02-06 | B1.7 | 9475341 | Password reset flow + secure token handling |
 | 2026-02-09 | B1.9 | 2730ac6 | RBAC middleware (requireRole) + ForbiddenError |
+| 2026-02-09 | B1.10 | 3455f6a | 31 auth integration tests + RBAC tests |
 
 ---
 
