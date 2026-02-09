@@ -23,7 +23,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
+
+| Field | Value |
+|-------|-------|
+| Task | F1.5 - Create auth service (API calls) |
+| Branch | feature/sprint1-F1.5-auth-service |
+| Step | 5/5 (Commit) |
+| Ticket | [F1.5-auth-service.md](../tickets/F1.5-auth-service.md) |
 
 ---
 
@@ -52,7 +59,7 @@ Blocked: 0 tasks
 | F1.2 | Implement login page | High | ⏳ | | |
 | F1.3 | Implement registration page | High | ⏳ | | |
 | F1.4 | Implement forgot password page | Medium | ⏳ | | |
-| F1.5 | Create auth service (API calls) | High | ⏳ | | |
+| F1.5 | Create auth service (API calls) | High | 🔄 | feature/sprint1-F1.5-auth-service | |
 | F1.6 | Setup axios interceptors for JWT | High | ⏳ | | |
 | F1.7 | Implement protected route HOC | High | ⏳ | | |
 | F1.8 | Create user menu component | Medium | ⏳ | | |
