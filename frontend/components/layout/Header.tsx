@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { UserMenu } from "@/components/auth/UserMenu";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -21,17 +22,20 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="hidden md:flex items-center gap-6">
+          <nav className="flex items-center gap-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <UserMenu />
+        </div>
 
         {/* Mobile Menu Button */}
         <Button
@@ -69,8 +73,8 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <nav className="md:hidden border-t px-4 py-4">
-          <div className="flex flex-col gap-4">
+        <div className="md:hidden border-t px-4 py-4">
+          <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -81,8 +85,11 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+          </nav>
+          <div className="mt-4 pt-4 border-t">
+            <UserMenu />
           </div>
-        </nav>
+        </div>
       )}
     </header>
   );

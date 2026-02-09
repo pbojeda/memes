@@ -14,6 +14,11 @@ jest.mock("next/link", () => {
   };
 });
 
+// Mock UserMenu to isolate Header tests
+jest.mock("../auth/UserMenu", () => ({
+  UserMenu: () => <div data-testid="user-menu">UserMenu</div>,
+}));
+
 describe("Header", () => {
   it("should render the logo", () => {
     render(<Header />);
@@ -54,5 +59,10 @@ describe("Header", () => {
     render(<Header />);
     const logo = screen.getByText("MemeStore");
     expect(logo.closest("a")).toHaveAttribute("href", "/");
+  });
+
+  it("should render UserMenu component", () => {
+    render(<Header />);
+    expect(screen.getAllByTestId("user-menu").length).toBeGreaterThanOrEqual(1);
   });
 });
