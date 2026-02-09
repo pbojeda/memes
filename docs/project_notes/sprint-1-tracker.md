@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [█████████████████   ] 45%
+Progress: [██████████████████  ] 50%
 
-Completed: 9/20 tasks
+Completed: 10/20 tasks
 In Progress: 0 tasks
-Pending: 10 tasks
+Pending: 9 tasks
 Deferred: 1 task (B1.8)
 Blocked: 0 tasks
 ```
@@ -23,14 +23,9 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
+**Status:** No active task
 
-| Field | Value |
-|-------|-------|
-| Task | F1.1 - Create authStore (Zustand) |
-| Branch | feature/sprint1-F1.1-auth-store |
-| Step | 4/5 (Commit) |
-| Ticket | [F1.1-auth-store.md](../tickets/F1.1-auth-store.md) |
+_Ready to start next frontend task (F1.2, F1.5, F1.7, or F1.8 - all unblocked after F1.1)._
 
 ---
 
@@ -55,7 +50,7 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F1.1 | Create authStore (Zustand) | High | 🔄 | feature/sprint1-F1.1-auth-store | |
+| F1.1 | Create authStore (Zustand) | High | ✅ | feature/sprint1-F1.1-auth-store | Completed 2026-02-09 |
 | F1.2 | Implement login page | High | ⏳ | | |
 | F1.3 | Implement registration page | High | ⏳ | | |
 | F1.4 | Implement forgot password page | Medium | ⏳ | | |
@@ -168,6 +163,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-06 | B1.7 | 9475341 | Password reset flow + secure token handling |
 | 2026-02-09 | B1.9 | 2730ac6 | RBAC middleware (requireRole) + ForbiddenError |
 | 2026-02-09 | B1.10 | 3455f6a | 31 auth integration tests + RBAC tests |
+| 2026-02-09 | F1.1 | 83596ce | Zustand authStore + 11 unit tests |
 
 ---
 
