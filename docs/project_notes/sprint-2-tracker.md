@@ -96,7 +96,7 @@ F2.3 ──► F2.4
 
 | ADR | Title | Date |
 |-----|-------|------|
-| - | - | - |
+| ADR-002 | Defer ProductType → Product relation until Sprint 3 | 2026-02-09 |
 
 ---
 
