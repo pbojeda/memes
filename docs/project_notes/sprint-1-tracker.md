@@ -23,9 +23,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
 
-_Ready to start next frontend task (F1.2, F1.5, F1.7, or F1.8 - all unblocked after F1.1)._
+| Field | Value |
+|-------|-------|
+| Task | F0.11 - Setup OpenAPI TypeScript codegen |
+| Branch | feature/sprint1-F0.11-openapi-types |
+| Step | 5/5 (Commit) |
+| Ticket | [F0.11-openapi-types.md](../tickets/F0.11-openapi-types.md) |
 
 ---
 

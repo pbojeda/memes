@@ -3,7 +3,7 @@ import axios, {
   AxiosInstance,
   InternalAxiosRequestConfig,
 } from "axios";
-import { ApiError, ApiException } from "./types";
+import { ApiError, ApiException } from "./exceptions";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1";

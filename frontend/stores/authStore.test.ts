@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react';
 import { useAuthStore } from './authStore';
-import type { User, AuthTokens } from '../types/auth';
+import type { User, AuthTokens } from './authStore';
 
 const mockUser: User = {
   id: '123e4567-e89b-12d3-a456-426614174000',

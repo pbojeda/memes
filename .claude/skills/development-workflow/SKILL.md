@@ -184,10 +184,17 @@ If user requests changes, update the ticket and ask again.
 
 **Update documentation during development (not after):**
 - New API endpoints → `api-spec.yaml`
-- Schema changes → `data-model.md` (wait for user approval before saving)
+- Schema/model changes exposed via API → `api-spec.yaml`
+- Database schema changes → `data-model.md` (wait for user approval before saving)
 - New env variables → `.env.example`
 - Architectural Decision Records (ADRs) with context and trade-offs → `decisions.md`
 - Setup changes → `README.md`, Development Guide
+
+**IMPORTANT - Frontend/Backend Sync:**
+After ANY change to `api-spec.yaml`, regenerate frontend types:
+```bash
+cd frontend && npm run generate:api
+```
 
 **Use skill:** `/update-docs`
 

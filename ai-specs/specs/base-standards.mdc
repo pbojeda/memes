@@ -53,7 +53,51 @@ memes/
 | Run backend tests | `cd backend && npm test` | `npm test` (from root) |
 | Install frontend dep | `cd frontend && npm install react` | `npm install react` (from root) |
 
-## 4. Pre-Commit Checklist
+## 4. API Types (Frontend-Backend Sync)
+
+TypeScript types for API requests/responses are auto-generated from the OpenAPI specification.
+
+**Generated file:** `frontend/lib/api/types.ts`
+**Source:** `ai-specs/specs/api-spec.yaml`
+
+### When to Update api-spec.yaml (Backend)
+
+Update `ai-specs/specs/api-spec.yaml` when:
+- Adding or modifying API endpoints
+- Adding or modifying request/response schemas
+- Changing model fields that are exposed via API (User, Product, Order, etc.)
+- Changing validation rules (min/max lengths, required fields, etc.)
+
+### When to Regenerate Types (Frontend)
+
+**MANDATORY:** Run this command in `frontend/` after ANY change to `api-spec.yaml`:
+
+```bash
+cd frontend && npm run generate:api
+```
+
+This regenerates `lib/api/types.ts` with updated TypeScript types.
+
+### Usage
+
+```typescript
+import type { components, paths, operations } from '@/lib/api/types';
+
+// Schema types
+type User = components['schemas']['AuthUser'];
+type LoginRequest = components['schemas']['LoginRequest'];
+
+// Path types
+type LoginBody = paths['/auth/login']['post']['requestBody']['content']['application/json'];
+```
+
+### Important
+
+- **Never edit `lib/api/types.ts` directly** - it will be overwritten
+- Custom client types (ApiException, ApiError) are in `lib/api/exceptions.ts`
+- When adding backend endpoints, update `api-spec.yaml` first, then regenerate types
+
+## 5. Pre-Commit Checklist
 
 Before every commit, verify ALL of the following:
 
@@ -65,7 +109,7 @@ Before every commit, verify ALL of the following:
 
 **Never commit if any step fails.** Fix issues first.
 
-## 5. Quality Gates
+## 6. Quality Gates
 
 For significant code changes, use these specialized agents:
 
@@ -77,7 +121,7 @@ For significant code changes, use these specialized agents:
 | `backend-developer` | DDD patterns, service implementation |
 | `frontend-developer` | React components, state management |
 
-## 6. Project Memory System
+## 7. Project Memory System
 
 This project maintains institutional knowledge in `docs/project_notes/` for consistency across sessions.
 
@@ -124,7 +168,7 @@ This project maintains institutional knowledge in `docs/project_notes/` for cons
 - Update the appropriate memory file (bugs, decisions, key_facts)
 - Follow the established format and style (bullet lists, dates, concise entries)
 
-## 7. Post-Compact Protocol
+## 8. Post-Compact Protocol
 
 After any context compaction (`/compact` or automatic), BEFORE continuing work:
 
@@ -135,7 +179,7 @@ After any context compaction (`/compact` or automatic), BEFORE continuing work:
 
 This protocol exists because compaction summaries capture *what* you were doing but lose *how* to do it correctly. The skill files define the "how".
 
-## 8. Anti-Patterns (Avoid)
+## 9. Anti-Patterns (Avoid)
 
 - **Not updating ticket acceptance criteria** `[x]` as each item is completed
 - **Installing dependencies in root directory** instead of `backend/` or `frontend/`
@@ -143,7 +187,7 @@ This protocol exists because compaction summaries capture *what* you were doing 
 - **Adding features or "improvements"** not explicitly requested
 - **Using `any` type** in TypeScript without explicit justification
 
-## 9. Specific Standards
+## 10. Specific Standards
 
 For detailed standards and guidelines specific to different areas of the project, refer to:
 
@@ -151,7 +195,7 @@ For detailed standards and guidelines specific to different areas of the project
 - [Frontend Standards](./ai-specs/specs/frontend-standards.mdc) - React components, UI/UX guidelines, and frontend architecture
 - [Documentation Standards](./ai-specs/specs/documentation-standards.mdc) - Technical documentation structure, formatting, and maintenance guidelines
 
-## 10. Related Documentation
+## 11. Related Documentation
 
 - [Architecture](./docs/ARQUITECTURA.md) - System architecture with diagrams
 - [Business Requirements](./docs/NEGOCIO.md) - Business context and requirements
