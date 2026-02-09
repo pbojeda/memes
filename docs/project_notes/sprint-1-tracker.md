@@ -23,9 +23,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
 
-_All Sprint 1 backend tasks completed (B1.8 deferred to post-MVP). Ready to start frontend tasks._
+| Field | Value |
+|-------|-------|
+| Task | F1.1 - Create authStore (Zustand) |
+| Branch | feature/sprint1-F1.1-auth-store |
+| Step | 4/5 (Commit) |
+| Ticket | [F1.1-auth-store.md](../tickets/F1.1-auth-store.md) |
 
 ---
 
@@ -50,7 +55,7 @@ _All Sprint 1 backend tasks completed (B1.8 deferred to post-MVP). Ready to star
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F1.1 | Create authStore (Zustand) | High | ⏳ | | |
+| F1.1 | Create authStore (Zustand) | High | 🔄 | feature/sprint1-F1.1-auth-store | |
 | F1.2 | Implement login page | High | ⏳ | | |
 | F1.3 | Implement registration page | High | ⏳ | | |
 | F1.4 | Implement forgot password page | Medium | ⏳ | | |
