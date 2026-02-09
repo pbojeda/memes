@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████████████] 60%
+Progress: [█████████████████████] 65%
 
-Completed: 12/20 tasks (+ F0.11 infra)
+Completed: 13/20 tasks (+ F0.11 infra)
 In Progress: 0 tasks
-Pending: 8 tasks
+Pending: 7 tasks
 Deferred: 1 task (B1.8)
 Blocked: 0 tasks
 ```
@@ -23,12 +23,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-| Field | Value |
-|-------|-------|
-| Task | F1.3 - Implement registration page |
-| Branch | feature/sprint1-F1.3-registration-page |
-| Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
-| Ticket | docs/tickets/F1.3-registration-page.md |
+**Status:** No active task
 
 ---
 
@@ -55,7 +50,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | F1.1 | Create authStore (Zustand) | High | ✅ | feature/sprint1-F1.1-auth-store | Completed 2026-02-09 |
 | F1.2 | Implement login page | High | ⏳ | | |
-| F1.3 | Implement registration page | High | 🔄 | feature/sprint1-F1.3-registration-page | |
+| F1.3 | Implement registration page | High | ✅ | feature/sprint1-F1.3-registration-page | Completed 2026-02-09 |
 | F1.4 | Implement forgot password page | Medium | ⏳ | | |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
 | F1.6 | Setup axios interceptors for JWT | High | ⏳ | | |
@@ -137,7 +132,7 @@ F1.9 (after F1.2, F1.3)
 
 From PLAN_DESARROLLO.md:
 
-- [ ] User registration working
+- [x] User registration working
 - [ ] User login/logout working
 - [ ] JWT authentication with refresh tokens
 - [ ] Role-based route protection
@@ -169,6 +164,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | F1.1 | 83596ce | Zustand authStore + 11 unit tests |
 | 2026-02-09 | F0.11 | 417990e | OpenAPI TypeScript codegen + api-spec fixes + docs |
 | 2026-02-09 | F1.5 | 1179a5f | Auth service (6 functions) + 13 unit tests |
+| 2026-02-09 | F1.3 | 33a8890 | Registration page + 41 unit tests + email normalization |
 
 ---
 
