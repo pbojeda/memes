@@ -86,7 +86,7 @@ export function RegisterForm() {
 
     try {
       await authService.register({
-        email,
+        email: email.trim().toLowerCase(),
         password,
       });
       router.push('/login?registered=true');

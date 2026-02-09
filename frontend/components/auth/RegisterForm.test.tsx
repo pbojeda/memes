@@ -107,7 +107,7 @@ describe('RegisterForm', () => {
 
     render(<RegisterForm />);
 
-    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/email/i), 'Test@Example.com');
     await user.type(screen.getByLabelText(/^password$/i), 'SecurePass123');
     await user.type(screen.getByLabelText(/confirm password/i), 'SecurePass123');
 
@@ -116,7 +116,7 @@ describe('RegisterForm', () => {
 
     await waitFor(() => {
       expect(authService.register).toHaveBeenCalledWith({
-        email: 'test@example.com',
+        email: 'test@example.com', // normalized to lowercase
         password: 'SecurePass123',
       });
     });

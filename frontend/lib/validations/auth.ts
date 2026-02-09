@@ -70,15 +70,16 @@ export function validatePassword(password: string): PasswordValidationResult {
 
 /**
  * Validates email format.
+ * Normalizes to lowercase to match backend behavior.
  */
 export function validateEmail(email: string): EmailValidationResult {
-  const trimmed = email.trim();
+  const normalized = email.trim().toLowerCase();
 
-  if (!trimmed) {
+  if (!normalized) {
     return { isValid: false, error: 'Email is required' };
   }
 
-  if (!EMAIL_REGEX.test(trimmed)) {
+  if (!EMAIL_REGEX.test(normalized)) {
     return { isValid: false, error: 'Invalid email format' };
   }
 
