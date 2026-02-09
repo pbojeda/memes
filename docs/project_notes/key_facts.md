@@ -34,7 +34,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 
 ### Auth Components (`frontend/components/auth/`)
 - `RegisterForm` - Registration form with password strength indicator
-- `LoginForm` - Login form with role-based redirect
+- `LoginForm` - Login form with role-based redirect (TARGET→/, others→/dashboard)
 - `PasswordStrength` - Visual password requirements checklist
 
 ### UI Primitives (`frontend/components/ui/`)
