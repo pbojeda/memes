@@ -22,9 +22,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** 🛑 Awaiting Commit Approval
 
-_Use `start task B1.8` to begin the next task._
+| Field | Value |
+|-------|-------|
+| Task | B1.9 - Implement role-based access control |
+| Branch | feature/sprint1-B1.9-rbac |
+| Step | 3/5 (Validate) - CHECKPOINT |
+| Ticket | [B1.9-rbac.md](../tickets/B1.9-rbac.md) |
 
 ---
 
