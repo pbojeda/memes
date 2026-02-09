@@ -23,9 +23,14 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+**Status:** In Progress
 
-_Use `start task B1.10` to begin the next task._
+| Field | Value |
+|-------|-------|
+| Task | B1.10 - Write auth integration tests |
+| Branch | feature/sprint1-B1.10-auth-integration-tests |
+| Step | 2/5 (Develop) |
+| Ticket | [B1.10-auth-integration-tests.md](../tickets/B1.10-auth-integration-tests.md) |
 
 ---
 
