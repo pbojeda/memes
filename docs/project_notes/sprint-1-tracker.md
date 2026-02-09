@@ -23,7 +23,12 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+| Field | Value |
+|-------|-------|
+| Task | F1.3 - Implement registration page |
+| Branch | feature/sprint1-F1.3-registration-page |
+| Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
+| Ticket | docs/tickets/F1.3-registration-page.md |
 
 ---
 
@@ -50,7 +55,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | F1.1 | Create authStore (Zustand) | High | ✅ | feature/sprint1-F1.1-auth-store | Completed 2026-02-09 |
 | F1.2 | Implement login page | High | ⏳ | | |
-| F1.3 | Implement registration page | High | ⏳ | | |
+| F1.3 | Implement registration page | High | 🔄 | feature/sprint1-F1.3-registration-page | |
 | F1.4 | Implement forgot password page | Medium | ⏳ | | |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
 | F1.6 | Setup axios interceptors for JWT | High | ⏳ | | |
