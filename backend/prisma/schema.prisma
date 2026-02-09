@@ -49,3 +49,19 @@ model User {
   @@index([stripeCustomerId])
   @@map("users")
 }
+
+model ProductType {
+  id        String   @id @default(uuid())
+  name      Json     // {"es": "Camiseta", "en": "T-Shirt"}
+  slug      String   @unique
+  hasSizes  Boolean  @default(false) @map("has_sizes")
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations: products Product[] will be added in Sprint 3 (ADR-002)
+
+  @@index([slug])
+  @@map("product_types")
+}
