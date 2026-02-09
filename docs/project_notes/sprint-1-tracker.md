@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████████████████] 80%
+Progress: [████████████████████████████] 90%
 
-Completed: 16/20 tasks (+ F0.11 infra)
+Completed: 18/20 tasks (+ F0.11 infra)
 In Progress: 0 tasks
-Pending: 3 tasks
+Pending: 1 task
 Deferred: 2 tasks (B1.8, F1.4)
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F1.7 - Implement protected route HOC |
-| Branch | feature/sprint1-F1.7-protected-route |
+| Task | F1.8 - Create user menu component |
+| Branch | feature/sprint1-F1.8-user-menu |
 | Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
-| Ticket | docs/tickets/F1.7-protected-route.md |
+| Ticket | docs/tickets/F1.8-user-menu.md |
 
 ---
 
@@ -59,9 +59,9 @@ Blocked: 0 tasks
 | F1.4 | Implement forgot password page | Medium | 🔜 | | Post-MVP |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
 | F1.6 | Setup axios interceptors for JWT | High | ✅ | feature/sprint1-F1.6-jwt-interceptors | Completed 2026-02-09 |
-| F1.7 | Implement protected route HOC | High | 🔄 | feature/sprint1-F1.7-protected-route | |
-| F1.8 | Create user menu component | Medium | ⏳ | | |
-| F1.9 | Write auth component tests | High | ⏳ | | |
+| F1.7 | Implement protected route HOC | High | ✅ | feature/sprint1-F1.7-protected-route | Completed 2026-02-09 |
+| F1.8 | Create user menu component | Medium | 🔄 | feature/sprint1-F1.8-user-menu | |
+| F1.9 | Write auth component tests | High | ✅ | - | Already covered by F1.1-F1.7 (107 tests) |
 | F1.10 | Implement token refresh logic | High | ✅ | feature/sprint1-F1.6-jwt-interceptors | Completed with F1.6 |
 
 ---
@@ -140,7 +140,7 @@ From PLAN_DESARROLLO.md:
 - [x] User registration working
 - [x] User login/logout working
 - [x] JWT authentication with refresh tokens
-- [ ] Role-based route protection
+- [x] Role-based route protection
 - [ ] Password reset flow (email pending)
 
 ---
@@ -172,6 +172,8 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | F1.3 | 33a8890 | Registration page + 41 unit tests + email normalization |
 | 2026-02-09 | F1.2 | 2827a89 | Login page + 17 unit tests + role-based redirect |
 | 2026-02-09 | F1.6 + F1.10 | ae1ef12 | JWT interceptors + auto refresh + request queuing + tech-debt docs |
+| 2026-02-09 | F1.7 | 70853e3 | ProtectedRoute component + role-based access + returnTo redirect + 23 tests |
+| 2026-02-09 | F1.9 | - | Verified: 107 auth tests already covered by F1.1-F1.7 (10 test suites, all passing) |
 
 ---
 

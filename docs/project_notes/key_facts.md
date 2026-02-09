@@ -36,6 +36,8 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `RegisterForm` - Registration form with password strength indicator
 - `LoginForm` - Login form with role-based redirect (TARGET→/, others→/dashboard)
 - `PasswordStrength` - Visual password requirements checklist
+- `UserMenu` - Auth-aware dropdown: Login/Register links (unauth) or user initial + email + role badge + logout (auth)
+- `ProtectedRoute` - Route guard with role-based access and returnTo redirect
 
 ### UI Primitives (`frontend/components/ui/`)
 - `Button`, `Input`, `Label`, `Card`, `Alert` (shadcn/ui)
