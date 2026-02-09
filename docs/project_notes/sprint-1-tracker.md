@@ -10,9 +10,9 @@
 ## Progress Overview
 
 ```
-Progress: [██████████████████  ] 50%
+Progress: [███████████████████ ] 55%
 
-Completed: 10/20 tasks
+Completed: 11/20 tasks (+ F0.11 infra)
 In Progress: 0 tasks
 Pending: 9 tasks
 Deferred: 1 task (B1.8)
@@ -23,14 +23,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** In Progress
-
-| Field | Value |
-|-------|-------|
-| Task | F0.11 - Setup OpenAPI TypeScript codegen |
-| Branch | feature/sprint1-F0.11-openapi-types |
-| Step | 5/5 (Commit) |
-| Ticket | [F0.11-openapi-types.md](../tickets/F0.11-openapi-types.md) |
+**Status:** No active task
 
 ---
 
@@ -169,6 +162,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | B1.9 | 2730ac6 | RBAC middleware (requireRole) + ForbiddenError |
 | 2026-02-09 | B1.10 | 3455f6a | 31 auth integration tests + RBAC tests |
 | 2026-02-09 | F1.1 | 83596ce | Zustand authStore + 11 unit tests |
+| 2026-02-09 | F0.11 | 417990e | OpenAPI TypeScript codegen + api-spec fixes + docs |
 
 ---
 
