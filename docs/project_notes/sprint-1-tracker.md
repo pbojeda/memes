@@ -13,8 +13,8 @@
 Progress: [██████████████████████] 70%
 
 Completed: 14/20 tasks (+ F0.11 infra)
-In Progress: 0 tasks
-Pending: 5 tasks
+In Progress: 2 tasks (F1.6 + F1.10 merged)
+Pending: 3 tasks
 Deferred: 2 tasks (B1.8, F1.4)
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | - |
-| Branch | - |
-| Step | - |
-| Ticket | - |
+| Task | F1.6 + F1.10 - JWT interceptors with token refresh |
+| Branch | feature/sprint1-F1.6-jwt-interceptors |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F1.6-jwt-interceptors.md |
 
 ---
 
@@ -58,11 +58,11 @@ Blocked: 0 tasks
 | F1.3 | Implement registration page | High | ✅ | feature/sprint1-F1.3-registration-page | Completed 2026-02-09 |
 | F1.4 | Implement forgot password page | Medium | 🔜 | | Post-MVP |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
-| F1.6 | Setup axios interceptors for JWT | High | ⏳ | | |
+| F1.6 | Setup axios interceptors for JWT | High | 🔄 | feature/sprint1-F1.6-jwt-interceptors | Merged with F1.10 |
 | F1.7 | Implement protected route HOC | High | ⏳ | | |
 | F1.8 | Create user menu component | Medium | ⏳ | | |
 | F1.9 | Write auth component tests | High | ⏳ | | |
-| F1.10 | Implement token refresh logic | High | ⏳ | | |
+| F1.10 | Implement token refresh logic | High | 🔄 | feature/sprint1-F1.6-jwt-interceptors | Merged into F1.6 |
 
 ---
 
@@ -139,7 +139,7 @@ From PLAN_DESARROLLO.md:
 
 - [x] User registration working
 - [x] User login/logout working
-- [ ] JWT authentication with refresh tokens
+- [x] JWT authentication with refresh tokens
 - [ ] Role-based route protection
 - [ ] Password reset flow (email pending)
 
