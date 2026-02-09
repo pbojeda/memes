@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [█████████████████████] 65%
+Progress: [██████████████████████] 70%
 
-Completed: 13/20 tasks (+ F0.11 infra)
+Completed: 14/20 tasks (+ F0.11 infra)
 In Progress: 0 tasks
-Pending: 6 tasks
+Pending: 5 tasks
 Deferred: 2 tasks (B1.8, F1.4)
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F1.2 - Implement login page |
-| Branch | feature/sprint1-F1.2-login-page |
-| Step | 2/5 (Develop) |
-| Ticket | docs/tickets/F1.2-login-page.md |
+| Task | - |
+| Branch | - |
+| Step | - |
+| Ticket | - |
 
 ---
 
@@ -54,7 +54,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F1.1 | Create authStore (Zustand) | High | ✅ | feature/sprint1-F1.1-auth-store | Completed 2026-02-09 |
-| F1.2 | Implement login page | High | 🔄 | feature/sprint1-F1.2-login-page | |
+| F1.2 | Implement login page | High | ✅ | feature/sprint1-F1.2-login-page | Completed 2026-02-09 |
 | F1.3 | Implement registration page | High | ✅ | feature/sprint1-F1.3-registration-page | Completed 2026-02-09 |
 | F1.4 | Implement forgot password page | Medium | 🔜 | | Post-MVP |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
@@ -138,7 +138,7 @@ F1.9 (after F1.2, F1.3)
 From PLAN_DESARROLLO.md:
 
 - [x] User registration working
-- [ ] User login/logout working
+- [x] User login/logout working
 - [ ] JWT authentication with refresh tokens
 - [ ] Role-based route protection
 - [ ] Password reset flow (email pending)
@@ -170,6 +170,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | F0.11 | 417990e | OpenAPI TypeScript codegen + api-spec fixes + docs |
 | 2026-02-09 | F1.5 | 1179a5f | Auth service (6 functions) + 13 unit tests |
 | 2026-02-09 | F1.3 | 33a8890 | Registration page + 41 unit tests + email normalization |
+| 2026-02-09 | F1.2 | 2827a89 | Login page + 17 unit tests + role-based redirect |
 
 ---
 
