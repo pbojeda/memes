@@ -39,7 +39,7 @@ _Use `start task B1.8` to begin the next task._
 | B1.5 | Implement refresh token rotation | High | ✅ | feature/sprint1-B1.3-jwt-token-service | Done in B1.3 |
 | B1.6 | Create auth controller and routes | High | ✅ | feature/sprint1-B1.6-auth-controller | Completed 2026-02-06 |
 | B1.7 | Implement password reset flow | Medium | ✅ | feature/sprint1-B1.7-password-reset | Completed 2026-02-06 |
-| B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Medium | ⏳ | | |
+| B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Low | 🔜 | | Post-MVP |
 | B1.9 | Implement role-based access control | High | ⏳ | | |
 | B1.10 | Write auth integration tests | High | ⏳ | | |
 
@@ -70,6 +70,7 @@ _Use `start task B1.8` to begin the next task._
 | 🔄 | In Progress | Currently being worked on |
 | ✅ | Completed | Done and merged |
 | 🚫 | Blocked | Waiting on dependency |
+| 🔜 | Deferred | Postponed to post-MVP |
 
 ---
 

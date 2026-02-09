@@ -104,7 +104,7 @@ gantt
 | B1.5 | Implement refresh token rotation | High | Service |
 | B1.6 | Create auth controller and routes | High | Controller |
 | B1.7 | Implement password reset flow | Medium | Service |
-| B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Medium | Controller |
+| B1.8 | Create user profile endpoints (GET /me, PATCH /me) | Low | Post-MVP |
 | B1.9 | Implement role-based access control | High | Middleware |
 | B1.10 | Write auth integration tests | High | Test |
 
