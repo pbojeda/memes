@@ -9,6 +9,7 @@ import { LoginForm } from '@/components/auth/LoginForm';
 function LoginContent() {
   const searchParams = useSearchParams();
   const isFromRegistration = searchParams.get('registered') === 'true';
+  const returnTo = searchParams.get('returnTo') || undefined;
 
   return (
     <Card className="w-full max-w-md">
@@ -23,7 +24,7 @@ function LoginContent() {
             </AlertDescription>
           </Alert>
         )}
-        <LoginForm />
+        <LoginForm returnTo={returnTo} />
       </CardContent>
     </Card>
   );

@@ -182,4 +182,68 @@ describe('LoginForm', () => {
 
     resolveLogin!();
   });
+
+  it('should redirect to returnTo path after successful login when provided', async () => {
+    const user = userEvent.setup();
+    (authService.login as jest.Mock).mockResolvedValue(undefined);
+    (useAuthStore.getState as jest.Mock).mockReturnValue({ user: { role: 'TARGET' } });
+
+    render(<LoginForm returnTo="/protected-page" />);
+
+    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/password/i), 'password123');
+    await user.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/protected-page');
+    });
+  });
+
+  it('should use role-based redirect when returnTo is not provided', async () => {
+    const user = userEvent.setup();
+    (authService.login as jest.Mock).mockResolvedValue(undefined);
+    (useAuthStore.getState as jest.Mock).mockReturnValue({ user: { role: 'ADMIN' } });
+
+    render(<LoginForm />);
+
+    await user.type(screen.getByLabelText(/email/i), 'admin@example.com');
+    await user.type(screen.getByLabelText(/password/i), 'password123');
+    await user.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+    });
+  });
+
+  it('should ignore returnTo if it does not start with /', async () => {
+    const user = userEvent.setup();
+    (authService.login as jest.Mock).mockResolvedValue(undefined);
+    (useAuthStore.getState as jest.Mock).mockReturnValue({ user: { role: 'TARGET' } });
+
+    render(<LoginForm returnTo="https://evil.com/phishing" />);
+
+    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/password/i), 'password123');
+    await user.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/');
+    });
+  });
+
+  it('should ignore returnTo if it is a protocol-relative URL', async () => {
+    const user = userEvent.setup();
+    (authService.login as jest.Mock).mockResolvedValue(undefined);
+    (useAuthStore.getState as jest.Mock).mockReturnValue({ user: { role: 'TARGET' } });
+
+    render(<LoginForm returnTo="//evil.com/phishing" />);
+
+    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/password/i), 'password123');
+    await user.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/');
+    });
+  });
 });
