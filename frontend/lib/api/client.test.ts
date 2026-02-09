@@ -1,5 +1,5 @@
 import { apiClient, API_BASE_URL } from "./client";
-import { ApiException } from "./types";
+import { ApiException } from "./exceptions";
 
 // Mock localStorage
 const localStorageMock = {

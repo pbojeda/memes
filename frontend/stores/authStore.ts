@@ -1,6 +1,37 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { AuthStore, AuthState, User, AuthTokens } from '../types/auth';
+import type { components } from '../lib/api/types';
+
+// Types from OpenAPI schema
+type User = components['schemas']['AuthUser'];
+
+// Local types for store (not in API spec)
+interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface AuthActions {
+  setAuth: (user: User, tokens: AuthTokens) => void;
+  clearAuth: () => void;
+  setLoading: (isLoading: boolean) => void;
+  setError: (error: string | null) => void;
+  setTokens: (tokens: AuthTokens) => void;
+}
+
+type AuthStore = AuthState & AuthActions;
+
+// Re-export types for use by other modules
+export type { User, AuthTokens, AuthState, AuthStore };
 
 const initialState: AuthState = {
   user: null,

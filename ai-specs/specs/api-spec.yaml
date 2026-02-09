@@ -144,6 +144,9 @@ paths:
     post:
       tags: [Auth]
       summary: Register a new user account
+      description: |
+        Creates a new user account. Returns user data only (no tokens).
+        User must login separately to get tokens.
       operationId: registerUser
       security: []
       requestBody:
@@ -163,7 +166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: '#/components/schemas/RegisterResponse'
         '400':
           $ref: '#/components/responses/ValidationError'
         '409':
@@ -202,20 +205,17 @@ paths:
     post:
       tags: [Auth]
       summary: Logout and invalidate refresh token
+      description: |
+        Requires Bearer token in Authorization header.
+        Clears the user's refresh token from the database.
       operationId: logoutUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [refreshToken]
-              properties:
-                refreshToken:
-                  type: string
       responses:
-        '204':
+        '200':
           description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -230,18 +230,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required: [refreshToken]
-              properties:
-                refreshToken:
-                  type: string
+              $ref: '#/components/schemas/RefreshRequest'
       responses:
         '200':
           description: Token refreshed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: '#/components/schemas/RefreshResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -285,11 +281,7 @@ paths:
                         type: string
                         example: If an account with that email exists, a password reset link has been sent.
         '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
+          $ref: '#/components/responses/ValidationError'
 
   /auth/reset-password:
     post:
@@ -2603,12 +2595,11 @@ components:
           format: email
         password:
           type: string
-          minLength: 8
+          minLength: 12
+          description: Must contain uppercase, lowercase, and number
         firstName:
           type: string
         lastName:
-          type: string
-        phone:
           type: string
 
     LoginRequest:
@@ -2621,27 +2612,116 @@ components:
         password:
           type: string
 
+    RefreshRequest:
+      type: object
+      required: [refreshToken, userId]
+      properties:
+        refreshToken:
+          type: string
+        userId:
+          type: string
+          format: uuid
+
+    RegisterResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AuthUser'
+
     AuthResponse:
       type: object
+      required:
+        - success
+        - data
       properties:
+        success:
+          type: boolean
         data:
           type: object
+          required:
+            - user
+            - accessToken
+            - refreshToken
+          properties:
+            user:
+              $ref: '#/components/schemas/AuthUser'
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+
+    RefreshResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          required:
+            - accessToken
+            - refreshToken
           properties:
             accessToken:
               type: string
             refreshToken:
               type: string
-            expiresIn:
-              type: integer
-              description: Access token expiry in seconds
-            user:
-              $ref: '#/components/schemas/User'
 
     # ============================================
     # USER SCHEMAS
     # ============================================
+    AuthUser:
+      type: object
+      description: User data returned from auth endpoints
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - role
+        - isActive
+        - emailVerifiedAt
+        - lastLoginAt
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/UserRole'
+        isActive:
+          type: boolean
+        emailVerifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
     User:
       type: object
+      description: Full user profile (for admin/profile endpoints)
       properties:
         id:
           type: string
