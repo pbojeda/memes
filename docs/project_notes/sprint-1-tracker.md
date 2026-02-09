@@ -14,8 +14,8 @@ Progress: [█████████████████████] 65%
 
 Completed: 13/20 tasks (+ F0.11 infra)
 In Progress: 0 tasks
-Pending: 7 tasks
-Deferred: 1 task (B1.8)
+Pending: 6 tasks
+Deferred: 2 tasks (B1.8, F1.4)
 Blocked: 0 tasks
 ```
 
@@ -23,7 +23,12 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**Status:** No active task
+| Field | Value |
+|-------|-------|
+| Task | F1.2 - Implement login page |
+| Branch | feature/sprint1-F1.2-login-page |
+| Step | 2/5 (Develop) |
+| Ticket | docs/tickets/F1.2-login-page.md |
 
 ---
 
@@ -49,9 +54,9 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F1.1 | Create authStore (Zustand) | High | ✅ | feature/sprint1-F1.1-auth-store | Completed 2026-02-09 |
-| F1.2 | Implement login page | High | ⏳ | | |
+| F1.2 | Implement login page | High | 🔄 | feature/sprint1-F1.2-login-page | |
 | F1.3 | Implement registration page | High | ✅ | feature/sprint1-F1.3-registration-page | Completed 2026-02-09 |
-| F1.4 | Implement forgot password page | Medium | ⏳ | | |
+| F1.4 | Implement forgot password page | Medium | 🔜 | | Post-MVP |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
 | F1.6 | Setup axios interceptors for JWT | High | ⏳ | | |
 | F1.7 | Implement protected route HOC | High | ⏳ | | |
