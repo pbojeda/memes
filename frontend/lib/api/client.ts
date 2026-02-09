@@ -137,12 +137,13 @@ function createApiClient(): AxiosInstance {
         // Process queued requests with error
         processQueue(refreshError as Error, null);
 
-        // Redirect to login
+        // Redirect to login - don't re-throw as navigation will clear the page
         navigateToLogin();
 
-        throw refreshError;
+        return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
+        failedQueue = []; // Defensive cleanup to prevent memory leaks
       }
     }
   );
