@@ -11,7 +11,11 @@ import { authService } from '@/lib/services/authService';
 import { validateEmail } from '@/lib/validations/auth';
 import { useAuthStore } from '@/stores/authStore';
 
-export function LoginForm() {
+interface LoginFormProps {
+  returnTo?: string;
+}
+
+export function LoginForm({ returnTo }: LoginFormProps = {}) {
   const router = useRouter();
 
   const [email, setEmail] = useState('');
@@ -53,7 +57,13 @@ export function LoginForm() {
         password,
       });
 
-      // Get user role from store after login
+      // Redirect to returnTo if provided and valid (relative path only)
+      if (returnTo && returnTo.startsWith('/') && !returnTo.startsWith('//')) {
+        router.push(returnTo);
+        return;
+      }
+
+      // Otherwise, use role-based redirect
       const { user } = useAuthStore.getState();
       if (user?.role === 'TARGET') {
         router.push('/');

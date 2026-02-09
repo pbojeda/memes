@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | - |
-| Branch | - |
-| Step | - |
-| Ticket | - |
+| Task | F1.7 - Implement protected route HOC |
+| Branch | feature/sprint1-F1.7-protected-route |
+| Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
+| Ticket | docs/tickets/F1.7-protected-route.md |
 
 ---
 
@@ -59,7 +59,7 @@ Blocked: 0 tasks
 | F1.4 | Implement forgot password page | Medium | 🔜 | | Post-MVP |
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
 | F1.6 | Setup axios interceptors for JWT | High | ✅ | feature/sprint1-F1.6-jwt-interceptors | Completed 2026-02-09 |
-| F1.7 | Implement protected route HOC | High | ⏳ | | |
+| F1.7 | Implement protected route HOC | High | 🔄 | feature/sprint1-F1.7-protected-route | |
 | F1.8 | Create user menu component | Medium | ⏳ | | |
 | F1.9 | Write auth component tests | High | ⏳ | | |
 | F1.10 | Implement token refresh logic | High | ✅ | feature/sprint1-F1.6-jwt-interceptors | Completed with F1.6 |
