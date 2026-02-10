@@ -971,6 +971,10 @@ paths:
     get:
       tags: [Product Types]
       summary: List product types
+      description: |
+        Returns product types ordered by sortOrder.
+        - Public/TARGET users: only active product types are returned (isActive filter is ignored).
+        - Staff roles (ADMIN, MANAGER, MARKETING): all product types are returned by default; use isActive query parameter to filter.
       operationId: listProductTypes
       security: []
       parameters:
