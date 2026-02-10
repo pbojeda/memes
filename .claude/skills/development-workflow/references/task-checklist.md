@@ -35,6 +35,15 @@ Use this checklist for each task to ensure all steps are completed correctly.
 
 ---
 
+### Plan Generation (Standard/Complex only)
+
+- [ ] Planner agent invoked (`backend-planner` or `frontend-planner`)
+- [ ] Plan written into ticket's `## Implementation Plan` section
+- [ ] Plan includes: Existing Code to Reuse, Files to Create/Modify, Implementation Order, Testing Strategy, Key Patterns
+- [ ] 🛑 Plan approved by user
+
+---
+
 ### Development (TDD)
 
 - [ ] **Cycle 1:**
@@ -53,11 +62,11 @@ Use this checklist for each task to ensure all steps are completed correctly.
   - [ ] Refactored if needed
 
 - [ ] All tests passing
-- [ ] Used appropriate agent if needed:
-  - [ ] `database-architect` for schema
-  - [ ] `backend-developer` for DDD patterns
-  - [ ] `frontend-developer` for React components
-  - [ ] `code-review-specialist` for complex code
+- [ ] Used appropriate developer agent:
+  - [ ] `backend-developer` for backend implementation (B*.*)
+  - [ ] `frontend-developer` for frontend implementation (F*.*)
+  - [ ] `database-architect` for schema design (if needed)
+  - [ ] `code-review-specialist` for complex code (if needed)
 
 ---
 

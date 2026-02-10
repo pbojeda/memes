@@ -30,6 +30,10 @@ This document describes how the development-workflow skill integrates with other
 │  └──────────────┘  └──────────────┘  └──────────────┘              │
 │  ┌──────────────┐  ┌──────────────┐                                 │
 │  │ backend-     │  │ frontend-    │                                 │
+│  │ planner      │  │ planner      │                                 │
+│  └──────────────┘  └──────────────┘                                 │
+│  ┌──────────────┐  ┌──────────────┐                                 │
+│  │ backend-     │  │ frontend-    │                                 │
 │  │ developer    │  │ developer    │                                 │
 │  └──────────────┘  └──────────────┘                                 │
 │                                                                      │
@@ -261,28 +265,68 @@ Action: Updates api-spec.yaml with new endpoint
 
 ---
 
+### backend-planner
+
+**Location:** `.claude/agents/backend-planner.md`
+
+**Purpose:** Generate implementation plans for backend tasks (B*.*).
+
+**Capabilities:**
+- Codebase exploration (entities, services, validators, repositories)
+- Identifies reusable code
+- Writes structured plan into ticket
+
+**When to Use:**
+- Step 2a for Standard/Complex backend tasks
+- Before `backend-developer` agent
+
+**Invocation:**
+```
+"Use backend-planner to generate plan for docs/tickets/B2.3-xxx.md"
+```
+
+---
+
 ### backend-developer
 
 **Location:** `.claude/agents/backend-developer.md`
 
-**Purpose:** Implement backend code following DDD patterns.
+**Purpose:** Implement backend tasks from approved ticket + implementation plan using TDD.
 
 **Expertise:**
-- Domain entities
-- Application services
-- Repository pattern
-- Express controllers
-- Error handling
+- Domain entities, application services, repository pattern
+- Express controllers, error handling
+- Test-driven development
 
 **When to Use:**
-- Complex service implementation
-- DDD pattern questions
-- Architecture decisions
+- Step 2b for Standard/Complex backend tasks
+- After plan is approved by user
 
 **Invocation:**
 ```
-"Implement UserService with backend-developer"
-"Use backend-developer for repository pattern"
+"Use backend-developer to implement docs/tickets/B2.3-xxx.md"
+```
+
+---
+
+### frontend-planner
+
+**Location:** `.claude/agents/frontend-planner.md`
+
+**Purpose:** Generate implementation plans for frontend tasks (F*.*).
+
+**Capabilities:**
+- Codebase exploration (components, services, stores, pages)
+- Identifies reusable code
+- Writes structured plan into ticket
+
+**When to Use:**
+- Step 2a for Standard/Complex frontend tasks
+- Before `frontend-developer` agent
+
+**Invocation:**
+```
+"Use frontend-planner to generate plan for docs/tickets/F1.2-xxx.md"
 ```
 
 ---
@@ -291,30 +335,27 @@ Action: Updates api-spec.yaml with new endpoint
 
 **Location:** `.claude/agents/frontend-developer.md`
 
-**Purpose:** Implement React components following project patterns.
+**Purpose:** Implement frontend tasks from approved ticket + implementation plan using TDD.
 
 **Expertise:**
-- React components
-- State management (Zustand)
-- API integration (TanStack Query)
-- Component testing
+- React components, state management (Zustand)
+- API integration, component testing
+- Test-driven development
 
 **When to Use:**
-- Complex component implementation
-- State management questions
-- React patterns
+- Step 2b for Standard/Complex frontend tasks
+- After plan is approved by user
 
 **Invocation:**
 ```
-"Implement ProductCard with frontend-developer"
-"Use frontend-developer for cart state"
+"Use frontend-developer to implement docs/tickets/F1.2-xxx.md"
 ```
 
 ---
 
 ## Integration Patterns
 
-### Pattern 1: Full Task Workflow
+### Pattern 1: Full Task Workflow (Standard/Complex)
 
 ```
 1. "Start task B1.2"
@@ -323,20 +364,28 @@ Action: Updates api-spec.yaml with new endpoint
 2. "/plan-backend-ticket B1.2"
    └─> Generates detailed ticket
 
-3. "/develop-backend"
-   └─> May use: database-architect, backend-developer
+3. 🛑 User approves ticket
 
-4. "Validate code"
+4. backend-planner agent
+   └─> Writes Implementation Plan into ticket
+
+5. 🛑 User approves plan
+
+6. backend-developer agent
+   └─> TDD implementation from plan
+   └─> May use: database-architect
+
+7. "Validate code"
    └─> production-code-validator
 
-5. "/update-docs"
+8. "/update-docs"
    └─> Updates relevant documentation
 
-6. "Generate commit"
+9. "Generate commit"
    └─> Creates conventional commit
 
-7. "Create PR"
-   └─> May use: code-review-specialist
+10. "Create PR"
+    └─> May use: code-review-specialist
 ```
 
 ### Pattern 2: Agent Chaining
@@ -345,25 +394,31 @@ Action: Updates api-spec.yaml with new endpoint
 User: "Create user authentication system"
 
 development-workflow
-  └─> database-architect (design User schema)
-      └─> backend-developer (implement auth service)
-          └─> production-code-validator (validate)
-              └─> code-review-specialist (review)
+  └─> backend-planner (generate implementation plan)
+      └─> 🛑 User approves plan
+          └─> backend-developer (TDD implementation)
+              └─> production-code-validator (validate)
+                  └─> code-review-specialist (review)
 ```
 
-### Pattern 3: Skill with Agent Support
+### Pattern 3: Planner → Developer Pipeline
 
 ```
-/develop-backend (for auth service)
+backend-planner (for auth service)
   │
-  ├─> Internal decision: Need database work
-  │   └─> Invokes: database-architect
-  │
-  ├─> Internal decision: Complex DDD pattern
-  │   └─> Invokes: backend-developer
-  │
-  └─> On completion
-      └─> Automatic: production-code-validator
+  ├─> Explores: domain/, services/, validators/, infrastructure/
+  ├─> Identifies reusable code
+  └─> Writes plan into ticket
+      │
+      └─> 🛑 User approves plan
+          │
+          └─> backend-developer (implements from plan)
+              │
+              ├─> Internal decision: Need database work
+              │   └─> Invokes: database-architect
+              │
+              └─> On completion
+                  └─> Automatic: production-code-validator
 ```
 
 ---
