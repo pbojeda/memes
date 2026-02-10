@@ -53,6 +53,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MAX_SLUG_LENGTH = 100;
 const MAX_NAME_LENGTH = 100;
+const MAX_SORT_ORDER = 2147483647;
 
 function validateName(name: unknown, fieldName: string): LocalizedName {
   if (!name || typeof name !== 'object' || Array.isArray(name)) {
@@ -129,6 +130,10 @@ function validateSortOrder(value: unknown, fieldName: string): number {
 
   if (value < 0) {
     throw new InvalidProductTypeDataError('Sort order cannot be negative', fieldName);
+  }
+
+  if (value > MAX_SORT_ORDER) {
+    throw new InvalidProductTypeDataError(`Sort order cannot exceed ${MAX_SORT_ORDER}`, fieldName);
   }
 
   return value;

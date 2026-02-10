@@ -415,6 +415,29 @@ describe('productTypeValidator', () => {
 
         expect(result.sortOrder).toBe(100);
       });
+
+      it('should throw InvalidProductTypeDataError when sortOrder exceeds max integer', () => {
+        const input: CreateProductTypeInput = {
+          name: { es: 'Camiseta' },
+          slug: 't-shirt',
+          sortOrder: 2147483648,
+        };
+
+        expect(() => validateCreateProductTypeInput(input)).toThrow(InvalidProductTypeDataError);
+        expect(() => validateCreateProductTypeInput(input)).toThrow('Sort order cannot exceed 2147483647');
+      });
+
+      it('should accept sortOrder at max integer boundary', () => {
+        const input: CreateProductTypeInput = {
+          name: { es: 'Camiseta' },
+          slug: 't-shirt',
+          sortOrder: 2147483647,
+        };
+
+        const result = validateCreateProductTypeInput(input);
+
+        expect(result.sortOrder).toBe(2147483647);
+      });
     });
   });
 

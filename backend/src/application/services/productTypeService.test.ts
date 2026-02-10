@@ -13,6 +13,7 @@ import {
 } from '../../domain/errors/ProductTypeError';
 import { UserRole } from '../../generated/prisma/enums';
 import type { ProductType } from '../../generated/prisma/client';
+import { Prisma } from '../../generated/prisma/client';
 
 jest.mock('../../lib/prisma', () => ({
   __esModule: true,
@@ -52,14 +53,10 @@ describe('productTypeService', () => {
     };
 
     it('should create product type with valid input', async () => {
-      (mockPrisma.productType.findUnique as jest.Mock).mockResolvedValue(null);
       (mockPrisma.productType.create as jest.Mock).mockResolvedValue(mockCreatedProductType);
 
       const result = await createProductType(validInput);
 
-      expect(mockPrisma.productType.findUnique).toHaveBeenCalledWith({
-        where: { slug: 't-shirt' },
-      });
       expect(mockPrisma.productType.create).toHaveBeenCalledWith({
         data: {
           name: { es: 'Camiseta', en: 'T-Shirt' },
@@ -73,7 +70,6 @@ describe('productTypeService', () => {
     });
 
     it('should apply default values for optional fields', async () => {
-      (mockPrisma.productType.findUnique as jest.Mock).mockResolvedValue(null);
       (mockPrisma.productType.create as jest.Mock).mockResolvedValue(mockCreatedProductType);
 
       await createProductType(validInput);
@@ -87,11 +83,25 @@ describe('productTypeService', () => {
       });
     });
 
-    it('should throw ProductTypeSlugAlreadyExistsError when slug exists', async () => {
-      (mockPrisma.productType.findUnique as jest.Mock).mockResolvedValue(mockCreatedProductType);
+    it('should throw ProductTypeSlugAlreadyExistsError when slug unique constraint violated', async () => {
+      (mockPrisma.productType.create as jest.Mock).mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+          code: 'P2002',
+          clientVersion: '6.0.0',
+        })
+      );
 
       await expect(createProductType(validInput)).rejects.toThrow(ProductTypeSlugAlreadyExistsError);
-      expect(mockPrisma.productType.create).not.toHaveBeenCalled();
+    });
+
+    it('should re-throw non-P2002 Prisma errors on create', async () => {
+      const dbError = new Prisma.PrismaClientKnownRequestError('Connection failed', {
+        code: 'P1001',
+        clientVersion: '6.0.0',
+      });
+      (mockPrisma.productType.create as jest.Mock).mockRejectedValue(dbError);
+
+      await expect(createProductType(validInput)).rejects.toThrow(dbError);
     });
 
     it('should throw InvalidProductTypeDataError when input is invalid', async () => {
@@ -120,7 +130,6 @@ describe('productTypeService', () => {
         sortOrder: 10,
       };
 
-      (mockPrisma.productType.findUnique as jest.Mock).mockResolvedValue(null);
       (mockPrisma.productType.create as jest.Mock).mockResolvedValue(mockResult);
 
       const result = await createProductType(fullInput);
@@ -432,37 +441,31 @@ describe('productTypeService', () => {
       expect(mockPrisma.productType.update).not.toHaveBeenCalled();
     });
 
-    it('should throw ProductTypeSlugAlreadyExistsError when slug conflicts', async () => {
+    it('should throw ProductTypeSlugAlreadyExistsError when slug unique constraint violated', async () => {
       const input = { slug: 'mug' };
 
-      const otherProductType = {
-        id: 'other-uuid',
-        slug: 'mug',
-      };
-
-      (mockPrisma.productType.findUnique as jest.Mock)
-        .mockResolvedValueOnce(mockExistingProductType)
-        .mockResolvedValueOnce(otherProductType);
+      (mockPrisma.productType.findUnique as jest.Mock).mockResolvedValue(mockExistingProductType);
+      (mockPrisma.productType.update as jest.Mock).mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+          code: 'P2002',
+          clientVersion: '6.0.0',
+        })
+      );
 
       await expect(updateProductType(validId, input)).rejects.toThrow(ProductTypeSlugAlreadyExistsError);
-      expect(mockPrisma.productType.update).not.toHaveBeenCalled();
     });
 
-    it('should not check slug uniqueness when slug unchanged', async () => {
-      const input = { slug: 't-shirt', name: { es: 'Nueva' } };
-
-      const mockUpdatedProductType = {
-        ...mockExistingProductType,
-        name: { es: 'Nueva' },
-      };
+    it('should re-throw non-P2002 Prisma errors on update', async () => {
+      const input = { slug: 'new-slug' };
+      const dbError = new Prisma.PrismaClientKnownRequestError('Connection failed', {
+        code: 'P1001',
+        clientVersion: '6.0.0',
+      });
 
       (mockPrisma.productType.findUnique as jest.Mock).mockResolvedValue(mockExistingProductType);
-      (mockPrisma.productType.update as jest.Mock).mockResolvedValue(mockUpdatedProductType);
+      (mockPrisma.productType.update as jest.Mock).mockRejectedValue(dbError);
 
-      await updateProductType(validId, input);
-
-      expect(mockPrisma.productType.findUnique).toHaveBeenCalledTimes(1);
-      expect(mockPrisma.productType.update).toHaveBeenCalled();
+      await expect(updateProductType(validId, input)).rejects.toThrow(dbError);
     });
 
     it('should throw InvalidProductTypeDataError when ID is invalid', async () => {

@@ -23,25 +23,24 @@ import { Prisma } from '../../generated/prisma/client';
 export async function createProductType(input: CreateProductTypeInput): Promise<ProductType> {
   const validated = validateCreateProductTypeInput(input);
 
-  const existing = await prisma.productType.findUnique({
-    where: { slug: validated.slug },
-  });
+  try {
+    const productType = await prisma.productType.create({
+      data: {
+        name: validated.name,
+        slug: validated.slug,
+        hasSizes: validated.hasSizes,
+        isActive: validated.isActive,
+        sortOrder: validated.sortOrder,
+      },
+    });
 
-  if (existing) {
-    throw new ProductTypeSlugAlreadyExistsError();
+    return productType;
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      throw new ProductTypeSlugAlreadyExistsError();
+    }
+    throw error;
   }
-
-  const productType = await prisma.productType.create({
-    data: {
-      name: validated.name,
-      slug: validated.slug,
-      hasSizes: validated.hasSizes,
-      isActive: validated.isActive,
-      sortOrder: validated.sortOrder,
-    },
-  });
-
-  return productType;
 }
 
 /**
@@ -111,22 +110,19 @@ export async function updateProductType(id: string, input: UpdateProductTypeInpu
     throw new ProductTypeNotFoundError();
   }
 
-  if (validated.slug && validated.slug !== existing.slug) {
-    const slugExists = await prisma.productType.findUnique({
-      where: { slug: validated.slug },
+  try {
+    const productType = await prisma.productType.update({
+      where: { id },
+      data: validated,
     });
 
-    if (slugExists) {
+    return productType;
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       throw new ProductTypeSlugAlreadyExistsError();
     }
+    throw error;
   }
-
-  const productType = await prisma.productType.update({
-    where: { id },
-    data: validated,
-  });
-
-  return productType;
 }
 
 /**
