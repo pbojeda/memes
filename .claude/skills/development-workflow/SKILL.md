@@ -1,459 +1,195 @@
 ---
 name: development-workflow
-description: "Orchestrates the complete development workflow for each task. Invoke with: 'start task B0.1', 'show sprint progress', 'next task', 'pause task', or 'resume task'."
+description: "Orchestrates the complete development workflow for each task. Invoke with: 'start task B0.1', 'show sprint progress', 'next task', or 'init sprint N'."
 ---
 
 # Development Workflow Skill
 
-## Overview
+## Quick Reference
 
-This skill orchestrates the development lifecycle for each task, integrating with the project memory system and using specialized agents for quality assurance.
+1. **Setup** - Branch, ticket (Std/Cplx), sprint tracker → 🛑 TICKET APPROVAL
+2. **Plan** - Planner agent writes implementation plan (Std/Cplx) → 🛑 PLAN APPROVAL
+3. **Implement** - Developer agent, TDD, update docs
+4. **Finalize** - Tests/lint/build, `production-code-validator`, summary → 🛑 COMMIT APPROVAL
+5. **Review** - PR, `code-review-specialist` (Std/Cplx), human review → Merge
 
 ## Commands
 
-| Command | Action |
-|---------|--------|
-| `start task B0.1` | Begin working on a specific task |
-| `next task` | Start the next pending task in current sprint |
-| `pause task` | Save progress and pause current work |
-| `resume task` | Continue a paused task |
-| `show sprint progress` | View sprint completion status |
-| `init sprint N` | Initialize a new sprint tracker |
+- `start task B0.1` — Begin working on a specific task
+- `next task` — Start the next pending task in current sprint
+- `show sprint progress` — View sprint completion status
+- `init sprint N` — Initialize a new sprint tracker
 
 ---
 
 ## Task Complexity
 
-**IMPORTANT:** Before starting any task, ask the user to classify its complexity using **context-aware options**.
+Ask user to classify complexity with **context-aware options** before starting. See `references/complexity-guide.md` for examples and how to ask.
 
-### How to Ask About Complexity
+### Workflow: Simple
 
-Instead of generic options, provide **task-specific descriptions** for each complexity level:
+1. Setup → Branch only
+2. Plan → Skip
+3. Implement → Direct implementation (TDD)
+4. Finalize → Commit
+5. Review → PR (auto-merge allowed)
 
-```
-"What complexity level for [TASK-ID] ([Task Name])?"
+### Workflow: Standard/Complex
 
-1. Simple (Recommended if applicable)
-   [Specific description of what "simple" means for THIS task]
-
-2. Standard
-   [Specific description of what "standard" means for THIS task]
-
-3. Complex / Skip / Alternative
-   [Context-aware third option - could be "Complex", "Skip if already done", or alternative approach]
-```
-
-### Examples
-
-**Example 1 - Task might be already done:**
-```
-What complexity level for B1.5 (Implement refresh token rotation)?
-
-1. Simple (Recommended)
-   Verify existing implementation in B1.3, add tests if missing
-
-2. Standard
-   Add additional rotation logic or edge cases
-
-3. Skip B1.5
-   Already done in B1.3, move to B1.6 (auth controller)
-```
-
-**Example 2 - Standard new feature:**
-```
-What complexity level for B1.4 (Create auth middleware)?
-
-1. Simple
-   Straightforward middleware, minimal logic
-
-2. Standard (Recommended)
-   JWT verification, role checking, error handling
-
-3. Complex
-   Multiple middleware types, extensive edge cases
-```
-
-### Discussion Option
-
-The user always has the option to **discuss the task** instead of selecting a complexity level. This allows:
-
-- Clarifying doubts about what the task involves
-- Discussing if a task should be split or combined
-- Exploring alternative approaches
-- Understanding dependencies better
-
-When presenting complexity options, remind the user they can select "Chat about this" or type a custom response to discuss before deciding.
-
-### Why Context-Aware Options?
-
-- Helps user understand what each level means **for this specific task**
-- Allows suggesting "Skip" when a task might be redundant
-- Provides recommendations based on task analysis
-- Enables discussion via "Chat about this" option
-- User can always choose to discuss before committing to a complexity level
-
-### Generic Fallback (only if no context available)
-
-```
-- Simple (install library, basic config, copy template)
-- Standard (new endpoint, component, small feature)
-- Complex (complete feature, significant refactor, external integration)
-```
-
-### Workflow by Complexity
-
-| Step | Simple | Standard | Complex |
-|------|--------|----------|---------|
-| 1. Setup | Branch only | Branch + Ticket + **User Review** | Branch + Ticket + ADR review + **User Review** |
-| 2a. Plan | Skip | Planner agent + **Plan Review** | Planner agent + **Plan Review** |
-| 2b. Implement | Direct implementation | Developer agent (TDD) | Developer agent (TDD) |
-| 3. Finalize | Commit | Validate + Commit | Validate + Commit |
-| 4. Review | PR (auto-merge allowed) | PR + `code-review-specialist` + Human review | PR + `code-review-specialist` + Human review |
-| 5. Complete | Merge + Update tracker | Merge + Update tracker | Merge + Update tracker |
-
-### Agents Usage by Complexity
-
-| Complexity | Ticket | Planner Agent | Developer Agent | code-review-specialist |
-|------------|--------|---------------|-----------------|------------------------|
-| Simple | ❌ Skip | ❌ Skip | ❌ Direct implementation | ❌ Skip |
-| Standard | ✅ Required | ✅ `backend-planner` or `frontend-planner` | ✅ `backend-developer` or `frontend-developer` | ✅ Required |
-| Complex | ✅ Required + ADR review | ✅ Required | ✅ Required | ✅ Required |
+1. Setup → Branch + Ticket + **User Review** (+ADR review for Complex)
+2. Plan → Planner agent + **Plan Review**
+3. Implement → Developer agent (TDD)
+4. Finalize → `production-code-validator` + Commit
+5. Review → PR + `code-review-specialist` + Human review
 
 ---
 
-## Workflow Steps (5 Steps)
+## Step 1: Setup
 
-### Step 1: Setup
-
-**Actions:**
 1. Verify sprint tracker exists (`docs/project_notes/sprint-X-tracker.md`)
 2. Verify no active task in sprint tracker
 3. Check dependencies are completed
 4. Create feature branch: `feature/sprint<N>-<task-id>-<short-description>`
+5. **Std/Cplx:** Generate ticket using `references/ticket-template.md`
+   - Backend (B*.*): Apply standards from `/ai-specs/specs/backend-standards.mdc`
+   - Frontend (F*.*): Apply standards from `/ai-specs/specs/frontend-standards.mdc`
+   - Save to `docs/tickets/<task-id>-<short-description>.md`
+6. **Complex:** Also review `decisions.md` for related ADRs
+7. Update sprint tracker: task status → 🔄, Active Task → `1/5 (Setup)`
 
-**For Standard/Complex tasks - Generate Ticket:**
-
-**For backend tasks (B*.*):**
-- Apply DDD and backend best practices from `/ai-specs/specs/backend-standards.mdc`
-
-**For frontend tasks (F*.*):**
-- Apply React/Next.js and frontend best practices from `/ai-specs/specs/frontend-standards.mdc`
-
-_Note: The detailed Implementation Plan will be generated by the planner agent in Step 2a._
-
-**Ticket Rules:**
-- Do NOT write code yet; provide only the plan
-- The ticket must be detailed enough for autonomous implementation
-- Use template from `references/ticket-template.md`
-- Save to `docs/tickets/<task-id>-<short-description>.md`
-- Example: `docs/tickets/B1.1-user-model.md`
-
-**For Complex tasks:** Also review `decisions.md` for related architectural decisions
-
-**Update sprint tracker:**
-- Update task status in table to 🔄 (In Progress)
-- Update Active Task step to: `1/5 (Setup) - 🛑 Awaiting ticket approval`
-
----
-
-### 🛑 CHECKPOINT: TICKET APPROVAL REQUIRED
+### 🛑 CHECKPOINT: TICKET APPROVAL REQUIRED (Std/Cplx only — Simple skips to Step 2b)
 
 **Do NOT proceed to Step 2 until user explicitly approves.**
-
-Ask: "Please review the ticket at `docs/tickets/[task-id].md`. Reply 'approved' to proceed with planning."
-
-If user requests changes, update the ticket and ask again.
+Ask: "Please review the ticket at `docs/tickets/[task-id].md`. Reply 'approved' to proceed."
 
 ---
 
-### Step 2a: Plan (Standard/Complex only — Simple tasks skip to 2b)
+## Step 2a: Plan (Standard/Complex only — Simple skips to 2b)
 
-**Use the Task tool with the appropriate planner agent:**
-- Backend tasks (B*.*) → Use `backend-planner` agent
-- Frontend tasks (F*.*) → Use `frontend-planner` agent
-
-The planner agent will:
-1. Explore the codebase for reusable code
-2. Write a structured Implementation Plan into the ticket's `## Implementation Plan` section
-3. The plan includes: Existing Code to Reuse, Files to Create/Modify, Implementation Order, Testing Strategy, Key Patterns
-
-**Update sprint tracker:**
-- Update Active Task step to: `2a/5 (Plan) - 🛑 Awaiting plan approval`
-
----
+1. Use Task tool with planner agent:
+   - Backend (B*.*) → `backend-planner`
+   - Frontend (F*.*) → `frontend-planner`
+2. Agent writes Implementation Plan into ticket's `## Implementation Plan` section
+3. Update sprint tracker: Active Task → `2a/5 (Plan)`
 
 ### 🛑 CHECKPOINT: PLAN APPROVAL REQUIRED
 
 **Do NOT proceed to Step 2b until user explicitly approves the plan.**
-
-Ask: "Please review the Implementation Plan in `docs/tickets/[task-id].md`. Reply 'approved' to proceed with implementation."
-
-If user requests changes, update the plan and ask again.
+Ask: "Please review the Implementation Plan in `docs/tickets/[task-id].md`. Reply 'approved' to proceed."
 
 ---
 
-### Step 2b: Implement
+## Step 2b: Implement
 
-**For Simple tasks:**
-- Implement directly following TDD principles
-- Write tests for the configuration/setup
+**Simple:** Implement directly following TDD principles.
 
-**For Standard/Complex tasks:**
+**Std/Cplx:** Use Task tool with developer agent:
+- Backend (B*.*) → `backend-developer`
+- Frontend (F*.*) → `frontend-developer`
 
-**IMPORTANT: Use the Task tool with the appropriate developer agent:**
-- Backend tasks (B*.*) → Use `backend-developer` agent
-- Frontend tasks (F*.*) → Use `frontend-developer` agent
+**TDD Cycle:** Write failing test → Minimum code to pass → Refactor → Repeat
 
-The developer agent will read the ticket + approved Implementation Plan and follow TDD strictly.
-
-**TDD Cycle:**
-```
-1. Write failing test → 2. Minimum code to pass → 3. Refactor → 4. Repeat
-```
-
-**Update documentation during development (not after):**
-- New API endpoints → `api-spec.yaml`
-- Schema/model changes exposed via API → `api-spec.yaml`
-- Database schema changes → `data-model.md` (wait for user approval before saving)
+**Update docs during development:**
+- API endpoints → `api-spec.yaml` (then run `cd frontend && npm run generate:api`)
+- DB schema changes → `data-model.md`
 - New env variables → `.env.example`
-- Architectural Decision Records (ADRs) with context and trade-offs → `decisions.md`
-- Setup changes → `README.md`, Development Guide
-
-**IMPORTANT - Frontend/Backend Sync:**
-After ANY change to `api-spec.yaml`, regenerate frontend types:
-```bash
-cd frontend && npm run generate:api
-```
-
-**Use skill:** `/update-docs`
-
-**Additional agents when needed:**
-
-| Situation | Agent |
-|-----------|-------|
-| Database schema design | `database-architect` |
-| Complex backend logic | `backend-developer` |
-| React components | `frontend-developer` |
+- ADRs → `decisions.md`
+- Use skill: `/update-docs`
 
 ---
 
-### Step 3: Finalize
+## Step 3: Finalize
 
-**Before committing, verify:**
-1. Tests pass: `npm test`
-2. Lint passes: `npm run lint`
-3. Build succeeds: `npm run build`
-4. **For Standard/Complex:** Run `production-code-validator` agent
+### Pre-commit checklist:
+1. [ ] Tests pass: `npm test`
+2. [ ] Lint passes: `npm run lint`
+3. [ ] Build succeeds: `npm run build`
 
-**Update ticket:**
-- Mark each acceptance criterion as `[x]` when verified
+### >>> MANDATORY: RUN production-code-validator (Standard/Complex) <<<
+
+Use the Task tool to launch the `production-code-validator` agent.
+**Do NOT skip this step.** It catches debug code, TODOs, hardcoded values.
+
+### Update ticket:
+- Mark each acceptance criterion as `[x]`
 - Mark each Definition of Done item as `[x]`
 - **Never commit without updating the ticket first**
 
-**If issues found:** Fix before proceeding.
-
-**Provide change summary to user:**
+### Provide change summary to user:
 - Files created (with purpose)
 - Files modified (with what changed)
-- Key points to review (security, breaking changes, dependencies, etc.)
-
----
+- Key points to review (security, breaking changes, dependencies)
 
 ### 🛑 CHECKPOINT: COMMIT APPROVAL REQUIRED
 
-**Do NOT create commit until user acknowledges the changes.**
-
+**Do NOT create commit until user acknowledges.**
 Ask: "Ready to commit. Reply 'yes' to proceed or request changes."
 
----
-
-**Create commit:**
-```
-<type>(<scope>): <description>
-
-<body>
-
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
-```
-
+**Commit format:** `<type>(<scope>): <description>` + body + `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
 Types: feat, fix, docs, style, refactor, test, chore
 
 ---
 
-### Step 4: Review
+## Step 4: Review
 
-**For Simple tasks:**
-- Push branch
-- Create PR
-- Auto-merge allowed if all checks pass
+**Simple:** Push branch → Create PR → Auto-merge allowed if checks pass.
 
-**For Standard/Complex tasks:**
+**Std/Cplx:**
 1. Push branch
-2. Create PR with description (use template below)
-3. Run `code-review-specialist` agent
-4. **Wait for human review**
-5. Address review comments if any
-6. Get approval before merging
+2. Create PR (use template from `references/pr-template.md`)
 
-**PR Description Template:**
-```markdown
-## Summary
-[Brief description of changes]
+### >>> MANDATORY: RUN code-review-specialist <<<
 
-## Task
-- Task ID: [B1.1]
-- Sprint: [1]
-- Complexity: [Simple/Standard/Complex]
-- Ticket: [docs/tickets/B1.1-xxx.md]
+Use the Task tool to launch the `code-review-specialist` agent.
+**Do NOT skip this step.** It catches quality issues before human review.
 
-## Changes
-- [List of changes]
-
-## Testing
-- [x] All tests passing
-- [x] Lint passing
-- [x] Build succeeds
-- [x] Validated with production-code-validator (if Standard/Complex)
-
-## Checklist
-- [ ] Ticket acceptance criteria updated with [x]
-- [ ] Documentation updated (if applicable)
-- [ ] Ready to merge
-
-🤖 Generated with [Claude Code](https://claude.ai/code)
-```
+3. **Wait for human review**
+4. Address review comments if any
+5. Get approval before merging
 
 ---
 
-### Step 5: Complete
+## Step 5: Complete
 
-**After PR is merged:**
+After PR is merged:
 1. Delete feature branch (local and remote)
 2. Update sprint tracker:
-   - Mark task status as ✅
-   - Add entry to Completion Log with date, task ID, commit hash, and notes
+   - Task status → ✅
+   - Add entry to Completion Log (date, task ID, commit hash, notes)
    - Update progress percentage
-3. Record any bugs fixed in `bugs.md`
-4. Record any decisions made in `decisions.md`
+3. Record bugs fixed in `bugs.md`
+4. Record decisions made in `decisions.md`
 
----
-
-## Memory System Integration
-
-### Files Updated Automatically
-
-| File | Updated When |
-|------|--------------|
-| `sprint-X-tracker.md` | Every step change, pause, resume, complete, task status |
-| `bugs.md` | Bug discovered and fixed during development |
-| `decisions.md` | Architectural decision made during implementation |
-| `key_facts.md` | New configuration or environment details added |
-| `docs/tickets/*.md` | Ticket generated (Step 3) |
-
-### Before Each Task
-```
-1. Read docs/project_notes/sprint-X-tracker.md → Verify no active task
-2. Read docs/project_notes/decisions.md → Check for relevant decisions
-3. Read docs/project_notes/bugs.md → Check for known issues
-4. Check sprint tracker task tables → Verify dependencies completed
-```
-
-### After Each Task
-```
-1. Update sprint tracker → Clear "Active Task", update task status to ✅
-2. Update sprint tracker → Add entry to "Completion Log"
-3. If bug fixed → Add to docs/project_notes/bugs.md
-4. If decision made → Add to docs/project_notes/decisions.md
-```
-
----
-
-## Pause & Resume
-
-### Pause Task
-
-When you need to stop work temporarily:
-
-1. Commit any work in progress (WIP commit if needed)
-2. Update sprint tracker with pause context:
-
-```markdown
-## Paused Task
-
-| Field | Value |
-|-------|-------|
-| Task | B1.1 - Create User model |
-| Branch | feature/sprint1-B1.1-user-model |
-| Paused At | Step 2 (Develop) |
-| Context | Completed user validation tests. Next: implement password hashing |
-```
-
-### Resume Task
-
-When continuing paused work:
-1. Read sprint tracker for context
-2. Checkout the branch
-3. Continue from saved step
-4. Clear the "Paused Task" section when resuming
-
----
-
-## Sprint Tracking
-
-### Single Source of Truth
-
-The file `docs/project_notes/sprint-X-tracker.md` (where X is the current sprint number) always reflects the current state:
-
-- **Active Task** section with step progress
-- **Task status** in the task tables
-- **Completion Log** for finished tasks
-
-**Always update the sprint tracker when:**
-- Starting a task → Update "Active Task" section and task status to 🔄
-- Changing steps → Update step in "Active Task" section
-- Pausing → Mark as Paused in "Active Task" section
-- Completing → Clear "Active Task", update task status to ✅, add to "Completion Log"
-
-### Initialize New Sprint
-
-1. Use template from `references/sprint-init-template.md`
-2. Save as `docs/project_notes/sprint-N-tracker.md`
-3. Populate with tasks from `PLAN_DESARROLLO.md`
-
----
+See `references/memory-integration.md` for full memory update checklist.
 
 ## Agents Reference
 
-| Agent | When to Use |
-|-------|-------------|
-| `production-code-validator` | Before commit (Standard/Complex tasks) |
-| `code-review-specialist` | Before merge (Standard/Complex tasks) |
-| `database-architect` | Schema design, migrations, query optimization |
-| `backend-planner` | Step 2a: generate implementation plan for backend tasks (B*.*) |
-| `backend-developer` | Step 2b: TDD implementation from approved plan for backend tasks (B*.*) |
-| `frontend-planner` | Step 2a: generate implementation plan for frontend tasks (F*.*) |
-| `frontend-developer` | Step 2b: TDD implementation from approved plan for frontend tasks (F*.*) |
+- `production-code-validator` — **Step 3:** Before commit (Std/Cplx)
+- `code-review-specialist` — **Step 4:** Before merge (Std/Cplx)
+- `database-architect` — Schema design, migrations, query optimization
+- `backend-planner` — **Step 2a:** Implementation plan for backend (B*.*)
+- `backend-developer` — **Step 2b:** TDD implementation for backend (B*.*)
+- `frontend-planner` — **Step 2a:** Implementation plan for frontend (F*.*)
+- `frontend-developer` — **Step 2b:** TDD implementation for frontend (F*.*)
 
----
+## Templates & References
 
-## Templates
-
-| Document | Purpose |
-|----------|---------|
-| `references/ticket-template.md` | Ticket format for Standard/Complex tasks |
-| `references/sprint-init-template.md` | Initialize new sprints |
-
----
+- `references/ticket-template.md` — Ticket format for Std/Cplx tasks
+- `references/pr-template.md` — PR description template & merge process
+- `references/sprint-init-template.md` — Initialize new sprints
+- `references/complexity-guide.md` — How to ask about complexity with examples
+- `references/memory-integration.md` — Memory system files & update rules
+- `references/sprint-tracking.md` — Sprint tracker operational rules
+- `references/task-checklist.md` — Detailed per-task checklist
 
 ## Constraints
 
-- **One task at a time**: Never start a new task before completing or pausing current
+- **One task at a time**: Never start a new task before completing current
 - **TDD mandatory**: All code needs tests
-- **Type safety**: All code fully typed (TypeScript)
+- **Type safety**: All code fully typed (TypeScript, no `any`)
 - **English only**: All technical artifacts in English
-- **Memory first**: Always check project_notes before changes
-- **Sprint tracker is source of truth**: Keep sprint-X-tracker.md updated at every step
-- **Ticket first**: For Standard/Complex, create ticket and wait for user approval before coding
-- **Human review**: Standard/Complex tasks require human PR review
-- **Use correct agents**: Backend tasks use `backend-planner` (Step 2a) + `backend-developer` (Step 2b), frontend tasks use `frontend-planner` + `frontend-developer`
-- **Use ticket template**: Always use `references/ticket-template.md` for local tickets
+- **Memory first**: Always check `project_notes/` before changes
+- **Sprint tracker**: Keep `sprint-X-tracker.md` updated at every step
+- **Ticket first**: Std/Cplx requires ticket + user approval before coding
+- **Human review**: Std/Cplx tasks require human PR review
+- **Correct agents**: Backend → `backend-planner` + `backend-developer`, Frontend → `frontend-planner` + `frontend-developer`
