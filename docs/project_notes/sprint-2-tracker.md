@@ -10,11 +10,12 @@
 ## Progress Overview
 
 ```
-Progress: [██████                  ] 30%
+Progress: [████████                ] 40%
 
-Completed: 3/10 tasks
+Completed: 4/9 tasks
 In Progress: 0 tasks
-Pending: 7 tasks
+Pending: 5 tasks
+Deferred: 1 task (B2.4)
 Blocked: 0 tasks
 ```
 
@@ -22,10 +23,9 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**B2.5** - Create seed data for product types
-- Step: `2b/5 (Implement)`
-- Branch: `feature/sprint2-B2.5-product-type-seed`
-- Complexity: Simple
+**B2.6** — Write product type integration tests
+- Step: 3/5 (Finalize)
+- Branch: `feature/sprint2-B2.6-product-type-integration-tests`
 
 ---
 
@@ -36,9 +36,9 @@ Blocked: 0 tasks
 | B2.1 | Create ProductType model and migration | High | ✅ | feature/sprint2-B2.1-product-type-model | Completed 2026-02-09 |
 | B2.2 | Implement product type service | High | ✅ | feature/sprint2-B2.2-product-type-service | Completed 2026-02-09 |
 | B2.3 | Create product type endpoints (CRUD) | High | ✅ | feature/sprint2-B2.3-product-type-endpoints | Completed 2026-02-10 |
-| B2.4 | Implement i18n support for product type names | Medium | ⏳ | | |
-| B2.5 | Create seed data for product types | High | 🔄 | feature/sprint2-B2.5-product-type-seed | |
-| B2.6 | Write product type integration tests | High | ⏳ | | |
+| B2.4 | Implement i18n support for product type names | Medium | 🚫 | | Deferred post-MVP (ADR-003) |
+| B2.5 | Create seed data for product types | High | ✅ | feature/sprint2-B2.5-product-type-seed | Completed 2026-02-10 |
+| B2.6 | Write product type integration tests | High | 🔄 | feature/sprint2-B2.6-product-type-integration-tests | |
 
 ---
 
@@ -95,6 +95,7 @@ F2.3 ──► F2.4
 | ADR | Title | Date |
 |-----|-------|------|
 | ADR-002 | Defer ProductType → Product relation until Sprint 3 | 2026-02-09 |
+| ADR-003 | Defer i18n to post-MVP | 2026-02-10 |
 
 ---
 
@@ -131,6 +132,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | B2.1 | cf7f25d | ProductType model + migration + domain errors + ADR-002 |
 | 2026-02-09 | B2.2 | c959e64 | ProductType service + validator, 92 tests, role-aware getAll, slug race condition fix |
 | 2026-02-10 | B2.3 | 44d7cd5 | CRUD endpoints + optionalAuthMiddleware + authController refactor, 361 tests, PR #40 |
+| 2026-02-10 | B2.5 | 2f75da1 | Seed data (6 product types) + seed script + 9 tests, PR #41 |
 
 ---
 
