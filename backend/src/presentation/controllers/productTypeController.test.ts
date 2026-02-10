@@ -12,6 +12,7 @@ import {
   ProductTypeSlugAlreadyExistsError,
 } from '../../domain/errors/ProductTypeError';
 import { UserRole } from '../../generated/prisma/enums';
+import { UNAUTHENTICATED_ROLE } from '../../application/validators/productTypeValidator';
 import type { ProductType } from '../../generated/prisma/client';
 
 jest.mock('../../application/services/productTypeService');
@@ -61,7 +62,7 @@ describe('productTypeController', () => {
       await listProductTypes(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(productTypeService.getAllProductTypes).toHaveBeenCalledWith({
-        callerRole: 'PUBLIC',
+        callerRole: UNAUTHENTICATED_ROLE,
         isActive: undefined,
       });
       expect(statusMock).toHaveBeenCalledWith(200);
@@ -92,7 +93,7 @@ describe('productTypeController', () => {
       await listProductTypes(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(productTypeService.getAllProductTypes).toHaveBeenCalledWith({
-        callerRole: 'PUBLIC',
+        callerRole: UNAUTHENTICATED_ROLE,
         isActive: true,
       });
     });
@@ -104,7 +105,7 @@ describe('productTypeController', () => {
       await listProductTypes(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(productTypeService.getAllProductTypes).toHaveBeenCalledWith({
-        callerRole: 'PUBLIC',
+        callerRole: UNAUTHENTICATED_ROLE,
         isActive: false,
       });
     });
@@ -116,8 +117,20 @@ describe('productTypeController', () => {
       await listProductTypes(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(productTypeService.getAllProductTypes).toHaveBeenCalledWith({
-        callerRole: 'PUBLIC',
+        callerRole: UNAUTHENTICATED_ROLE,
         isActive: undefined,
+      });
+    });
+
+    it('should treat non-"true" isActive values as false', async () => {
+      mockRequest.query = { isActive: 'invalid' };
+      (productTypeService.getAllProductTypes as jest.Mock).mockResolvedValue([]);
+
+      await listProductTypes(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(productTypeService.getAllProductTypes).toHaveBeenCalledWith({
+        callerRole: UNAUTHENTICATED_ROLE,
+        isActive: false,
       });
     });
 

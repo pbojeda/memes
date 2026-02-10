@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../application/services/tokenService';
-import { TokenExpiredError, InvalidTokenError } from '../domain/errors/AuthError';
 
 /**
  * Express middleware for optional JWT authentication.
@@ -37,13 +36,8 @@ export function optionalAuthMiddleware(req: Request, _res: Response, next: NextF
     req.user = payload;
 
     next();
-  } catch (error) {
-    // Silently ignore all token verification errors
-    if (error instanceof TokenExpiredError || error instanceof InvalidTokenError) {
-      next();
-    } else {
-      // Also pass through for any other error
-      next();
-    }
+  } catch {
+    // Silently ignore all token verification errors - this is optional auth
+    next();
   }
 }

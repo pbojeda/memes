@@ -33,30 +33,7 @@ export async function register(req: Request, res: Response, next: NextFunction):
       data: user,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-          field: error.field,
-        },
-      });
-      return;
-    }
-
-    if (error instanceof EmailAlreadyExistsError) {
-      res.status(409).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    next(error);
+    handleAuthError(error, res, next);
   }
 }
 
@@ -81,41 +58,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
       },
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-          field: error.field,
-        },
-      });
-      return;
-    }
-
-    if (error instanceof InvalidCredentialsError) {
-      res.status(401).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    if (error instanceof UserNotActiveError) {
-      res.status(401).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    next(error);
+    handleAuthError(error, res, next);
   }
 }
 
@@ -148,18 +91,7 @@ export async function logout(req: Request, res: Response, next: NextFunction): P
       },
     });
   } catch (error) {
-    if (error instanceof UserNotFoundError) {
-      res.status(404).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    next(error);
+    handleAuthError(error, res, next);
   }
 }
 
@@ -177,30 +109,7 @@ export async function refresh(req: Request, res: Response, next: NextFunction): 
       data: tokens,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-          field: error.field,
-        },
-      });
-      return;
-    }
-
-    if (error instanceof InvalidTokenError) {
-      res.status(401).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    next(error);
+    handleAuthError(error, res, next);
   }
 }
 
@@ -223,19 +132,7 @@ export async function forgotPassword(req: Request, res: Response, next: NextFunc
       },
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-          field: error.field,
-        },
-      });
-      return;
-    }
-
-    next(error);
+    handleAuthError(error, res, next);
   }
 }
 
@@ -255,40 +152,81 @@ export async function resetPassword(req: Request, res: Response, next: NextFunct
       },
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-          field: error.field,
-        },
-      });
-      return;
-    }
-
-    if (error instanceof PasswordResetTokenInvalidError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    if (error instanceof PasswordResetTokenExpiredError) {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: error.message,
-          code: error.code,
-        },
-      });
-      return;
-    }
-
-    next(error);
+    handleAuthError(error, res, next);
   }
+}
+
+/**
+ * Private helper to handle auth domain errors.
+ * Maps domain errors to HTTP status codes.
+ */
+function handleAuthError(error: unknown, res: Response, next: NextFunction): void {
+  if (error instanceof ValidationError) {
+    res.status(400).json({
+      success: false,
+      error: {
+        message: error.message,
+        code: error.code,
+        field: error.field,
+      },
+    });
+    return;
+  }
+
+  if (error instanceof EmailAlreadyExistsError) {
+    res.status(409).json({
+      success: false,
+      error: {
+        message: error.message,
+        code: error.code,
+      },
+    });
+    return;
+  }
+
+  if (error instanceof InvalidCredentialsError || error instanceof UserNotActiveError) {
+    res.status(401).json({
+      success: false,
+      error: {
+        message: error.message,
+        code: error.code,
+      },
+    });
+    return;
+  }
+
+  if (error instanceof UserNotFoundError) {
+    res.status(404).json({
+      success: false,
+      error: {
+        message: error.message,
+        code: error.code,
+      },
+    });
+    return;
+  }
+
+  if (error instanceof InvalidTokenError) {
+    res.status(401).json({
+      success: false,
+      error: {
+        message: error.message,
+        code: error.code,
+      },
+    });
+    return;
+  }
+
+  if (error instanceof PasswordResetTokenInvalidError || error instanceof PasswordResetTokenExpiredError) {
+    res.status(400).json({
+      success: false,
+      error: {
+        message: error.message,
+        code: error.code,
+      },
+    });
+    return;
+  }
+
+  next(error);
 }

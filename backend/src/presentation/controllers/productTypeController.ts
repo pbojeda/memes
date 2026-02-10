@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as productTypeService from '../../application/services/productTypeService';
+import { UNAUTHENTICATED_ROLE } from '../../application/validators/productTypeValidator';
 import {
   InvalidProductTypeDataError,
   ProductTypeNotFoundError,
@@ -21,7 +22,7 @@ export async function listProductTypes(
   next: NextFunction
 ): Promise<void> {
   try {
-    const callerRole = req.user?.role ?? 'PUBLIC';
+    const callerRole = req.user?.role ?? UNAUTHENTICATED_ROLE;
 
     let isActive: boolean | undefined = undefined;
     if (req.query.isActive !== undefined) {

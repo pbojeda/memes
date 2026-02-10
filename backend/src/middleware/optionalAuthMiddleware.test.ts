@@ -94,6 +94,16 @@ describe('optionalAuthMiddleware', () => {
     expect(mockNext).toHaveBeenCalledWith();
   });
 
+  it('should call next() without setting req.user when Bearer token is empty', () => {
+    mockRequest.headers = { authorization: 'Bearer ' };
+
+    optionalAuthMiddleware(mockRequest as Request, mockResponse as Response, mockNext);
+
+    expect(mockRequest.user).toBeUndefined();
+    expect(mockNext).toHaveBeenCalledTimes(1);
+    expect(mockNext).toHaveBeenCalledWith();
+  });
+
   it('should call next() without setting req.user for unexpected errors', () => {
     mockRequest.headers = { authorization: 'Bearer valid.token' };
     const unexpectedError = new Error('Database connection failed');
