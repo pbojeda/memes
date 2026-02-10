@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ButtonGroupSkeleton } from '@/components/ui/button-group-skeleton';
 import { productTypeService } from '@/lib/services/productTypeService';
 import { cn } from '@/lib/utils';
 import type { components } from '@/lib/api/types';
@@ -45,16 +46,11 @@ export function ProductTypeFilter({ value, onChange, className }: ProductTypeFil
   // Loading state
   if (isLoading) {
     return (
-      <div
-        className={cn('flex gap-2', className)}
-        role="status"
-        aria-live="polite"
-      >
-        <div className="h-9 w-16 bg-muted animate-pulse rounded-md" />
-        <div className="h-9 w-20 bg-muted animate-pulse rounded-md" />
-        <div className="h-9 w-24 bg-muted animate-pulse rounded-md" />
-        <span className="sr-only">Loading product types...</span>
-      </div>
+      <ButtonGroupSkeleton
+        count={3}
+        label="Loading product types..."
+        className={className}
+      />
     );
   }
 
