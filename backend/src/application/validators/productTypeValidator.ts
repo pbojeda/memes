@@ -1,6 +1,10 @@
 import { InvalidProductTypeDataError } from '../../domain/errors/ProductTypeError';
 import type { UserRole } from '../../generated/prisma/enums';
 
+/** Role value for unauthenticated callers. */
+export const UNAUTHENTICATED_ROLE = 'PUBLIC' as const;
+export type CallerRole = UserRole | typeof UNAUTHENTICATED_ROLE;
+
 export interface LocalizedName {
   es: string;
   en?: string;
@@ -41,12 +45,12 @@ export interface ValidatedUpdateProductTypeInput {
 
 export interface GetAllProductTypesInput {
   isActive?: boolean;
-  callerRole: UserRole | 'PUBLIC';
+  callerRole: CallerRole;
 }
 
 export interface ValidatedGetAllProductTypesInput {
   isActive?: boolean;
-  callerRole: UserRole | 'PUBLIC';
+  callerRole: CallerRole;
 }
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

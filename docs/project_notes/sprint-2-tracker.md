@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██                      ] 10%
+Progress: [████                    ] 20%
 
-Completed: 1/10 tasks
+Completed: 2/10 tasks
 In Progress: 0 tasks
-Pending: 9 tasks
+Pending: 8 tasks
 Blocked: 0 tasks
 ```
 
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B2.2 - Implement product type service |
-| Branch | feature/sprint2-B2.2-product-type-service |
-| Step | 2/5 (Develop) |
-| Ticket | docs/tickets/B2.2-product-type-service.md |
+| Task | B2.3 - Create product type endpoints (CRUD) |
+| Branch | feature/sprint2-B2.3-product-type-endpoints |
+| Step | 3/5 (Finalize) - Awaiting commit approval |
+| Complexity | Standard |
 
 ---
 
@@ -36,8 +36,8 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | B2.1 | Create ProductType model and migration | High | ✅ | feature/sprint2-B2.1-product-type-model | Completed 2026-02-09 |
-| B2.2 | Implement product type service | High | 🔄 | feature/sprint2-B2.2-product-type-service | |
-| B2.3 | Create product type endpoints (CRUD) | High | ⏳ | | |
+| B2.2 | Implement product type service | High | ✅ | feature/sprint2-B2.2-product-type-service | Completed 2026-02-09 |
+| B2.3 | Create product type endpoints (CRUD) | High | 🔄 | feature/sprint2-B2.3-product-type-endpoints | |
 | B2.4 | Implement i18n support for product type names | Medium | ⏳ | | |
 | B2.5 | Create seed data for product types | High | ⏳ | | |
 | B2.6 | Write product type integration tests | High | ⏳ | | |
@@ -131,6 +131,7 @@ _Key learnings, issues, or observations:_
 | Date | Task | Commit | Notes |
 |------|------|--------|-------|
 | 2026-02-09 | B2.1 | cf7f25d | ProductType model + migration + domain errors + ADR-002 |
+| 2026-02-09 | B2.2 | c959e64 | ProductType service + validator, 92 tests, role-aware getAll, slug race condition fix |
 
 ---
 

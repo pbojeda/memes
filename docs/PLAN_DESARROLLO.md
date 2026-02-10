@@ -498,6 +498,7 @@ gantt
 | Add message queue | Post-MVP | Medium | For async email/webhook processing |
 | Add CDN for images | Sprint 3 | High | Required for performance |
 | Database indexes optimization | Sprint 10 | High | Based on query patterns |
+| Add error response helpers (badRequest, notFound, conflict) | Post-MVP | Low | DRY error responses in controllers, complement existing success/created/noContent helpers in responseHelpers.ts |
 
 ---
 

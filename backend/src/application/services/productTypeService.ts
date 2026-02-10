@@ -4,6 +4,7 @@ import {
   validateUpdateProductTypeInput,
   validateGetAllProductTypesInput,
   validateProductTypeId,
+  UNAUTHENTICATED_ROLE,
   type CreateProductTypeInput,
   type UpdateProductTypeInput,
   type GetAllProductTypesInput,
@@ -76,7 +77,7 @@ export async function getAllProductTypes(input: GetAllProductTypesInput): Promis
 
   const where: Prisma.ProductTypeWhereInput = {};
 
-  if (validated.callerRole === 'PUBLIC' || validated.callerRole === 'TARGET') {
+  if (validated.callerRole === UNAUTHENTICATED_ROLE || validated.callerRole === 'TARGET') {
     where.isActive = true;
   } else {
     if (validated.isActive !== undefined) {
