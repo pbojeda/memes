@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████                ] 40%
+Progress: [██████████              ] 50%
 
-Completed: 4/9 tasks
+Completed: 5/9 tasks
 In Progress: 0 tasks
-Pending: 5 tasks
+Pending: 4 tasks
 Deferred: 1 task (B2.4)
 Blocked: 0 tasks
 ```
@@ -23,9 +23,9 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**B2.6** — Write product type integration tests
+**F2.1** — Create product types service
 - Step: 3/5 (Finalize)
-- Branch: `feature/sprint2-B2.6-product-type-integration-tests`
+- Branch: `feature/sprint2-F2.1-product-types-service`
 
 ---
 
@@ -38,7 +38,7 @@ Blocked: 0 tasks
 | B2.3 | Create product type endpoints (CRUD) | High | ✅ | feature/sprint2-B2.3-product-type-endpoints | Completed 2026-02-10 |
 | B2.4 | Implement i18n support for product type names | Medium | 🚫 | | Deferred post-MVP (ADR-003) |
 | B2.5 | Create seed data for product types | High | ✅ | feature/sprint2-B2.5-product-type-seed | Completed 2026-02-10 |
-| B2.6 | Write product type integration tests | High | 🔄 | feature/sprint2-B2.6-product-type-integration-tests | |
+| B2.6 | Write product type integration tests | High | ✅ | feature/sprint2-B2.6-product-type-integration-tests | Completed 2026-02-10 |
 
 ---
 
@@ -46,7 +46,7 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F2.1 | Create product types service | High | ⏳ | | |
+| F2.1 | Create product types service | High | 🔄 | feature/sprint2-F2.1-product-types-service | |
 | F2.2 | Create product type filter component | High | ⏳ | | |
 | F2.3 | Implement admin product types page | Medium | ⏳ | | |
 | F2.4 | Write product type component tests | Medium | ⏳ | | |
@@ -133,6 +133,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | B2.2 | c959e64 | ProductType service + validator, 92 tests, role-aware getAll, slug race condition fix |
 | 2026-02-10 | B2.3 | 44d7cd5 | CRUD endpoints + optionalAuthMiddleware + authController refactor, 361 tests, PR #40 |
 | 2026-02-10 | B2.5 | 2f75da1 | Seed data (6 product types) + seed script + 9 tests, PR #41 |
+| 2026-02-10 | B2.6 | c438463 | 33 integration tests for CRUD endpoints, 403 total tests, PR #42 |
 
 ---
 
