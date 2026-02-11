@@ -3,18 +3,18 @@
 **Goal:** Implement product type management.
 **Start Date:** 2026-02-09
 **End Date:** 2026-02-23
-**Status:** In Progress
+**Status:** Completed
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [████████████████████    ] 80%
+Progress: [█████████████████████████] 100%
 
-Completed: 8/9 tasks
+Completed: 9/9 tasks
 In Progress: 0 tasks
-Pending: 1 task
+Pending: 0 tasks
 Deferred: 1 task (B2.4)
 Blocked: 0 tasks
 ```
@@ -23,10 +23,7 @@ Blocked: 0 tasks
 
 ## Active Task
 
-| Task | - |
-| Branch | - |
-| Step | - |
-| Ticket | - |
+None — Sprint 2 completed.
 
 ---
 
@@ -50,7 +47,7 @@ Blocked: 0 tasks
 | F2.1 | Create product types service | High | ✅ | feature/sprint2-F2.1-product-types-service | Completed 2026-02-10 |
 | F2.2 | Create product type filter component | High | ✅ | feature/sprint2-F2.2-product-type-filter | Completed 2026-02-10 |
 | F2.3 | Implement admin product types page | Medium | ✅ | feature/sprint2-F2.3-admin-product-types | Completed 2026-02-11 |
-| F2.4 | Write product type component tests | Medium | ⏳ | | |
+| F2.4 | Write product type component tests | Medium | ✅ | | Tests written via TDD in F2.1–F2.3 (88 tests) |
 
 ---
 
@@ -114,7 +111,7 @@ From PLAN_DESARROLLO.md:
 
 - [x] Product types CRUD for admin
 - [x] Product type filter on frontend
-- [ ] Seeded product types (t-shirt, hoodie, mug, etc.)
+- [x] Seeded product types (t-shirt, hoodie, mug, etc.)
 
 ---
 
@@ -138,6 +135,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-10 | F2.1 | ce0a234 | productTypeService CRUD + 19 tests (auth/RBAC coverage), PR #43 |
 | 2026-02-10 | F2.2 | cc19375 | ProductTypeFilter + ButtonGroupSkeleton, 27 tests (180 total), PR #44 |
 | 2026-02-11 | F2.3 | 66bf0d3 | Admin product types page, CRUD dialogs, admin layout, 57 tests (237 total), PR #45 |
+| 2026-02-11 | F2.4 | — | Already covered by TDD in F2.1–F2.3: 88 product-type tests, 237 frontend total |
 
 ---
 
