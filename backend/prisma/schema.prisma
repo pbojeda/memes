@@ -45,7 +45,8 @@ model User {
   deletedAt            DateTime? @map("deleted_at")
 
   // Relations
-  createdProducts Product[] @relation("ProductCreator")
+  createdProducts Product[]      @relation("ProductCreator")
+  priceChanges    PriceHistory[] @relation("PriceChanger")
 
   @@index([email])
   @@index([role])
@@ -98,7 +99,8 @@ model Product {
   createdBy   User?           @relation("ProductCreator", fields: [createdByUserId], references: [id])
   images      ProductImage[]
   reviews     ProductReview[]
-  // Relations deferred: priceHistory PriceHistory[] (B3.2), orderItems OrderItem[] (Sprint 5)
+  priceHistory PriceHistory[]
+  // Relations deferred: orderItems OrderItem[] (Sprint 5)
 
   @@index([slug])
   @@index([productTypeId])
@@ -141,4 +143,21 @@ model ProductReview {
   @@index([productId])
   @@index([isVisible])
   @@map("product_reviews")
+}
+
+model PriceHistory {
+  id              String   @id @default(uuid())
+  productId       String   @map("product_id")
+  price           Decimal  @db.Decimal(10, 2)
+  changedByUserId String?  @map("changed_by_user_id")
+  reason          String?  @db.VarChar(255)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  product   Product @relation(fields: [productId], references: [id])
+  changedBy User?   @relation("PriceChanger", fields: [changedByUserId], references: [id])
+
+  @@index([productId])
+  @@index([createdAt])
+  @@map("price_history")
 }

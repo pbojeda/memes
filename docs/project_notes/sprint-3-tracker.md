@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [░░░░░░░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░░░░░░░░░░░░░░░░] 5%
 
-Completed: 0/20 tasks
+Completed: 1/20 tasks
 In Progress: 0 tasks
-Pending: 20 tasks
+Pending: 19 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B3.1 — Create Product, ProductImage, ProductReview models |
-| Branch | feature/sprint3-B3.1-product-models |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B3.1-product-models.md |
+| Task | B3.2 — Create PriceHistory model |
+| Branch | feature/sprint3-B3.2-price-history-model |
+| Step | 2b/5 (Implement) |
+| Ticket | Simple — no ticket |
 
 ---
 
@@ -36,8 +36,8 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| B3.1 | Create Product, ProductImage, ProductReview models | High | 🔄 | feature/sprint3-B3.1-product-models | Adds ProductType→Product relation (ADR-002) |
-| B3.2 | Create PriceHistory model | Medium | ⏳ | | Price audit trail |
+| B3.1 | Create Product, ProductImage, ProductReview models | High | ✅ | feature/sprint3-B3.1-product-models | Completed 2026-02-11 |
+| B3.2 | Create PriceHistory model | Medium | 🔄 | feature/sprint3-B3.2-price-history-model | Price audit trail |
 | B3.3 | Implement product service (CRUD) | High | ⏳ | | Soft delete, localized fields |
 | B3.4 | Implement product listing with filters | High | ⏳ | | Pagination, sorting, type/price/active filters |
 | B3.5 | Implement product detail endpoint | High | ⏳ | | Includes images, reviews |
@@ -154,7 +154,7 @@ _Key learnings, issues, or observations:_
 
 | Date | Task | Commit | Notes |
 |------|------|--------|-------|
-| - | - | - | - |
+| 2026-02-11 | B3.1 | 50dbcd0 | Product, ProductImage, ProductReview models + migration + domain errors (13 tests), 416 total, PR #46 |
 
 ---
 
