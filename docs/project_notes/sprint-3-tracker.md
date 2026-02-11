@@ -43,7 +43,7 @@ Blocked: 0 tasks
 | B3.5 | Implement product detail endpoint | High | ⏳ | | Includes images, reviews |
 | B3.6 | Implement soft delete for products | Medium | ⏳ | | deletedAt exclusion from public queries |
 | B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |
-| B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle |
+| B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
 | B3.9 | Create admin product endpoints | High | ⏳ | | CRUD for MANAGER/ADMIN |
 | B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage |
 
