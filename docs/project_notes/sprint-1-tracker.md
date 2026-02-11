@@ -3,18 +3,18 @@
 **Goal:** Implement user authentication and basic user management.
 **Start Date:** 2026-02-05
 **End Date:** 2026-02-19
-**Status:** In Progress
+**Status:** Complete
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [████████████████████████████] 90%
+Progress: [██████████████████████████████] 95%
 
-Completed: 18/20 tasks (+ F0.11 infra)
+Completed: 19/20 tasks (+ F0.11 infra)
 In Progress: 0 tasks
-Pending: 1 task
+Pending: 0 tasks
 Deferred: 2 tasks (B1.8, F1.4)
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F1.8 - Create user menu component |
-| Branch | feature/sprint1-F1.8-user-menu |
-| Step | 3/5 (Finalize) - 🛑 Awaiting commit approval |
-| Ticket | docs/tickets/F1.8-user-menu.md |
+| Task | - |
+| Branch | - |
+| Step | - |
+| Ticket | - |
 
 ---
 
@@ -60,7 +60,7 @@ Blocked: 0 tasks
 | F1.5 | Create auth service (API calls) | High | ✅ | feature/sprint1-F1.5-auth-service | Completed 2026-02-09 |
 | F1.6 | Setup axios interceptors for JWT | High | ✅ | feature/sprint1-F1.6-jwt-interceptors | Completed 2026-02-09 |
 | F1.7 | Implement protected route HOC | High | ✅ | feature/sprint1-F1.7-protected-route | Completed 2026-02-09 |
-| F1.8 | Create user menu component | Medium | 🔄 | feature/sprint1-F1.8-user-menu | |
+| F1.8 | Create user menu component | Medium | ✅ | feature/sprint1-F1.8-user-menu | Completed 2026-02-09 |
 | F1.9 | Write auth component tests | High | ✅ | - | Already covered by F1.1-F1.7 (107 tests) |
 | F1.10 | Implement token refresh logic | High | ✅ | feature/sprint1-F1.6-jwt-interceptors | Completed with F1.6 |
 
@@ -174,8 +174,10 @@ _Key learnings, issues, or observations:_
 | 2026-02-09 | F1.6 + F1.10 | ae1ef12 | JWT interceptors + auto refresh + request queuing + tech-debt docs |
 | 2026-02-09 | F1.7 | 70853e3 | ProtectedRoute component + role-based access + returnTo redirect + 23 tests |
 | 2026-02-09 | F1.9 | - | Verified: 107 auth tests already covered by F1.1-F1.7 (10 test suites, all passing) |
+| 2026-02-09 | F1.8 | c2f8c6d | UserMenu component + Radix DropdownMenu + Header integration + 10 tests |
 
 ---
 
 *Created: 2026-02-05*
 *Last Updated: 2026-02-09*
+*Sprint Closed: 2026-02-09*

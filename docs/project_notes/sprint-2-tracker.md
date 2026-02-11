@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████            ] 60%
+Progress: [████████████████        ] 70%
 
-Completed: 6/9 tasks
+Completed: 7/9 tasks
 In Progress: 0 tasks
-Pending: 3 tasks
+Pending: 2 tasks
 Deferred: 1 task (B2.4)
 Blocked: 0 tasks
 ```
@@ -23,9 +23,10 @@ Blocked: 0 tasks
 
 ## Active Task
 
-**F2.2** — Create product type filter component
-**Step:** 3/5 (Finalize)
-**Branch:** feature/sprint2-F2.2-product-type-filter
+**F2.3** - Implement admin product types page
+- **Step:** 2b/5 (Implement) — Sub-step 2/8: AdminSidebar
+- **Branch:** feature/sprint2-F2.3-admin-product-types
+- **Ticket:** docs/tickets/F2.3-admin-product-types-page.md
 
 ---
 
@@ -47,8 +48,8 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F2.1 | Create product types service | High | ✅ | feature/sprint2-F2.1-product-types-service | Completed 2026-02-10 |
-| F2.2 | Create product type filter component | High | 🔄 | feature/sprint2-F2.2-product-type-filter | |
-| F2.3 | Implement admin product types page | Medium | ⏳ | | |
+| F2.2 | Create product type filter component | High | ✅ | feature/sprint2-F2.2-product-type-filter | Completed 2026-02-10 |
+| F2.3 | Implement admin product types page | Medium | 🔄 | feature/sprint2-F2.3-admin-product-types | Started 2026-02-11 |
 | F2.4 | Write product type component tests | Medium | ⏳ | | |
 
 ---
@@ -112,7 +113,7 @@ F2.3 ──► F2.4
 From PLAN_DESARROLLO.md:
 
 - [ ] Product types CRUD for admin
-- [ ] Product type filter on frontend
+- [x] Product type filter on frontend
 - [ ] Seeded product types (t-shirt, hoodie, mug, etc.)
 
 ---
@@ -135,6 +136,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-10 | B2.5 | 2f75da1 | Seed data (6 product types) + seed script + 9 tests, PR #41 |
 | 2026-02-10 | B2.6 | c438463 | 33 integration tests for CRUD endpoints, 403 total tests, PR #42 |
 | 2026-02-10 | F2.1 | ce0a234 | productTypeService CRUD + 19 tests (auth/RBAC coverage), PR #43 |
+| 2026-02-10 | F2.2 | cc19375 | ProductTypeFilter + ButtonGroupSkeleton, 27 tests (180 total), PR #44 |
 
 ---
 
