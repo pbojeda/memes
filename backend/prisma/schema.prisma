@@ -44,6 +44,9 @@ model User {
   updatedAt            DateTime  @updatedAt @map("updated_at")
   deletedAt            DateTime? @map("deleted_at")
 
+  // Relations
+  createdProducts Product[] @relation("ProductCreator")
+
   @@index([email])
   @@index([role])
   @@index([stripeCustomerId])
@@ -60,8 +63,82 @@ model ProductType {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  // Relations: products Product[] will be added in Sprint 3 (ADR-002)
+  // Relations
+  products Product[]
 
   @@index([slug])
   @@map("product_types")
+}
+
+model Product {
+  id                    String    @id @default(uuid())
+  productTypeId         String    @map("product_type_id")
+  title                 Json      // {"es": "...", "en": "..."}
+  description           Json      // {"es": "...", "en": "..."}
+  slug                  String    @unique
+  price                 Decimal   @db.Decimal(10, 2)
+  compareAtPrice        Decimal?  @map("compare_at_price") @db.Decimal(10, 2)
+  availableSizes        Json?     @map("available_sizes") // ["S", "M", "L", "XL"]
+  color                 String    @default("white")
+  isActive              Boolean   @default(true) @map("is_active")
+  isHot                 Boolean   @default(false) @map("is_hot")
+  printfulProductId     String?   @map("printful_product_id")
+  printfulSyncVariantId String?   @map("printful_sync_variant_id")
+  memeSourceUrl         String?   @map("meme_source_url")
+  memeIsOriginal        Boolean   @default(false) @map("meme_is_original")
+  salesCount            Int       @default(0) @map("sales_count")
+  viewCount             Int       @default(0) @map("view_count")
+  createdByUserId       String?   @map("created_by_user_id")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  deletedAt             DateTime? @map("deleted_at")
+
+  // Relations
+  productType ProductType     @relation(fields: [productTypeId], references: [id])
+  createdBy   User?           @relation("ProductCreator", fields: [createdByUserId], references: [id])
+  images      ProductImage[]
+  reviews     ProductReview[]
+  // Relations deferred: priceHistory PriceHistory[] (B3.2), orderItems OrderItem[] (Sprint 5)
+
+  @@index([slug])
+  @@index([productTypeId])
+  @@index([isActive])
+  @@index([isHot])
+  @@index([createdAt])
+  @@index([salesCount])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String   @map("product_id")
+  url       String
+  altText   Json?    @map("alt_text") // {"es": "...", "en": "..."}
+  isPrimary Boolean  @default(false) @map("is_primary")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model ProductReview {
+  id            String   @id @default(uuid())
+  productId     String   @map("product_id")
+  authorName    String   @map("author_name")
+  rating        Int      @db.SmallInt
+  comment       String
+  isAiGenerated Boolean  @default(false) @map("is_ai_generated")
+  isVisible     Boolean  @default(true) @map("is_visible")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([isVisible])
+  @@map("product_reviews")
 }
