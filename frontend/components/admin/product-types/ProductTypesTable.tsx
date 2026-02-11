@@ -2,6 +2,7 @@
 
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import type { components } from '@/lib/api/types';
+import { getLocalizedName } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -100,7 +101,7 @@ export function ProductTypesTable({
         <TableBody>
           {productTypes.map((pt) => (
             <TableRow key={pt.id}>
-              <TableCell className="font-medium">{pt.name}</TableCell>
+              <TableCell className="font-medium">{getLocalizedName(pt.name)}</TableCell>
               <TableCell>{pt.slug}</TableCell>
               <TableCell>{pt.hasSizes ? 'Yes' : 'No'}</TableCell>
               <TableCell>
@@ -115,7 +116,7 @@ export function ProductTypesTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onEdit(pt)}
-                    aria-label={`Edit ${pt.name}`}
+                    aria-label={`Edit ${getLocalizedName(pt.name)}`}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -123,7 +124,7 @@ export function ProductTypesTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onDelete(pt)}
-                    aria-label={`Delete ${pt.name}`}
+                    aria-label={`Delete ${getLocalizedName(pt.name)}`}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

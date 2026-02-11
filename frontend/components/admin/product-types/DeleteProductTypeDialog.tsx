@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { components } from '@/lib/api/types';
+import { getLocalizedName } from '@/lib/utils';
 import { productTypeService } from '@/lib/services/productTypeService';
 import { ApiException } from '@/lib/api/exceptions';
 import { Button } from '@/components/ui/button';
@@ -63,7 +64,7 @@ export function DeleteProductTypeDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {productType.name}</DialogTitle>
+          <DialogTitle>Delete {getLocalizedName(productType.name)}</DialogTitle>
           <DialogDescription>
             This action cannot be undone. Are you sure you want to delete this
             product type?

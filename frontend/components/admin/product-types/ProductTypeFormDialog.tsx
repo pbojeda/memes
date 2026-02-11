@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { components } from '@/lib/api/types';
+import { getLocalizedName } from '@/lib/utils';
 import { productTypeService } from '@/lib/services/productTypeService';
 import { ApiException } from '@/lib/api/exceptions';
 import { Button } from '@/components/ui/button';
@@ -52,7 +53,7 @@ export function ProductTypeFormDialog({
   useEffect(() => {
     if (open) {
       if (productType) {
-        setName(productType.name ?? '');
+        setName(getLocalizedName(productType.name));
         setSlug(productType.slug ?? '');
         setHasSizes(productType.hasSizes ?? false);
         setIsActive(productType.isActive ?? true);

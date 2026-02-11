@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ButtonGroupSkeleton } from '@/components/ui/button-group-skeleton';
 import { productTypeService } from '@/lib/services/productTypeService';
-import { cn } from '@/lib/utils';
+import { cn, getLocalizedName } from '@/lib/utils';
 import type { components } from '@/lib/api/types';
 
 type ProductType = components['schemas']['ProductType'];
@@ -108,7 +108,7 @@ export function ProductTypeFilter({ value, onChange, className }: ProductTypeFil
           onClick={() => onChange(type.slug ?? null)}
           aria-pressed={value === type.slug}
         >
-          {type.name ?? type.slug}
+          {getLocalizedName(type.name, type.slug)}
         </Button>
       ))}
     </div>

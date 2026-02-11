@@ -37,7 +37,7 @@ describe('Express App', () => {
     it('should return 200 when database is healthy', async () => {
       (prisma.$queryRaw as jest.Mock).mockResolvedValue([{ '?column?': 1 }]);
 
-      const response = await request(app).get('/health');
+      const response = await request(app).get('/api/v1/health');
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
@@ -48,7 +48,7 @@ describe('Express App', () => {
     it('should return 503 when database is unhealthy', async () => {
       (prisma.$queryRaw as jest.Mock).mockRejectedValue(new Error('Connection refused'));
 
-      const response = await request(app).get('/health');
+      const response = await request(app).get('/api/v1/health');
 
       expect(response.status).toBe(503);
       expect(response.body.success).toBe(false);
