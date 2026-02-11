@@ -2,7 +2,7 @@
 
 **Goal:** Implement product type management.
 **Start Date:** 2026-02-09
-**End Date:** 2026-02-23
+**End Date:** 2026-02-11 (early)
 **Status:** Completed
 
 ---
@@ -101,7 +101,13 @@ F2.3 ──► F2.4
 
 | Date | Bug | Solution |
 |------|-----|----------|
-| - | - | - |
+| 2026-02-11 | ts-node fails to load Express type augmentation (`req.user` TS error) | Add `"ts-node": { "files": true }` to `tsconfig.json` |
+| 2026-02-11 | Backend routes missing `/api/v1` prefix (frontend 404s) | Mount routes with `app.use('/api/v1', routes)` in `app.ts` |
+| 2026-02-11 | No CORS middleware — frontend (port 3001) blocked from backend (port 3000) | Install and add `cors()` middleware to `app.ts` |
+| 2026-02-11 | Prisma seed command not configured | Add `seed` property to `prisma.config.ts` |
+| 2026-02-11 | Login fails — `JWT_SECRET` missing from `.env` | Add `JWT_SECRET` and other required vars to `.env` |
+| 2026-02-11 | Session lost on navigation — auth store only persists tokens, not user/isAuthenticated | Add `user` and `isAuthenticated` to `partialize` in auth store |
+| 2026-02-11 | `name` field rendered as `[object Object]` — backend returns `LocalizedString` JSON | Add `getLocalizedName()` helper to extract string from `{es: "..."}` objects |
 
 ---
 
@@ -120,6 +126,9 @@ From PLAN_DESARROLLO.md:
 _Key learnings, issues, or observations:_
 
 - Sprint 2 started in parallel with Sprint 1 (frontend tasks F1.7, F1.8, F1.9 still pending in another terminal)
+- First manual QA run revealed 7 integration bugs — all unit/integration tests passed but the app didn't work end-to-end
+- Key gap: `.env` setup and runtime config were never tested as part of the development workflow
+- `LocalizedString` JSON type (i18n deferred by ADR-003) still flows through the full stack — frontend must handle it
 
 ---
 
