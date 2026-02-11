@@ -23,6 +23,10 @@ export class PriceHistoryNotFoundError extends PriceHistoryError {
 
 /**
  * Thrown when price history data is invalid.
+ *
+ * @example
+ * throw new InvalidPriceHistoryDataError('Price must be positive', 'price');
+ * throw new InvalidPriceHistoryDataError('Reason exceeds 255 characters', 'reason');
  */
 export class InvalidPriceHistoryDataError extends PriceHistoryError {
   constructor(

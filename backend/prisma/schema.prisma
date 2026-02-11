@@ -46,7 +46,7 @@ model User {
 
   // Relations
   createdProducts Product[]      @relation("ProductCreator")
-  priceChanges    PriceHistory[] @relation("PriceChanger")
+  priceChanges    PriceHistory[]
 
   @@index([email])
   @@index([role])
@@ -154,8 +154,8 @@ model PriceHistory {
   createdAt       DateTime @default(now()) @map("created_at")
 
   // Relations
-  product   Product @relation(fields: [productId], references: [id])
-  changedBy User?   @relation("PriceChanger", fields: [changedByUserId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  changedBy User?   @relation(fields: [changedByUserId], references: [id])
 
   @@index([productId])
   @@index([createdAt])
