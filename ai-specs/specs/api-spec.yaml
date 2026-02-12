@@ -689,6 +689,34 @@ paths:
       responses:
         '204':
           description: Product deleted (soft delete)
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/restore:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+
+    post:
+      tags: [Products]
+      summary: Restore soft-deleted product (Staff only)
+      operationId: restoreProduct
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '200':
+          description: Product restored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':

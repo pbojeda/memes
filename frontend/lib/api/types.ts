@@ -311,6 +311,25 @@ export interface paths {
         patch: operations["updateProduct"];
         trace?: never;
     };
+    "/products/{productId}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: components["parameters"]["ProductId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore soft-deleted product (Staff only) */
+        post: operations["restoreProduct"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products/{productId}/activate": {
         parameters: {
             query?: never;
@@ -455,7 +474,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List product types */
+        /**
+         * List product types
+         * @description Returns product types ordered by sortOrder.
+         *     - Public/TARGET users: only active product types are returned (isActive filter is ignored).
+         *     - Staff roles (ADMIN, MANAGER, MARKETING): all product types are returned by default; use isActive query parameter to filter.
+         */
         get: operations["listProductTypes"];
         put?: never;
         /** Create product type (Admin only) */
@@ -2468,6 +2492,7 @@ export interface operations {
                 };
                 content?: never;
             };
+            400: components["responses"]["ValidationError"];
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
@@ -2489,6 +2514,32 @@ export interface operations {
         };
         responses: {
             /** @description Product updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductResponse"];
+                };
+            };
+            400: components["responses"]["ValidationError"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    restoreProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: components["parameters"]["ProductId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Product restored */
             200: {
                 headers: {
                     [name: string]: unknown;

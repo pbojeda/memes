@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getProductDetail } from './productController';
+import { getProductDetail, deleteProduct, restoreProduct } from './productController';
 import * as productService from '../../application/services/productService';
 import {
   InvalidProductDataError,
@@ -137,6 +137,144 @@ describe('productController', () => {
       (productService.getProductDetailBySlug as jest.Mock).mockRejectedValue(unexpectedError);
 
       await getProductDetail(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(unexpectedError);
+    });
+  });
+
+  describe('deleteProduct', () => {
+    let sendMock: jest.Mock;
+
+    beforeEach(() => {
+      sendMock = jest.fn();
+      jsonMock = jest.fn();
+      statusMock = jest.fn().mockReturnValue({ send: sendMock, json: jsonMock });
+      mockResponse = {
+        status: statusMock,
+        json: jsonMock,
+      };
+      mockRequest = {
+        params: { id: 'prod-123' },
+      };
+    });
+
+    it('should return 204 when product is soft-deleted successfully', async () => {
+      (productService.softDeleteProduct as jest.Mock).mockResolvedValue(undefined);
+
+      await deleteProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(productService.softDeleteProduct).toHaveBeenCalledWith('prod-123');
+      expect(statusMock).toHaveBeenCalledWith(204);
+      expect(sendMock).toHaveBeenCalled();
+    });
+
+    it('should return 400 for invalid UUID (InvalidProductDataError)', async () => {
+      const error = new InvalidProductDataError('Invalid UUID format', 'id');
+      (productService.softDeleteProduct as jest.Mock).mockRejectedValue(error);
+
+      await deleteProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Invalid UUID format',
+          code: 'INVALID_PRODUCT_DATA',
+          field: 'id',
+        },
+      });
+    });
+
+    it('should return 404 when not found or already deleted (ProductNotFoundError)', async () => {
+      const error = new ProductNotFoundError();
+      (productService.softDeleteProduct as jest.Mock).mockRejectedValue(error);
+
+      await deleteProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(404);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Product not found',
+          code: 'PRODUCT_NOT_FOUND',
+        },
+      });
+    });
+
+    it('should call next(error) for unexpected errors', async () => {
+      const unexpectedError = new Error('Database connection failed');
+      (productService.softDeleteProduct as jest.Mock).mockRejectedValue(unexpectedError);
+
+      await deleteProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(unexpectedError);
+    });
+  });
+
+  describe('restoreProduct', () => {
+    beforeEach(() => {
+      jsonMock = jest.fn();
+      statusMock = jest.fn().mockReturnValue({ json: jsonMock });
+      mockResponse = {
+        status: statusMock,
+        json: jsonMock,
+      };
+      mockRequest = {
+        params: { id: 'prod-123' },
+      };
+    });
+
+    it('should return 200 with restored product data', async () => {
+      (productService.restoreProduct as jest.Mock).mockResolvedValue(mockProduct);
+
+      await restoreProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(productService.restoreProduct).toHaveBeenCalledWith('prod-123');
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: mockProduct,
+      });
+    });
+
+    it('should return 400 for invalid UUID (InvalidProductDataError)', async () => {
+      const error = new InvalidProductDataError('Invalid UUID format', 'id');
+      (productService.restoreProduct as jest.Mock).mockRejectedValue(error);
+
+      await restoreProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Invalid UUID format',
+          code: 'INVALID_PRODUCT_DATA',
+          field: 'id',
+        },
+      });
+    });
+
+    it('should return 404 when not found or not deleted (ProductNotFoundError)', async () => {
+      const error = new ProductNotFoundError();
+      (productService.restoreProduct as jest.Mock).mockRejectedValue(error);
+
+      await restoreProduct(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(statusMock).toHaveBeenCalledWith(404);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        error: {
+          message: 'Product not found',
+          code: 'PRODUCT_NOT_FOUND',
+        },
+      });
+    });
+
+    it('should call next(error) for unexpected errors', async () => {
+      const unexpectedError = new Error('Database connection failed');
+      (productService.restoreProduct as jest.Mock).mockRejectedValue(unexpectedError);
+
+      await restoreProduct(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(unexpectedError);
     });
