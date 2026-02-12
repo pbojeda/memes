@@ -301,7 +301,7 @@ export interface ValidatedListProductsInput {
   minPrice?: number;
   maxPrice?: number;
   search?: string;
-  sortBy: 'price' | 'createdAt' | 'salesCount';
+  sortBy: SortByField;
   sortDirection: 'asc' | 'desc';
   includeSoftDeleted: boolean;
 }
@@ -310,9 +310,11 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 const MIN_LIMIT = 1;
+const MAX_SEARCH_LENGTH = 100;
 const DEFAULT_SORT_BY = 'createdAt';
 const DEFAULT_SORT_DIRECTION = 'desc';
 const ALLOWED_SORT_FIELDS = ['price', 'createdAt', 'salesCount'] as const;
+type SortByField = typeof ALLOWED_SORT_FIELDS[number];
 
 function validatePaginationPage(page: unknown, fieldName: string): number {
   if (page === undefined) {
@@ -358,6 +360,11 @@ function validateOptionalBoolean(value: unknown, fieldName: string): boolean | u
   return value;
 }
 
+/**
+ * Validates optional price filter parameter.
+ * Unlike product prices, filter prices don't enforce 2-decimal precision
+ * since PostgreSQL Decimal comparison handles precision automatically.
+ */
 function validateOptionalPrice(price: unknown, fieldName: string): number | undefined {
   if (price === undefined) {
     return undefined;
@@ -386,15 +393,19 @@ function validateOptionalSearch(search: unknown, fieldName: string): string | un
   const trimmed = search.trim();
 
   if (trimmed === '') {
-    throw new InvalidProductDataError('search cannot be empty', fieldName);
+    return undefined;
+  }
+
+  if (trimmed.length > MAX_SEARCH_LENGTH) {
+    throw new InvalidProductDataError(`search exceeds ${MAX_SEARCH_LENGTH} characters`, fieldName);
   }
 
   return trimmed;
 }
 
-function validateSortBy(sortBy: unknown, fieldName: string): 'price' | 'createdAt' | 'salesCount' {
+function validateSortBy(sortBy: unknown, fieldName: string): SortByField {
   if (sortBy === undefined) {
-    return DEFAULT_SORT_BY as 'createdAt';
+    return DEFAULT_SORT_BY as SortByField;
   }
 
   if (typeof sortBy !== 'string') {
@@ -405,7 +416,7 @@ function validateSortBy(sortBy: unknown, fieldName: string): 'price' | 'createdA
     throw new InvalidProductDataError('sortBy must be one of: price, createdAt, salesCount', fieldName);
   }
 
-  return sortBy as 'price' | 'createdAt' | 'salesCount';
+  return sortBy as SortByField;
 }
 
 function validateSortDirection(sortDirection: unknown, fieldName: string): 'asc' | 'desc' {

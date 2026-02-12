@@ -313,7 +313,7 @@ export async function listProducts(input: ListProductsInput): Promise<ListProduc
   ]);
 
   // Calculate pagination metadata
-  const totalPages = total > 0 ? Math.ceil(total / validated.limit) : 0;
+  const totalPages = Math.ceil(total / validated.limit);
 
   return {
     data: products,

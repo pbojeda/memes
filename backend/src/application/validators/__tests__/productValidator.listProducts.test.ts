@@ -263,16 +263,27 @@ describe('productValidator - validateListProductsInput', () => {
       expect(() => validateListProductsInput(input as never)).toThrow('search must be a string');
     });
 
-    it('should throw InvalidProductDataError when search is empty string', () => {
+    it('should return undefined search when search is empty string', () => {
       const input: ListProductsInput = {
         search: '',
       };
 
-      expect(() => validateListProductsInput(input)).toThrow(InvalidProductDataError);
-      expect(() => validateListProductsInput(input)).toThrow('search cannot be empty');
+      const result = validateListProductsInput(input);
+
+      expect(result.search).toBeUndefined();
     });
 
-    it('should accept search with only whitespace trimmed', () => {
+    it('should return undefined search when search is only whitespace', () => {
+      const input: ListProductsInput = {
+        search: '   ',
+      };
+
+      const result = validateListProductsInput(input);
+
+      expect(result.search).toBeUndefined();
+    });
+
+    it('should accept search with leading/trailing whitespace trimmed', () => {
       const input: ListProductsInput = {
         search: '  camiseta  ',
       };
@@ -280,6 +291,35 @@ describe('productValidator - validateListProductsInput', () => {
       const result = validateListProductsInput(input);
 
       expect(result.search).toBe('camiseta');
+    });
+
+    it('should throw InvalidProductDataError when search exceeds 100 characters', () => {
+      const input: ListProductsInput = {
+        search: 'a'.repeat(101),
+      };
+
+      expect(() => validateListProductsInput(input)).toThrow(InvalidProductDataError);
+      expect(() => validateListProductsInput(input)).toThrow('search exceeds 100 characters');
+    });
+
+    it('should accept search at exactly 100 characters', () => {
+      const input: ListProductsInput = {
+        search: 'a'.repeat(100),
+      };
+
+      const result = validateListProductsInput(input);
+
+      expect(result.search).toBe('a'.repeat(100));
+    });
+
+    it('should handle search strings with special characters', () => {
+      const input: ListProductsInput = {
+        search: "O'Reilly & Sons <script>",
+      };
+
+      const result = validateListProductsInput(input);
+
+      expect(result.search).toBe("O'Reilly & Sons <script>");
     });
   });
 
