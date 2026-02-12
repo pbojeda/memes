@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B3.5 — Implement product detail endpoint |
+| Branch | feature/sprint3-B3.5-product-detail-endpoint |
+| Step | ✅ Complete — ready for commit |
+| Ticket | docs/tickets/B3.5-product-detail-endpoint.md |
 
 ---
 
@@ -40,7 +40,7 @@ Blocked: 0 tasks
 | B3.2 | Create PriceHistory model | Medium | ✅ | feature/sprint3-B3.2-price-history-model | Completed 2026-02-11 |
 | B3.3 | Implement product service (CRUD) | High | ✅ | feature/sprint3-B3.3-product-service | Completed 2026-02-12 |
 | B3.4 | Implement product listing with filters | High | ✅ | feature/sprint3-B3.4-product-listing-filters | Completed 2026-02-12 |
-| B3.5 | Implement product detail endpoint | High | ⏳ | | Includes images, reviews |
+| B3.5 | Implement product detail endpoint | High | 🔄 | feature/sprint3-B3.5-product-detail-endpoint | Includes images, reviews |
 | B3.6 | Implement soft delete for products | Medium | ⏳ | | deletedAt exclusion from public queries |
 | B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |
 | B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
