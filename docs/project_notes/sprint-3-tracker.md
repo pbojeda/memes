@@ -147,6 +147,7 @@ _Key learnings, issues, or observations:_
 - ADR-002: ProductType → Product relation deferred from Sprint 2, must be added in B3.1
 - ADR-003: Localized fields (title, description) use JSON `{es: "...", en: "..."}` — frontend uses `es` key for MVP
 - Product model has 20+ fields including Printful refs, meme metadata, and counters (see data-model.md §3.4)
+- Future optimization: Consider adding DB index on `products.deleted_at` for soft-delete query performance (from B3.3 code review)
 
 ---
 

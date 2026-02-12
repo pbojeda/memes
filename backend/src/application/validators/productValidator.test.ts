@@ -382,6 +382,35 @@ describe('productValidator', () => {
 
         expect(result.price).toBe(0.01);
       });
+
+      it('should throw InvalidProductDataError when price has more than 2 decimal places', () => {
+        const input: CreateProductInput = {
+          title: { es: 'Producto' },
+          description: { es: 'Descripción' },
+          slug: 'producto',
+          price: 29.999,
+          productTypeId: '123e4567-e89b-12d3-a456-426614174000',
+          color: 'Rojo',
+        };
+
+        expect(() => validateCreateProductInput(input)).toThrow(InvalidProductDataError);
+        expect(() => validateCreateProductInput(input)).toThrow('Price cannot have more than 2 decimal places');
+      });
+
+      it('should accept price with exactly 2 decimal places', () => {
+        const input: CreateProductInput = {
+          title: { es: 'Producto' },
+          description: { es: 'Descripción' },
+          slug: 'producto',
+          price: 29.99,
+          productTypeId: '123e4567-e89b-12d3-a456-426614174000',
+          color: 'Rojo',
+        };
+
+        const result = validateCreateProductInput(input);
+
+        expect(result.price).toBe(29.99);
+      });
     });
 
     describe('compareAtPrice validation', () => {
@@ -429,6 +458,21 @@ describe('productValidator', () => {
         const result = validateCreateProductInput(input);
 
         expect(result.compareAtPrice).toBe(35.00);
+      });
+
+      it('should throw InvalidProductDataError when compareAtPrice has more than 2 decimal places', () => {
+        const input: CreateProductInput = {
+          title: { es: 'Producto' },
+          description: { es: 'Descripción' },
+          slug: 'producto',
+          price: 25.00,
+          compareAtPrice: 35.999,
+          productTypeId: '123e4567-e89b-12d3-a456-426614174000',
+          color: 'Rojo',
+        };
+
+        expect(() => validateCreateProductInput(input)).toThrow(InvalidProductDataError);
+        expect(() => validateCreateProductInput(input)).toThrow('Compare at price cannot have more than 2 decimal places');
       });
     });
 
@@ -698,6 +742,25 @@ describe('productValidator', () => {
 
         expect(() => validateUpdateProductInput(input)).toThrow(InvalidProductDataError);
         expect(() => validateUpdateProductInput(input)).toThrow('Compare at price must be greater than price');
+      });
+
+      it('should accept compareAtPrice without price in update (cross-validation happens in service)', () => {
+        const input: UpdateProductInput = {
+          compareAtPrice: 50.00,
+        };
+
+        const result = validateUpdateProductInput(input);
+
+        expect(result.compareAtPrice).toBe(50.00);
+      });
+
+      it('should throw InvalidProductDataError when price has more than 2 decimal places in update', () => {
+        const input: UpdateProductInput = {
+          price: 29.999,
+        };
+
+        expect(() => validateUpdateProductInput(input)).toThrow(InvalidProductDataError);
+        expect(() => validateUpdateProductInput(input)).toThrow('Price cannot have more than 2 decimal places');
       });
     });
   });

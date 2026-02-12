@@ -523,6 +523,54 @@ describe('productService', () => {
       });
       expect(result).toEqual(mockExistingProduct);
     });
+
+    it('should throw InvalidProductDataError when compareAtPrice is less than existing price', async () => {
+      const input = {
+        compareAtPrice: 20.00, // existing price is 25.00
+      };
+
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockExistingProduct);
+
+      await expect(updateProduct(validId, input)).rejects.toThrow(InvalidProductDataError);
+      await expect(updateProduct(validId, input)).rejects.toThrow('Compare at price must be greater than price');
+      expect(mockPrisma.product.update).not.toHaveBeenCalled();
+    });
+
+    it('should accept compareAtPrice greater than existing price when price not in update', async () => {
+      const input = {
+        compareAtPrice: 45.00, // existing price is 25.00
+      };
+
+      const mockUpdatedProduct = {
+        ...mockExistingProduct,
+        compareAtPrice: new Prisma.Decimal(45.00),
+      };
+
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockExistingProduct);
+      (mockPrisma.product.update as jest.Mock).mockResolvedValue(mockUpdatedProduct);
+
+      const result = await updateProduct(validId, input);
+
+      expect(mockPrisma.product.update).toHaveBeenCalledWith({
+        where: { id: validId },
+        data: { compareAtPrice: 45.00 },
+      });
+      expect(result).toEqual(mockUpdatedProduct);
+    });
+
+    it('should not create PriceHistory when price value is the same as existing', async () => {
+      const input = {
+        price: 25.00, // same as existing Decimal(25.00)
+      };
+
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockExistingProduct);
+      (mockPrisma.product.update as jest.Mock).mockResolvedValue(mockExistingProduct);
+
+      await updateProduct(validId, input);
+
+      expect(mockPrisma.$transaction).not.toHaveBeenCalled();
+      expect(mockPrisma.product.update).toHaveBeenCalled();
+    });
   });
 
   describe('softDeleteProduct', () => {

@@ -10,6 +10,7 @@ import {
 import {
   ProductNotFoundError,
   ProductSlugAlreadyExistsError,
+  InvalidProductDataError,
 } from '../../domain/errors/ProductError';
 import type { Product } from '../../generated/prisma/client';
 import { Prisma } from '../../generated/prisma/client';
@@ -122,8 +123,16 @@ export async function updateProduct(
     throw new ProductNotFoundError();
   }
 
-  // Check if price is changing
-  const priceChanged = validated.price !== undefined && Number(existing.price) !== validated.price;
+  // Cross-validate compareAtPrice against actual price (existing or new)
+  if (validated.compareAtPrice !== undefined) {
+    const effectivePrice = validated.price ?? Number(existing.price);
+    if (validated.compareAtPrice <= effectivePrice) {
+      throw new InvalidProductDataError('Compare at price must be greater than price', 'compareAtPrice');
+    }
+  }
+
+  // Check if price is changing (use Decimal comparison to avoid floating-point issues)
+  const priceChanged = validated.price !== undefined && !existing.price.equals(validated.price);
 
   try {
     if (priceChanged) {

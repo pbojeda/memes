@@ -1,4 +1,5 @@
 import { InvalidProductDataError } from '../../domain/errors/ProductError';
+import { validateSlug as sharedValidateSlug, validateUUID as sharedValidateUUID } from './shared';
 
 export interface LocalizedText {
   es: string;
@@ -58,9 +59,6 @@ export interface ValidatedUpdateProductInput {
   isHot?: boolean;
 }
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const MAX_SLUG_LENGTH = 100;
 const MAX_TITLE_LENGTH = 200;
 const MAX_DESCRIPTION_LENGTH = 1000;
 const MAX_COLOR_LENGTH = 50;
@@ -93,33 +91,12 @@ function validateLocalizedText(text: unknown, fieldName: string, maxLength: numb
   return textObj as LocalizedText;
 }
 
+function throwProductError(message: string, field: string): never {
+  throw new InvalidProductDataError(message, field);
+}
+
 export function validateSlug(slug: unknown, fieldName: string, required: boolean = true): string {
-  if (!slug || (typeof slug === 'string' && slug.trim() === '')) {
-    if (required) {
-      throw new InvalidProductDataError('Slug is required', fieldName);
-    }
-    throw new InvalidProductDataError('Slug cannot be empty', fieldName);
-  }
-
-  if (typeof slug !== 'string') {
-    throw new InvalidProductDataError('Slug must be a string', fieldName);
-  }
-
-  const trimmedSlug = slug.trim();
-
-  if (trimmedSlug.length > MAX_SLUG_LENGTH) {
-    throw new InvalidProductDataError(`Slug exceeds ${MAX_SLUG_LENGTH} characters`, fieldName);
-  }
-
-  if (trimmedSlug !== trimmedSlug.toLowerCase()) {
-    throw new InvalidProductDataError('Slug must be lowercase', fieldName);
-  }
-
-  if (!SLUG_REGEX.test(trimmedSlug)) {
-    throw new InvalidProductDataError('Slug must contain only lowercase letters, numbers, and hyphens', fieldName);
-  }
-
-  return trimmedSlug;
+  return sharedValidateSlug(slug, fieldName, required, throwProductError);
 }
 
 function validatePrice(price: unknown, fieldName: string, required: boolean = true): number {
@@ -138,6 +115,11 @@ function validatePrice(price: unknown, fieldName: string, required: boolean = tr
     throw new InvalidProductDataError('Price must be greater than 0', fieldName);
   }
 
+  const decimalPlaces = (price.toString().split('.')[1] || '').length;
+  if (decimalPlaces > 2) {
+    throw new InvalidProductDataError('Price cannot have more than 2 decimal places', fieldName);
+  }
+
   return price;
 }
 
@@ -152,6 +134,11 @@ function validateCompareAtPrice(price: number | undefined, compareAtPrice: unkno
 
   if (compareAtPrice <= 0) {
     throw new InvalidProductDataError('Compare at price must be greater than 0', fieldName);
+  }
+
+  const decimalPlaces = (compareAtPrice.toString().split('.')[1] || '').length;
+  if (decimalPlaces > 2) {
+    throw new InvalidProductDataError('Compare at price cannot have more than 2 decimal places', fieldName);
   }
 
   if (price !== undefined && compareAtPrice <= price) {
@@ -184,15 +171,7 @@ function validateAvailableSizes(sizes: unknown, fieldName: string): string[] | u
 }
 
 function validateUUID(id: unknown, fieldName: string): string {
-  if (!id || typeof id !== 'string') {
-    throw new InvalidProductDataError('ID is required', fieldName);
-  }
-
-  if (!UUID_REGEX.test(id)) {
-    throw new InvalidProductDataError('Invalid ID format', fieldName);
-  }
-
-  return id;
+  return sharedValidateUUID(id, fieldName, throwProductError);
 }
 
 function validateBoolean(value: unknown, fieldName: string): boolean {
@@ -271,7 +250,9 @@ export function validateUpdateProductInput(input: UpdateProductInput): Validated
   }
 
   if (input.compareAtPrice !== undefined) {
-    validated.compareAtPrice = validateCompareAtPrice(validated.price || input.price, input.compareAtPrice, 'compareAtPrice');
+    // Only validate format/range here. Cross-validation against actual price
+    // happens in the service layer where we have access to the existing product.
+    validated.compareAtPrice = validateCompareAtPrice(validated.price, input.compareAtPrice, 'compareAtPrice');
   }
 
   if (input.availableSizes !== undefined) {
