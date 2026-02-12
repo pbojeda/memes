@@ -321,6 +321,20 @@ describe('productValidator - validateListProductsInput', () => {
 
       expect(result.search).toBe("O'Reilly & Sons <script>");
     });
+
+    it('should return undefined search when combined with other valid filters', () => {
+      const input: ListProductsInput = {
+        search: '  ',
+        isActive: true,
+        minPrice: 10,
+      };
+
+      const result = validateListProductsInput(input);
+
+      expect(result.search).toBeUndefined();
+      expect(result.isActive).toBe(true);
+      expect(result.minPrice).toBe(10);
+    });
   });
 
   describe('sort validation', () => {

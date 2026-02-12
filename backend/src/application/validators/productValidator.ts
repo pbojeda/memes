@@ -311,10 +311,10 @@ const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 const MIN_LIMIT = 1;
 const MAX_SEARCH_LENGTH = 100;
-const DEFAULT_SORT_BY = 'createdAt';
-const DEFAULT_SORT_DIRECTION = 'desc';
 const ALLOWED_SORT_FIELDS = ['price', 'createdAt', 'salesCount'] as const;
 type SortByField = typeof ALLOWED_SORT_FIELDS[number];
+const DEFAULT_SORT_BY: SortByField = 'createdAt';
+const DEFAULT_SORT_DIRECTION: 'asc' | 'desc' = 'desc';
 
 function validatePaginationPage(page: unknown, fieldName: string): number {
   if (page === undefined) {
@@ -405,7 +405,7 @@ function validateOptionalSearch(search: unknown, fieldName: string): string | un
 
 function validateSortBy(sortBy: unknown, fieldName: string): SortByField {
   if (sortBy === undefined) {
-    return DEFAULT_SORT_BY as SortByField;
+    return DEFAULT_SORT_BY;
   }
 
   if (typeof sortBy !== 'string') {
@@ -421,7 +421,7 @@ function validateSortBy(sortBy: unknown, fieldName: string): SortByField {
 
 function validateSortDirection(sortDirection: unknown, fieldName: string): 'asc' | 'desc' {
   if (sortDirection === undefined) {
-    return DEFAULT_SORT_DIRECTION as 'desc';
+    return DEFAULT_SORT_DIRECTION;
   }
 
   if (typeof sortDirection !== 'string') {
