@@ -1,4 +1,5 @@
 import { InvalidProductTypeDataError } from '../../domain/errors/ProductTypeError';
+import { validateSlug as sharedValidateSlug, validateUUID as sharedValidateUUID } from './shared';
 import type { UserRole } from '../../generated/prisma/enums';
 
 /** Role value for unauthenticated callers. */
@@ -53,9 +54,6 @@ export interface ValidatedGetAllProductTypesInput {
   callerRole: CallerRole;
 }
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const MAX_SLUG_LENGTH = 100;
 const MAX_NAME_LENGTH = 100;
 const MAX_SORT_ORDER = 2147483647;
 
@@ -87,33 +85,12 @@ function validateName(name: unknown, fieldName: string): LocalizedName {
   return nameObj as LocalizedName;
 }
 
+function throwProductTypeError(message: string, field: string): never {
+  throw new InvalidProductTypeDataError(message, field);
+}
+
 function validateSlug(slug: unknown, fieldName: string, required: boolean = true): string {
-  if (!slug || (typeof slug === 'string' && slug.trim() === '')) {
-    if (required) {
-      throw new InvalidProductTypeDataError('Slug is required', fieldName);
-    }
-    throw new InvalidProductTypeDataError('Slug cannot be empty', fieldName);
-  }
-
-  if (typeof slug !== 'string') {
-    throw new InvalidProductTypeDataError('Slug must be a string', fieldName);
-  }
-
-  const trimmedSlug = slug.trim();
-
-  if (trimmedSlug.length > MAX_SLUG_LENGTH) {
-    throw new InvalidProductTypeDataError(`Slug exceeds ${MAX_SLUG_LENGTH} characters`, fieldName);
-  }
-
-  if (trimmedSlug !== trimmedSlug.toLowerCase()) {
-    throw new InvalidProductTypeDataError('Slug must be lowercase', fieldName);
-  }
-
-  if (!SLUG_REGEX.test(trimmedSlug)) {
-    throw new InvalidProductTypeDataError('Slug must contain only lowercase letters, numbers, and hyphens', fieldName);
-  }
-
-  return trimmedSlug;
+  return sharedValidateSlug(slug, fieldName, required, throwProductTypeError);
 }
 
 function validateBoolean(value: unknown, fieldName: string): boolean {
@@ -144,15 +121,7 @@ function validateSortOrder(value: unknown, fieldName: string): number {
 }
 
 function validateUUID(id: unknown, fieldName: string): string {
-  if (!id || typeof id !== 'string') {
-    throw new InvalidProductTypeDataError('ID is required', fieldName);
-  }
-
-  if (!UUID_REGEX.test(id)) {
-    throw new InvalidProductTypeDataError('Invalid ID format', fieldName);
-  }
-
-  return id;
+  return sharedValidateUUID(id, fieldName, throwProductTypeError);
 }
 
 export function validateCreateProductTypeInput(input: CreateProductTypeInput): ValidatedCreateProductTypeInput {
