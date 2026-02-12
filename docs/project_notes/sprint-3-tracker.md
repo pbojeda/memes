@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████░░░░░░░░░░░░░░░░░░░░░] 15%
+Progress: [█████░░░░░░░░░░░░░░░░░░░░] 20%
 
-Completed: 3/20 tasks
+Completed: 4/20 tasks
 In Progress: 0 tasks
-Pending: 17 tasks
+Pending: 16 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B3.4 — Implement product listing with filters |
-| Branch | feature/sprint3-B3.4-product-listing-filters |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B3.4-product-listing-filters.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -39,7 +39,7 @@ Blocked: 0 tasks
 | B3.1 | Create Product, ProductImage, ProductReview models | High | ✅ | feature/sprint3-B3.1-product-models | Completed 2026-02-11 |
 | B3.2 | Create PriceHistory model | Medium | ✅ | feature/sprint3-B3.2-price-history-model | Completed 2026-02-11 |
 | B3.3 | Implement product service (CRUD) | High | ✅ | feature/sprint3-B3.3-product-service | Completed 2026-02-12 |
-| B3.4 | Implement product listing with filters | High | 🔄 | feature/sprint3-B3.4-product-listing-filters | Pagination, sorting, type/price/active filters |
+| B3.4 | Implement product listing with filters | High | ✅ | feature/sprint3-B3.4-product-listing-filters | Completed 2026-02-12 |
 | B3.5 | Implement product detail endpoint | High | ⏳ | | Includes images, reviews |
 | B3.6 | Implement soft delete for products | Medium | ⏳ | | deletedAt exclusion from public queries |
 | B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |
@@ -158,6 +158,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-11 | B3.1 | 50dbcd0 | Product, ProductImage, ProductReview models + migration + domain errors (13 tests), 416 total, PR #46 |
 | 2026-02-11 | B3.2 | 9ac72d1 | PriceHistory model + migration + domain errors (4 tests), 420 total, PR #47 |
 | 2026-02-12 | B3.3 | a6d9a7c | Product service CRUD + validators + shared utils (103 new tests), 523 total, PR #48 |
+| 2026-02-12 | B3.4 | 4f224f2 | Product listing with filters, pagination, sorting (77 new tests), 600 total, PR #49 |
 
 ---
 
