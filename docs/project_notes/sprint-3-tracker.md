@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████░░░░░░░░░░░░░░░░░░░] 25%
+Progress: [███████░░░░░░░░░░░░░░░░░░] 30%
 
-Completed: 5/20 tasks
+Completed: 6/20 tasks
 In Progress: 0 tasks
-Pending: 15 tasks
+Pending: 14 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B3.6 — Implement soft delete endpoints for products |
-| Branch | feature/sprint3-B3.6-soft-delete-endpoints |
-| Step | 2b/5 (Implement) |
-| Ticket | docs/tickets/B3.6-soft-delete-endpoints.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -41,7 +41,7 @@ Blocked: 0 tasks
 | B3.3 | Implement product service (CRUD) | High | ✅ | feature/sprint3-B3.3-product-service | Completed 2026-02-12 |
 | B3.4 | Implement product listing with filters | High | ✅ | feature/sprint3-B3.4-product-listing-filters | Completed 2026-02-12 |
 | B3.5 | Implement product detail endpoint | High | ✅ | feature/sprint3-B3.5-product-detail-endpoint | Completed 2026-02-12 |
-| B3.6 | Implement soft delete for products | Medium | 🔄 | feature/sprint3-B3.6-soft-delete-endpoints | deletedAt exclusion from public queries |
+| B3.6 | Implement soft delete for products | Medium | ✅ | feature/sprint3-B3.6-soft-delete-endpoints | Completed 2026-02-12 |
 | B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |
 | B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
 | B3.9 | Create admin product endpoints | High | ⏳ | | CRUD for MANAGER/ADMIN |
@@ -160,8 +160,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-12 | B3.3 | a6d9a7c | Product service CRUD + validators + shared utils (103 new tests), 523 total, PR #48 |
 | 2026-02-12 | B3.4 | 4f224f2 | Product listing with filters, pagination, sorting (77 new tests), 600 total, PR #49 |
 | 2026-02-12 | B3.5 | 8dbd558 | Product detail endpoint with images/reviews + viewCount fire-and-forget (11 new tests), 611 total, PR #50 |
+| 2026-02-12 | B3.6 | a10bc4a | Soft delete + restore endpoints with auth/role middleware (8 new tests), 619 total, PR #51 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-12 (B3.5 merged)*
+*Last Updated: 2026-02-12 (B3.6 merged)*
