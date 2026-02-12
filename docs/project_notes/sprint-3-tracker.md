@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B3.4 — Implement product listing with filters |
+| Branch | feature/sprint3-B3.4-product-listing-filters |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/B3.4-product-listing-filters.md |
 
 ---
 
@@ -39,7 +39,7 @@ Blocked: 0 tasks
 | B3.1 | Create Product, ProductImage, ProductReview models | High | ✅ | feature/sprint3-B3.1-product-models | Completed 2026-02-11 |
 | B3.2 | Create PriceHistory model | Medium | ✅ | feature/sprint3-B3.2-price-history-model | Completed 2026-02-11 |
 | B3.3 | Implement product service (CRUD) | High | ✅ | feature/sprint3-B3.3-product-service | Completed 2026-02-12 |
-| B3.4 | Implement product listing with filters | High | ⏳ | | Pagination, sorting, type/price/active filters |
+| B3.4 | Implement product listing with filters | High | 🔄 | feature/sprint3-B3.4-product-listing-filters | Pagination, sorting, type/price/active filters |
 | B3.5 | Implement product detail endpoint | High | ⏳ | | Includes images, reviews |
 | B3.6 | Implement soft delete for products | Medium | ⏳ | | deletedAt exclusion from public queries |
 | B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |

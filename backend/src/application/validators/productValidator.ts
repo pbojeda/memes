@@ -277,3 +277,191 @@ export function validateUpdateProductInput(input: UpdateProductInput): Validated
 export function validateProductId(id: string): string {
   return validateUUID(id, 'id');
 }
+
+export interface ListProductsInput {
+  page?: number;
+  limit?: number;
+  productTypeId?: string;
+  isActive?: boolean;
+  isHot?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  includeSoftDeleted?: boolean;
+}
+
+export interface ValidatedListProductsInput {
+  page: number;
+  limit: number;
+  productTypeId?: string;
+  isActive?: boolean;
+  isHot?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  sortBy: 'price' | 'createdAt' | 'salesCount';
+  sortDirection: 'asc' | 'desc';
+  includeSoftDeleted: boolean;
+}
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 20;
+const MAX_LIMIT = 100;
+const MIN_LIMIT = 1;
+const DEFAULT_SORT_BY = 'createdAt';
+const DEFAULT_SORT_DIRECTION = 'desc';
+const ALLOWED_SORT_FIELDS = ['price', 'createdAt', 'salesCount'] as const;
+
+function validatePaginationPage(page: unknown, fieldName: string): number {
+  if (page === undefined) {
+    return DEFAULT_PAGE;
+  }
+
+  if (typeof page !== 'number') {
+    throw new InvalidProductDataError('Page must be a number', fieldName);
+  }
+
+  if (page < 1) {
+    throw new InvalidProductDataError('Page must be at least 1', fieldName);
+  }
+
+  return page;
+}
+
+function validatePaginationLimit(limit: unknown, fieldName: string): number {
+  if (limit === undefined) {
+    return DEFAULT_LIMIT;
+  }
+
+  if (typeof limit !== 'number') {
+    throw new InvalidProductDataError('Limit must be a number', fieldName);
+  }
+
+  if (limit < MIN_LIMIT || limit > MAX_LIMIT) {
+    throw new InvalidProductDataError('Limit must be between 1 and 100', fieldName);
+  }
+
+  return limit;
+}
+
+function validateOptionalBoolean(value: unknown, fieldName: string): boolean | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value !== 'boolean') {
+    throw new InvalidProductDataError(`${fieldName} must be a boolean`, fieldName);
+  }
+
+  return value;
+}
+
+function validateOptionalPrice(price: unknown, fieldName: string): number | undefined {
+  if (price === undefined) {
+    return undefined;
+  }
+
+  if (typeof price !== 'number') {
+    throw new InvalidProductDataError(`${fieldName} must be a number`, fieldName);
+  }
+
+  if (price < 0) {
+    throw new InvalidProductDataError(`${fieldName} must be greater than or equal to 0`, fieldName);
+  }
+
+  return price;
+}
+
+function validateOptionalSearch(search: unknown, fieldName: string): string | undefined {
+  if (search === undefined) {
+    return undefined;
+  }
+
+  if (typeof search !== 'string') {
+    throw new InvalidProductDataError('search must be a string', fieldName);
+  }
+
+  const trimmed = search.trim();
+
+  if (trimmed === '') {
+    throw new InvalidProductDataError('search cannot be empty', fieldName);
+  }
+
+  return trimmed;
+}
+
+function validateSortBy(sortBy: unknown, fieldName: string): 'price' | 'createdAt' | 'salesCount' {
+  if (sortBy === undefined) {
+    return DEFAULT_SORT_BY as 'createdAt';
+  }
+
+  if (typeof sortBy !== 'string') {
+    throw new InvalidProductDataError('sortBy must be a string', fieldName);
+  }
+
+  if (!ALLOWED_SORT_FIELDS.includes(sortBy as never)) {
+    throw new InvalidProductDataError('sortBy must be one of: price, createdAt, salesCount', fieldName);
+  }
+
+  return sortBy as 'price' | 'createdAt' | 'salesCount';
+}
+
+function validateSortDirection(sortDirection: unknown, fieldName: string): 'asc' | 'desc' {
+  if (sortDirection === undefined) {
+    return DEFAULT_SORT_DIRECTION as 'desc';
+  }
+
+  if (typeof sortDirection !== 'string') {
+    throw new InvalidProductDataError('sortDirection must be a string', fieldName);
+  }
+
+  if (sortDirection !== 'asc' && sortDirection !== 'desc') {
+    throw new InvalidProductDataError('sortDirection must be either asc or desc', fieldName);
+  }
+
+  return sortDirection;
+}
+
+export function validateListProductsInput(input: ListProductsInput): ValidatedListProductsInput {
+  const page = validatePaginationPage(input.page, 'page');
+  const limit = validatePaginationLimit(input.limit, 'limit');
+
+  const productTypeId = input.productTypeId !== undefined
+    ? validateUUID(input.productTypeId, 'productTypeId')
+    : undefined;
+
+  const isActive = validateOptionalBoolean(input.isActive, 'isActive');
+  const isHot = validateOptionalBoolean(input.isHot, 'isHot');
+
+  const minPrice = validateOptionalPrice(input.minPrice, 'minPrice');
+  const maxPrice = validateOptionalPrice(input.maxPrice, 'maxPrice');
+
+  if (minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice) {
+    throw new InvalidProductDataError('minPrice cannot be greater than maxPrice', 'minPrice');
+  }
+
+  const search = validateOptionalSearch(input.search, 'search');
+
+  const sortBy = validateSortBy(input.sortBy, 'sortBy');
+  const sortDirection = validateSortDirection(input.sortDirection, 'sortDirection');
+
+  const includeSoftDeleted = input.includeSoftDeleted !== undefined
+    ? validateBoolean(input.includeSoftDeleted, 'includeSoftDeleted')
+    : false;
+
+  return {
+    page,
+    limit,
+    productTypeId,
+    isActive,
+    isHot,
+    minPrice,
+    maxPrice,
+    search,
+    sortBy,
+    sortDirection,
+    includeSoftDeleted,
+  };
+}

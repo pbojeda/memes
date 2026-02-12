@@ -4,8 +4,10 @@ import {
   validateUpdateProductInput,
   validateProductId,
   validateSlug,
+  validateListProductsInput,
   type CreateProductInput,
   type UpdateProductInput,
+  type ListProductsInput,
 } from '../validators/productValidator';
 import {
   ProductNotFoundError,
@@ -14,6 +16,7 @@ import {
 } from '../../domain/errors/ProductError';
 import type { Product } from '../../generated/prisma/client';
 import { Prisma } from '../../generated/prisma/client';
+import type { PaginationMeta } from '../../utils/responseHelpers';
 
 /**
  * Creates a new product.
@@ -217,4 +220,110 @@ export async function restoreProduct(id: string): Promise<Product> {
   });
 
   return product;
+}
+
+export interface ListProductsResult {
+  data: Product[];
+  pagination: PaginationMeta;
+}
+
+/**
+ * Lists products with pagination, filtering, and sorting.
+ * @param input Filtering, pagination, and sorting options
+ * @throws {InvalidProductDataError} If input validation fails
+ * @returns Paginated list of products with metadata
+ */
+export async function listProducts(input: ListProductsInput): Promise<ListProductsResult> {
+  const validated = validateListProductsInput(input);
+
+  // Build where clause dynamically
+  const where: Prisma.ProductWhereInput = {};
+
+  // Soft-delete filter (default: exclude deleted)
+  if (!validated.includeSoftDeleted) {
+    where.deletedAt = null;
+  }
+
+  // Product type filter
+  if (validated.productTypeId) {
+    where.productTypeId = validated.productTypeId;
+  }
+
+  // Active status filter
+  if (validated.isActive !== undefined) {
+    where.isActive = validated.isActive;
+  }
+
+  // Hot status filter
+  if (validated.isHot !== undefined) {
+    where.isHot = validated.isHot;
+  }
+
+  // Price range filter
+  if (validated.minPrice !== undefined || validated.maxPrice !== undefined) {
+    where.price = {};
+    if (validated.minPrice !== undefined) {
+      where.price.gte = validated.minPrice;
+    }
+    if (validated.maxPrice !== undefined) {
+      where.price.lte = validated.maxPrice;
+    }
+  }
+
+  // Search text filter (JSONB title.es and title.en)
+  if (validated.search) {
+    where.OR = [
+      {
+        title: {
+          path: ['es'],
+          string_contains: validated.search,
+          mode: 'insensitive',
+        },
+      },
+      {
+        title: {
+          path: ['en'],
+          string_contains: validated.search,
+          mode: 'insensitive',
+        },
+      },
+    ];
+  }
+
+  // Pagination
+  const skip = (validated.page - 1) * validated.limit;
+  const take = validated.limit;
+
+  // Sorting
+  const orderBy: Prisma.ProductOrderByWithRelationInput = {
+    [validated.sortBy]: validated.sortDirection,
+  };
+
+  // Execute queries
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+    }),
+    prisma.product.count({
+      where,
+    }),
+  ]);
+
+  // Calculate pagination metadata
+  const totalPages = total > 0 ? Math.ceil(total / validated.limit) : 0;
+
+  return {
+    data: products,
+    pagination: {
+      page: validated.page,
+      limit: validated.limit,
+      total,
+      totalPages,
+      hasNext: validated.page < totalPages,
+      hasPrev: validated.page > 1,
+    },
+  };
 }
