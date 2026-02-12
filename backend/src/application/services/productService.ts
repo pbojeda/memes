@@ -14,7 +14,7 @@ import {
   ProductSlugAlreadyExistsError,
   InvalidProductDataError,
 } from '../../domain/errors/ProductError';
-import type { Product } from '../../generated/prisma/client';
+import type { Product, ProductImage, ProductReview } from '../../generated/prisma/client';
 import { Prisma } from '../../generated/prisma/client';
 import type { PaginationMeta } from '../../utils/responseHelpers';
 
@@ -225,6 +225,46 @@ export async function restoreProduct(id: string): Promise<Product> {
 export interface ListProductsResult {
   data: Product[];
   pagination: PaginationMeta;
+}
+
+/**
+ * Retrieves a product by slug with images and reviews (public endpoint).
+ * Increments viewCount asynchronously (fire-and-forget).
+ * @throws {InvalidProductDataError} If slug is invalid
+ * @throws {ProductNotFoundError} If product not found or soft-deleted
+ */
+export async function getProductDetailBySlug(slug: string): Promise<Product & { images: ProductImage[]; reviews: ProductReview[] }> {
+  const validatedSlug = validateSlug(slug, 'slug');
+
+  const product = await prisma.product.findFirst({
+    where: {
+      slug: validatedSlug,
+      deletedAt: null,
+    },
+    include: {
+      images: {
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+      },
+      reviews: {
+        where: { isVisible: true },
+        orderBy: { createdAt: 'desc' },
+      },
+    },
+  });
+
+  if (!product) {
+    throw new ProductNotFoundError();
+  }
+
+  // Fire-and-forget viewCount increment (non-blocking)
+  prisma.product.update({
+    where: { id: product.id },
+    data: { viewCount: { increment: 1 } },
+  }).catch(() => {
+    // Silently ignore errors to avoid crashing the request
+  });
+
+  return product;
 }
 
 /**

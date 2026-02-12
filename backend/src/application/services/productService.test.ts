@@ -5,6 +5,7 @@ import {
   updateProduct,
   softDeleteProduct,
   restoreProduct,
+  getProductDetailBySlug,
 } from './productService';
 import prisma from '../../lib/prisma';
 import {
@@ -704,6 +705,162 @@ describe('productService', () => {
 
     it('should throw InvalidProductDataError when ID is invalid', async () => {
       await expect(restoreProduct('invalid-id')).rejects.toThrow(InvalidProductDataError);
+      expect(mockPrisma.product.findFirst).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getProductDetailBySlug', () => {
+    const mockProductImage1 = {
+      id: 'img-1',
+      productId: 'prod-123',
+      url: 'https://example.com/image1.jpg',
+      altText: null,
+      sortOrder: 1,
+      createdAt: new Date('2026-02-11T10:00:00Z'),
+      updatedAt: new Date('2026-02-11T10:00:00Z'),
+    };
+
+    const mockProductImage2 = {
+      id: 'img-2',
+      productId: 'prod-123',
+      url: 'https://example.com/image2.jpg',
+      altText: null,
+      sortOrder: 2,
+      createdAt: new Date('2026-02-11T09:00:00Z'),
+      updatedAt: new Date('2026-02-11T09:00:00Z'),
+    };
+
+    const mockVisibleReview1 = {
+      id: 'review-1',
+      productId: 'prod-123',
+      orderId: 'order-123',
+      userId: 'user-123',
+      rating: 5,
+      comment: 'Great product!',
+      isVisible: true,
+      createdAt: new Date('2026-02-11T12:00:00Z'),
+      updatedAt: new Date('2026-02-11T12:00:00Z'),
+    };
+
+    const mockVisibleReview2 = {
+      id: 'review-2',
+      productId: 'prod-123',
+      orderId: 'order-124',
+      userId: 'user-124',
+      rating: 4,
+      comment: 'Good quality',
+      isVisible: true,
+      createdAt: new Date('2026-02-11T11:00:00Z'),
+      updatedAt: new Date('2026-02-11T11:00:00Z'),
+    };
+
+    const mockProductWithDetails = {
+      id: 'prod-123',
+      title: { es: 'Producto Test' },
+      description: { es: 'Descripción del producto' },
+      slug: 'producto-test',
+      price: new Prisma.Decimal(29.99),
+      compareAtPrice: null,
+      availableSizes: ['S', 'M', 'L'],
+      productTypeId: '456e4567-e89b-12d3-a456-426614174000',
+      color: 'Rojo',
+      isActive: true,
+      isHot: true,
+      printfulProductId: null,
+      printfulSyncVariantId: null,
+      memeSourceUrl: null,
+      memeIsOriginal: false,
+      salesCount: 50,
+      viewCount: 200,
+      createdByUserId: null,
+      deletedAt: null,
+      createdAt: new Date('2026-02-10'),
+      updatedAt: new Date('2026-02-10'),
+      images: [mockProductImage1, mockProductImage2],
+      reviews: [mockVisibleReview1, mockVisibleReview2],
+    };
+
+    it('should return product with images and reviews when found', async () => {
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockProductWithDetails);
+      (mockPrisma.product.update as jest.Mock).mockResolvedValue({});
+
+      const result = await getProductDetailBySlug('producto-test');
+
+      expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
+        where: { slug: 'producto-test', deletedAt: null },
+        include: {
+          images: { orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }] },
+          reviews: { where: { isVisible: true }, orderBy: { createdAt: 'desc' } },
+        },
+      });
+      expect(result).toEqual(mockProductWithDetails);
+    });
+
+    it('should throw ProductNotFoundError when product not found', async () => {
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(null);
+
+      await expect(getProductDetailBySlug('non-existent')).rejects.toThrow(ProductNotFoundError);
+      expect(mockPrisma.product.update).not.toHaveBeenCalled();
+    });
+
+    it('should exclude soft-deleted products', async () => {
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(null);
+
+      await expect(getProductDetailBySlug('deleted-product')).rejects.toThrow(ProductNotFoundError);
+
+      expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
+        where: { slug: 'deleted-product', deletedAt: null },
+        include: {
+          images: { orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }] },
+          reviews: { where: { isVisible: true }, orderBy: { createdAt: 'desc' } },
+        },
+      });
+    });
+
+    it('should include images sorted by sortOrder ASC, then createdAt ASC', async () => {
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockProductWithDetails);
+      (mockPrisma.product.update as jest.Mock).mockResolvedValue({});
+
+      await getProductDetailBySlug('producto-test');
+
+      expect(mockPrisma.product.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            images: { orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }] },
+          }),
+        })
+      );
+    });
+
+    it('should include only visible reviews sorted by createdAt DESC', async () => {
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockProductWithDetails);
+      (mockPrisma.product.update as jest.Mock).mockResolvedValue({});
+
+      await getProductDetailBySlug('producto-test');
+
+      expect(mockPrisma.product.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            reviews: { where: { isVisible: true }, orderBy: { createdAt: 'desc' } },
+          }),
+        })
+      );
+    });
+
+    it('should increment viewCount asynchronously', async () => {
+      (mockPrisma.product.findFirst as jest.Mock).mockResolvedValue(mockProductWithDetails);
+      (mockPrisma.product.update as jest.Mock).mockResolvedValue({});
+
+      await getProductDetailBySlug('producto-test');
+
+      expect(mockPrisma.product.update).toHaveBeenCalledWith({
+        where: { id: 'prod-123' },
+        data: { viewCount: { increment: 1 } },
+      });
+    });
+
+    it('should throw InvalidProductDataError for invalid slug', async () => {
+      await expect(getProductDetailBySlug('INVALID-SLUG')).rejects.toThrow(InvalidProductDataError);
       expect(mockPrisma.product.findFirst).not.toHaveBeenCalled();
     });
   });
