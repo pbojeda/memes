@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [█████░░░░░░░░░░░░░░░░░░░░] 20%
+Progress: [██████░░░░░░░░░░░░░░░░░░░] 25%
 
-Completed: 4/20 tasks
+Completed: 5/20 tasks
 In Progress: 0 tasks
-Pending: 16 tasks
+Pending: 15 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B3.5 — Implement product detail endpoint |
-| Branch | feature/sprint3-B3.5-product-detail-endpoint |
-| Step | ✅ Complete — ready for commit |
-| Ticket | docs/tickets/B3.5-product-detail-endpoint.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -40,7 +40,7 @@ Blocked: 0 tasks
 | B3.2 | Create PriceHistory model | Medium | ✅ | feature/sprint3-B3.2-price-history-model | Completed 2026-02-11 |
 | B3.3 | Implement product service (CRUD) | High | ✅ | feature/sprint3-B3.3-product-service | Completed 2026-02-12 |
 | B3.4 | Implement product listing with filters | High | ✅ | feature/sprint3-B3.4-product-listing-filters | Completed 2026-02-12 |
-| B3.5 | Implement product detail endpoint | High | 🔄 | feature/sprint3-B3.5-product-detail-endpoint | Includes images, reviews |
+| B3.5 | Implement product detail endpoint | High | ✅ | feature/sprint3-B3.5-product-detail-endpoint | Completed 2026-02-12 |
 | B3.6 | Implement soft delete for products | Medium | ⏳ | | deletedAt exclusion from public queries |
 | B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |
 | B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
@@ -159,8 +159,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-11 | B3.2 | 9ac72d1 | PriceHistory model + migration + domain errors (4 tests), 420 total, PR #47 |
 | 2026-02-12 | B3.3 | a6d9a7c | Product service CRUD + validators + shared utils (103 new tests), 523 total, PR #48 |
 | 2026-02-12 | B3.4 | 4f224f2 | Product listing with filters, pagination, sorting (77 new tests), 600 total, PR #49 |
+| 2026-02-12 | B3.5 | 8dbd558 | Product detail endpoint with images/reviews + viewCount fire-and-forget (11 new tests), 611 total, PR #50 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-12*
+*Last Updated: 2026-02-12 (B3.5 merged)*
