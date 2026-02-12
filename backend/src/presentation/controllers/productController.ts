@@ -4,7 +4,7 @@ import {
   InvalidProductDataError,
   ProductNotFoundError,
 } from '../../domain/errors/ProductError';
-import { success } from '../../utils/responseHelpers';
+import { success, noContent } from '../../utils/responseHelpers';
 
 /**
  * Handle product detail retrieval by slug.
@@ -20,6 +20,46 @@ export async function getProductDetail(
   try {
     const slug = req.params.slug as string;
     const product = await productService.getProductDetailBySlug(slug);
+    success(res, product);
+  } catch (error) {
+    handleProductError(error, res, next);
+  }
+}
+
+/**
+ * Handle product soft deletion.
+ * DELETE /api/products/:id
+ *
+ * Requires authentication and MANAGER/ADMIN role.
+ */
+export async function deleteProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const id = req.params.id as string;
+    await productService.softDeleteProduct(id);
+    noContent(res);
+  } catch (error) {
+    handleProductError(error, res, next);
+  }
+}
+
+/**
+ * Handle product restoration (un-delete).
+ * POST /api/products/:id/restore
+ *
+ * Requires authentication and MANAGER/ADMIN role.
+ */
+export async function restoreProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const id = req.params.id as string;
+    const product = await productService.restoreProduct(id);
     success(res, product);
   } catch (error) {
     handleProductError(error, res, next);
