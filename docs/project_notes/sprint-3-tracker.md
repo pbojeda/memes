@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [███████░░░░░░░░░░░░░░░░░░] 30%
+Progress: [█████████░░░░░░░░░░░░░░░░] 35%
 
-Completed: 6/20 tasks
+Completed: 7/20 tasks
 In Progress: 0 tasks
-Pending: 14 tasks
+Pending: 13 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B3.7 — Implement product image upload |
-| Branch | feature/sprint3-B3.7-product-image-upload |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B3.7-product-image-upload.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -42,10 +42,10 @@ Blocked: 0 tasks
 | B3.4 | Implement product listing with filters | High | ✅ | feature/sprint3-B3.4-product-listing-filters | Completed 2026-02-12 |
 | B3.5 | Implement product detail endpoint | High | ✅ | feature/sprint3-B3.5-product-detail-endpoint | Completed 2026-02-12 |
 | B3.6 | Implement soft delete for products | Medium | ✅ | feature/sprint3-B3.6-soft-delete-endpoints | Completed 2026-02-12 |
-| B3.7 | Implement product image upload | High | 🔄 | feature/sprint3-B3.7-product-image-upload | CDN/file storage |
+| B3.7 | Implement product image upload | High | ✅ | feature/sprint3-B3.7-product-image-upload | Completed 2026-02-13 |
 | B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
 | B3.9 | Create admin product endpoints | High | ⏳ | | CRUD for MANAGER/ADMIN |
-| B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage |
+| B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage. **Must include upload + product image endpoints** (from B3.7 code review) |
 
 ---
 
@@ -148,6 +148,8 @@ _Key learnings, issues, or observations:_
 - ADR-003: Localized fields (title, description) use JSON `{es: "...", en: "..."}` — frontend uses `es` key for MVP
 - Product model has 20+ fields including Printful refs, meme metadata, and counters (see data-model.md §3.4)
 - Future optimization: Consider adding DB index on `products.deleted_at` for soft-delete query performance (from B3.3 code review)
+- Future improvement: Store Cloudinary `publicId` as a separate column in `product_images` instead of extracting it from URL on delete (from B3.7 code review)
+- B3.10 should include integration tests for upload and product image endpoints (from B3.7 code review)
 
 ---
 
@@ -161,8 +163,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-12 | B3.4 | 4f224f2 | Product listing with filters, pagination, sorting (77 new tests), 600 total, PR #49 |
 | 2026-02-12 | B3.5 | 8dbd558 | Product detail endpoint with images/reviews + viewCount fire-and-forget (11 new tests), 611 total, PR #50 |
 | 2026-02-12 | B3.6 | a10bc4a | Soft delete + restore endpoints with auth/role middleware (8 new tests), 619 total, PR #51 |
+| 2026-02-13 | B3.7 | d61f742 | Product image upload with Cloudinary + CRUD endpoints + multer + validators (106 new tests), 725 total, PR #52 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-12 (B3.6 merged)*
+*Last Updated: 2026-02-13 (B3.7 merged)*
