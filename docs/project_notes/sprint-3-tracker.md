@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████████░░░░░░░░░░░░░░░] 40%
+Progress: [███████████░░░░░░░░░░░░░░] 45%
 
-Completed: 8/20 tasks
+Completed: 9/20 tasks
 In Progress: 0 tasks
-Pending: 12 tasks
+Pending: 11 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B3.8 — Implement product review management |
-| Branch | feature/sprint3-B3.8-product-review-management |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B3.8-product-review-management.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -43,7 +43,7 @@ Blocked: 0 tasks
 | B3.5 | Implement product detail endpoint | High | ✅ | feature/sprint3-B3.5-product-detail-endpoint | Completed 2026-02-12 |
 | B3.6 | Implement soft delete for products | Medium | ✅ | feature/sprint3-B3.6-soft-delete-endpoints | Completed 2026-02-12 |
 | B3.7 | Implement product image upload | High | ✅ | feature/sprint3-B3.7-product-image-upload | Completed 2026-02-13 |
-| B3.8 | Implement product review management | Medium | 🔄 | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
+| B3.8 | Implement product review management | Medium | ✅ | feature/sprint3-B3.8-product-review-management | Completed 2026-02-13 |
 | B3.9 | Create admin product endpoints | High | ✅ | feature/sprint3-B3.9-admin-product-endpoints | Completed 2026-02-13 |
 | B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage. **Must include upload + product image endpoints** (from B3.7 code review) |
 
@@ -151,6 +151,8 @@ _Key learnings, issues, or observations:_
 - Future improvement: Store Cloudinary `publicId` as a separate column in `product_images` instead of extracting it from URL on delete (from B3.7 code review)
 - B3.10 should include integration tests for upload and product image endpoints (from B3.7 code review)
 - `path-to-regexp` v8 (Express 5) does not support inline regex in route params — UUID vs slug distinction handled in handler via regex detection (from B3.9)
+- B3.10 should also include integration tests for review endpoints (from B3.8 code review)
+- Review analytics (averageRating, ratingDistribution) computed from ALL reviews (visible + hidden) for accurate product metrics (B3.8 design decision)
 
 ---
 
@@ -166,8 +168,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-12 | B3.6 | a10bc4a | Soft delete + restore endpoints with auth/role middleware (8 new tests), 619 total, PR #51 |
 | 2026-02-13 | B3.7 | d61f742 | Product image upload with Cloudinary + CRUD endpoints + multer + validators (106 new tests), 725 total, PR #52 |
 | 2026-02-13 | B3.9 | 53d90bd | Admin product endpoints (create, update, list, getById, activate, deactivate) + 409 error mapping (35 new tests), 760 total, PR #53 |
+| 2026-02-13 | B3.8 | 3e386c3 | Product review CRUD + visibility toggle + analytics (avgRating, distribution), rating 1-5 at validator level (80 new tests), 840 total, PR #54 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-13 (B3.9 merged)*
+*Last Updated: 2026-02-13 (B3.8 merged)*
