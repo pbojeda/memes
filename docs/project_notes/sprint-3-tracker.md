@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B3.7 — Implement product image upload |
+| Branch | feature/sprint3-B3.7-product-image-upload |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/B3.7-product-image-upload.md |
 
 ---
 
@@ -42,7 +42,7 @@ Blocked: 0 tasks
 | B3.4 | Implement product listing with filters | High | ✅ | feature/sprint3-B3.4-product-listing-filters | Completed 2026-02-12 |
 | B3.5 | Implement product detail endpoint | High | ✅ | feature/sprint3-B3.5-product-detail-endpoint | Completed 2026-02-12 |
 | B3.6 | Implement soft delete for products | Medium | ✅ | feature/sprint3-B3.6-soft-delete-endpoints | Completed 2026-02-12 |
-| B3.7 | Implement product image upload | High | ⏳ | | CDN/file storage |
+| B3.7 | Implement product image upload | High | 🔄 | feature/sprint3-B3.7-product-image-upload | CDN/file storage |
 | B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
 | B3.9 | Create admin product endpoints | High | ⏳ | | CRUD for MANAGER/ADMIN |
 | B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage |
