@@ -15,6 +15,7 @@ import {
   updateImage,
   deleteImage,
 } from '../presentation/controllers/productImageController';
+import { listReviews, createReview } from '../presentation/controllers/productReviewController';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { optionalAuthMiddleware } from '../middleware/optionalAuthMiddleware';
 import { requireRole } from '../middleware/roleMiddleware';
@@ -80,6 +81,18 @@ router.delete(
   authMiddleware,
   requireRole([UserRole.MANAGER, UserRole.ADMIN]),
   deleteImage
+);
+
+// Product Review routes
+// GET /api/products/:productId/reviews - List product reviews (public, no auth)
+router.get('/:productId/reviews', listReviews);
+
+// POST /api/products/:productId/reviews - Create product review (MANAGER/ADMIN only)
+router.post(
+  '/:productId/reviews',
+  authMiddleware,
+  requireRole([UserRole.MANAGER, UserRole.ADMIN]),
+  createReview
 );
 
 // Single-segment routes (lower specificity)
