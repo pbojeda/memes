@@ -18,6 +18,7 @@ export interface CreateProductInput {
   color: string;
   isActive?: boolean;
   isHot?: boolean;
+  createdByUserId?: string;
 }
 
 export interface ValidatedCreateProductInput {
@@ -33,6 +34,7 @@ export interface ValidatedCreateProductInput {
   isHot: boolean;
   salesCount: number;
   viewCount: number;
+  createdByUserId?: string;
 }
 
 export interface UpdateProductInput {
@@ -214,6 +216,10 @@ export function validateCreateProductInput(input: CreateProductInput): Validated
   const isActive = input.isActive !== undefined ? validateBoolean(input.isActive, 'isActive') : true;
   const isHot = input.isHot !== undefined ? validateBoolean(input.isHot, 'isHot') : false;
 
+  const createdByUserId = input.createdByUserId !== undefined
+    ? validateUUID(input.createdByUserId, 'createdByUserId')
+    : undefined;
+
   return {
     title,
     description,
@@ -227,6 +233,7 @@ export function validateCreateProductInput(input: CreateProductInput): Validated
     isHot,
     salesCount: 0,
     viewCount: 0,
+    createdByUserId,
   };
 }
 

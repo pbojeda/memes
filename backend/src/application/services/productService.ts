@@ -41,6 +41,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
         isHot: validated.isHot,
         salesCount: validated.salesCount,
         viewCount: validated.viewCount,
+        createdByUserId: validated.createdByUserId ?? null,
       },
     });
 
