@@ -12,6 +12,7 @@ import {
 } from '../../domain/errors/ProductImageError';
 import { getProductById } from './productService';
 import { CloudinaryAdapter } from '../../infrastructure/storage/CloudinaryAdapter';
+import logger from '../../lib/logger';
 import type { ProductImage } from '../../generated/prisma/client';
 
 /**
@@ -193,6 +194,6 @@ export async function deleteProductImage(productId: string, imageId: string): Pr
     }
   } catch (error) {
     // Log error but don't throw (best-effort cleanup)
-    console.error(`Failed to delete image from Cloudinary: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    logger.error({ error: error instanceof Error ? error.message : 'Unknown error', url: existing.url }, 'Failed to delete image from Cloudinary');
   }
 }
