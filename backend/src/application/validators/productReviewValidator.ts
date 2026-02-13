@@ -219,7 +219,7 @@ function validatePage(page: unknown, fieldName: string): number {
     return 1;
   }
 
-  if (typeof page !== 'number') {
+  if (typeof page !== 'number' || Number.isNaN(page)) {
     throw new InvalidProductReviewDataError('Page must be a number', fieldName);
   }
 
@@ -242,7 +242,7 @@ function validateLimit(limit: unknown, fieldName: string): number {
     return 20;
   }
 
-  if (typeof limit !== 'number') {
+  if (typeof limit !== 'number' || Number.isNaN(limit)) {
     throw new InvalidProductReviewDataError('Limit must be a number', fieldName);
   }
 

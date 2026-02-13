@@ -501,5 +501,23 @@ describe('productReviewValidator', () => {
       expect(() => validateListReviewsInput(input)).toThrow(InvalidProductReviewDataError);
       expect(() => validateListReviewsInput(input)).toThrow('Limit must be a number');
     });
+
+    it('should throw for NaN page', () => {
+      const input: ListReviewsInput = {
+        page: NaN,
+      };
+
+      expect(() => validateListReviewsInput(input)).toThrow(InvalidProductReviewDataError);
+      expect(() => validateListReviewsInput(input)).toThrow('Page must be a number');
+    });
+
+    it('should throw for NaN limit', () => {
+      const input: ListReviewsInput = {
+        limit: NaN,
+      };
+
+      expect(() => validateListReviewsInput(input)).toThrow(InvalidProductReviewDataError);
+      expect(() => validateListReviewsInput(input)).toThrow('Limit must be a number');
+    });
   });
 });

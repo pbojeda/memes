@@ -3202,6 +3202,9 @@ components:
         id:
           type: string
           format: uuid
+        productId:
+          type: string
+          format: uuid
         authorName:
           type: string
         rating:
