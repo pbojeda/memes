@@ -251,7 +251,7 @@ export async function activateProduct(
 ): Promise<void> {
   try {
     const id = req.params.id as string;
-    const product = await productService.updateProduct(id, { isActive: true });
+    const product = await productService.updateProduct(id, { isActive: true }, req.user!.userId);
     success(res, product);
   } catch (error) {
     handleProductError(error, res, next);
@@ -271,7 +271,7 @@ export async function deactivateProduct(
 ): Promise<void> {
   try {
     const id = req.params.id as string;
-    const product = await productService.updateProduct(id, { isActive: false });
+    const product = await productService.updateProduct(id, { isActive: false }, req.user!.userId);
     success(res, product);
   } catch (error) {
     handleProductError(error, res, next);

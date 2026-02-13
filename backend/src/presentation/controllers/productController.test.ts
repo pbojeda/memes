@@ -858,7 +858,8 @@ describe('productController', () => {
 
       expect(productService.updateProduct).toHaveBeenCalledWith(
         'prod-123',
-        { isActive: true }
+        { isActive: true },
+        'user-123'
       );
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalledWith({
@@ -921,7 +922,8 @@ describe('productController', () => {
 
       expect(productService.updateProduct).toHaveBeenCalledWith(
         'prod-123',
-        { isActive: false }
+        { isActive: false },
+        'user-123'
       );
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalledWith({
