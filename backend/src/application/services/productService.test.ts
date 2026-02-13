@@ -90,6 +90,7 @@ describe('productService', () => {
           isHot: false,
           salesCount: 0,
           viewCount: 0,
+          createdByUserId: null,
         },
       });
       expect(result).toEqual(mockCreatedProduct);

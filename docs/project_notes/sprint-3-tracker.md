@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B3.9 — Create admin product endpoints |
+| Branch | feature/sprint3-B3.9-admin-product-endpoints |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/B3.9-admin-product-endpoints.md |
 
 ---
 
@@ -44,7 +44,7 @@ Blocked: 0 tasks
 | B3.6 | Implement soft delete for products | Medium | ✅ | feature/sprint3-B3.6-soft-delete-endpoints | Completed 2026-02-12 |
 | B3.7 | Implement product image upload | High | ✅ | feature/sprint3-B3.7-product-image-upload | Completed 2026-02-13 |
 | B3.8 | Implement product review management | Medium | ⏳ | | AI-generated flag, visibility toggle. **Must add rating CHECK (1-5) at validator/service level** — Prisma doesn't support DB CHECK constraints (from B3.1 code review) |
-| B3.9 | Create admin product endpoints | High | ⏳ | | CRUD for MANAGER/ADMIN |
+| B3.9 | Create admin product endpoints | High | 🔄 | feature/sprint3-B3.9-admin-product-endpoints | CRUD for MANAGER/ADMIN |
 | B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage. **Must include upload + product image endpoints** (from B3.7 code review) |
 
 ---
