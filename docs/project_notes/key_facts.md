@@ -42,9 +42,11 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Product Components (`frontend/components/product/`)
 - `ProductCard` - Presentational card: image (next/image + placeholder), localized title, EUR price + compare-at strikethrough, Hot badge, star rating + review count, links to `/products/{slug}`
 - `ProductGrid` - Responsive grid of ProductCards: 3 states (loading skeletons, empty with PackageOpen icon, populated). Props: `products`, `loading?`, `className?`, `skeletonCount?`, `columns?`. Default grid: 1→2→3→4 cols. Server Component.
+- `ProductFilters` - Controlled client component (`'use client'`): search input, type Select, min/max price, sort Select, Hot checkbox, clear button. Props: `value: ProductFiltersValue`, `onFiltersChange`, `types?: ProductType[]`, `className?`. Emits `undefined` for cleared/default values (not empty strings). Uses sentinel `__all__` for "All types" in Radix Select (which doesn't allow empty string values).
 
 ### UI Primitives (`frontend/components/ui/`)
-- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge` (shadcn/ui + Radix)
+- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `DropdownMenu`, `Table`, `Select` (shadcn/ui + Radix)
+- **Radix Select testing**: Radix portals don't work in JSDOM — mock `radix-ui` Select with native `<select>` elements in tests. See `ProductFilters.test.tsx` for the pattern.
 
 ### Validations (`frontend/lib/validations/auth.ts`)
 - `validateEmail(email)` - Email format validation
