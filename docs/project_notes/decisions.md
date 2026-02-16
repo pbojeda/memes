@@ -53,3 +53,56 @@ Defer all i18n-related tasks until after MVP. The JSON name field remains as-is 
 - Frontend can hardcode `name.es` for MVP; switching to i18n later only requires changing the accessor
 - No schema changes needed when i18n is implemented — the data structure already supports it
 
+### ADR-004: Enforce rating constraint at validator level, not DB (2026-02-13)
+
+**Context:**
+- ProductReview.rating must be 1-5, per data model spec
+- Prisma does not support DB-level CHECK constraints
+- B3.1 code review flagged this as needing enforcement somewhere
+
+**Decision:**
+Enforce rating 1-5 at the application validator level (`productReviewValidator.ts`). The validator checks `Number.isInteger(rating)` and `rating >= 1 && rating <= 5` before data reaches the database.
+
+**Alternatives Considered:**
+- Raw SQL migration to add CHECK constraint → Rejected: breaks Prisma migration workflow, hard to maintain
+- DB trigger → Rejected: over-engineering for a simple range check
+
+**Consequences:**
+- Validation only runs when requests go through the API — direct DB writes could bypass it
+- Acceptable trade-off: only staff (MANAGER/ADMIN) can create reviews, and all access goes through API
+
+### ADR-005: Review analytics from ALL reviews, not just visible (2026-02-13)
+
+**Context:**
+- List reviews endpoint returns `averageRating` and `ratingDistribution` in response meta
+- Only visible reviews (`isVisible: true`) are returned in the data array
+- Question: should analytics include hidden reviews?
+
+**Decision:**
+Compute `averageRating` and `ratingDistribution` from ALL reviews for a product (visible + hidden). The paginated data only shows visible reviews.
+
+**Alternatives Considered:**
+- Analytics from visible-only → Rejected: hiding one bad review would artificially inflate the average, misleading admins
+
+**Consequences:**
+- Admins see accurate product metrics regardless of visibility settings
+- Public users see the same averageRating even if some reviews are hidden (consistent experience)
+
+### ADR-006: No inline regex in Express 5 route params (2026-02-13)
+
+**Context:**
+- `path-to-regexp` v8 (used by Express 5) dropped support for inline regex in route parameters
+- Pattern like `/:id([0-9a-f]{8}-...)` throws `PathError: Unexpected (`
+- Need to distinguish UUID vs slug in product detail endpoint
+
+**Decision:**
+Handle UUID vs slug detection in the route handler via runtime regex check, not in the route definition. The `getProductDetail` handler tests the param with a UUID regex and routes accordingly.
+
+**Alternatives Considered:**
+- Separate routes (`/products/by-id/:id` and `/products/by-slug/:slug`) → Rejected: breaks REST conventions
+- Downgrade path-to-regexp → Rejected: Express 5 dependency
+
+**Consequences:**
+- All future routes with mixed param formats must use handler-level detection
+- Slightly more complex handler code, but cleaner route definitions
+

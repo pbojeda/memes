@@ -60,15 +60,54 @@ This file stores project configuration, constants, and frequently-needed **non-s
 
 ### Domain Errors (`backend/src/domain/errors/`)
 - `AuthError` - ValidationError, AuthenticationError, NotFoundError, ConflictError, ForbiddenError
+- `ProductError` - ProductNotFoundError, InvalidProductDataError, ProductSlugAlreadyExistsError
+- `ProductImageError` - ProductImageNotFoundError, InvalidProductImageDataError
+- `ProductReviewError` - ProductReviewNotFoundError, InvalidProductReviewDataError
+- `ProductTypeError` - ProductTypeNotFoundError, InvalidProductTypeDataError
 
 ### Services (`backend/src/application/services/`)
 - `authService` - register, login, logout, refresh, password reset
 - `tokenService` - JWT generation, verification, refresh token rotation
+- `productService` - CRUD, listing with filters/pagination/sorting, soft delete/restore, slug-based detail
+- `productImageService` - CRUD for product images, Cloudinary upload/delete
+- `productReviewService` - CRUD, visibility toggle, analytics (averageRating, ratingDistribution)
 
 ### Validators (`backend/src/application/validators/`)
 - `authValidator` - validateRegisterInput, validateLoginInput, validateRefreshInput, etc.
+- `productValidator` - validateCreateProductInput, validateUpdateProductInput, validateListProductsInput
+- `productImageValidator` - validateAddImageInput, validateUpdateImageInput
+- `productReviewValidator` - validateCreateReviewInput, validateUpdateReviewInput, validateToggleVisibilityInput, validateListReviewsInput
+- `shared` - validateUUID, validateSlug (reusable across validators)
+
+### Controllers (`backend/src/presentation/controllers/`)
+- `authController` - Auth endpoints
+- `productController` - Product CRUD + listing + detail (slug/UUID) + activate/deactivate
+- `productImageController` - Product image CRUD
+- `productReviewController` - Review CRUD + visibility toggle
+- `uploadController` - Cloudinary image upload
 
 ### Middleware (`backend/src/presentation/middleware/`)
 - `authMiddleware` - JWT verification, request user injection
+- `optionalAuthMiddleware` - JWT verification without requiring auth (for public + admin endpoints)
 - `requireRole` - Role-based access control
+
+### Routes (`backend/src/routes/`)
+- `/auth` - Auth routes
+- `/products` - Product routes (includes nested `/products/:productId/images` and `/products/:productId/reviews`)
+- `/reviews` - Review-specific routes (`/:reviewId`, `/:reviewId/visibility`)
+- `/product-types` - Product type CRUD
+- `/upload` - File upload
+- `/health` - Health check
+
+### External Services
+- **Cloudinary** - Image storage (free tier), credentials in `backend/.env`
+  - Max file size: 5MB
+  - Allowed types: image/jpeg, image/png, image/webp
+  - Cleanup on delete: best-effort (log errors, no throw)
+
+### Key Technical Constraints
+- **Express 5 + path-to-regexp v8**: No inline regex in route params (see ADR-006)
+- **Prisma**: No DB CHECK constraints — validation enforced at application layer
+- **Roles for product management**: MANAGER and ADMIN only (not MARKETING)
+- **UserRole enum**: `"TARGET" | "MANAGER" | "ADMIN" | "MARKETING"`
 
