@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.1 - Create product catalog page |
+| Branch | feature/sprint3-F3.1-catalog-page |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F3.1-catalog-page.md |
 
 ---
 
@@ -53,7 +53,7 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F3.1 | Create product catalog page | High | ⏳ | | Public-facing, paginated |
+| F3.1 | Create product catalog page | High | 🔄 | feature/sprint3-F3.1-catalog-page | Public-facing, paginated |
 | F3.2 | Implement ProductCard component | High | ✅ | feature/sprint3-F3.2-product-card | Completed 2026-02-16 |
 | F3.3 | Implement ProductGrid component | High | ✅ | feature/sprint3-F3.3-product-grid | Completed 2026-02-16 |
 | F3.4 | Implement ProductFilters component | High | ✅ | feature/sprint3-F3.4-product-filters | Completed 2026-02-16 |
