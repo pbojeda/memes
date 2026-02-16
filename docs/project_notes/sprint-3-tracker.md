@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [█████████████████░░░░░░░░] 70%
+Progress: [██████████████████░░░░░░░] 75%
 
-Completed: 14/20 tasks
+Completed: 15/20 tasks
 In Progress: 0 tasks
-Pending: 6 tasks
+Pending: 5 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.6 - Image gallery component |
-| Branch | feature/sprint3-F3.6-image-gallery |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.6-image-gallery.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -58,7 +58,7 @@ Blocked: 0 tasks
 | F3.3 | Implement ProductGrid component | High | ✅ | feature/sprint3-F3.3-product-grid | Completed 2026-02-16 |
 | F3.4 | Implement ProductFilters component | High | ✅ | feature/sprint3-F3.4-product-filters | Completed 2026-02-16 |
 | F3.5 | Create product detail page | High | ⏳ | | Gallery, description, sizes, reviews |
-| F3.6 | Implement image gallery component | Medium | 🔄 | feature/sprint3-F3.6-image-gallery | Multiple images, navigation |
+| F3.6 | Implement image gallery component | Medium | ✅ | feature/sprint3-F3.6-image-gallery | Completed 2026-02-16 |
 | F3.7 | Implement reviews display | Medium | ⏳ | | Star ratings, comments |
 | F3.8 | Create admin products list page | High | ⏳ | | Table with CRUD actions |
 | F3.9 | Create admin product form (create/edit) | High | ⏳ | | Multi-field form, image upload |
@@ -174,8 +174,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-16 | F3.3 | 36a5ca8 | ProductGrid component with loading skeletons, empty state icon, responsive grid, shared test fixtures (17 new tests), 271 frontend total, PR #57 |
 | 2026-02-16 | F3.4 | 092ca2c | ProductFilters controlled component (search, type select, price range, sort, hot toggle, clear) + Select UI primitive (33 new tests), 304 frontend total, PR #58 |
 | 2026-02-16 | F3.1 | 931fb7a | Catalog page (/products) with URL-synced filters + pagination + productService + Pagination UI component (41 new tests), 345 frontend total, PR #59 |
+| 2026-02-16 | F3.6 | 1873b1f | ImageGallery component with main view, thumbnails, prev/next arrows, keyboard nav, sortOrder sorting, safeIndex bounds checking (27 new tests), 372 frontend total, PR #60 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-16 (F3.1 merged — 70%)*
+*Last Updated: 2026-02-16 (F3.6 merged — 75%)*

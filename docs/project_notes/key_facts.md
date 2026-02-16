@@ -43,6 +43,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `ProductCard` - Presentational card: image (next/image + placeholder), localized title, EUR price + compare-at strikethrough, Hot badge, star rating + review count, links to `/products/{slug}`
 - `ProductGrid` - Responsive grid of ProductCards: 3 states (loading skeletons, empty with PackageOpen icon, populated). Props: `products`, `loading?`, `className?`, `skeletonCount?`, `columns?`. Default grid: 1→2→3→4 cols. Server Component.
 - `ProductFilters` - Controlled client component (`'use client'`): search input, type Select, min/max price, sort Select, Hot checkbox, clear button. Props: `value: ProductFiltersValue`, `onFiltersChange`, `types?: ProductType[]`, `className?`. Emits `undefined` for cleared/default values (not empty strings). Uses sentinel `__all__` for "All types" in Radix Select (which doesn't allow empty string values).
+- `ImageGallery` - Client component (`'use client'`): main image (next/image fill) + thumbnail strip + prev/next arrow buttons + keyboard nav (ArrowLeft/ArrowRight). Props: `images?: ProductImage[]`, `className?`. Sorts by `sortOrder` asc, `isPrimary` desc tiebreaker. Handles 0 images (ImageOff placeholder), 1 image (no nav controls). Uses `safeIndex` bounds checking for dynamic image array changes.
 
 ### UI Primitives (`frontend/components/ui/`)
 - `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `DropdownMenu`, `Table`, `Select`, `Pagination` (shadcn/ui + Radix)
@@ -126,7 +127,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
 - **Test mock**: Mock `next/image` filtering out `fill`/`sizes` props; mock `lucide-react` icons as simple SVGs with `data-testid`
-- **Test fixtures**: Shared `createProduct()` and `createProducts()` factories in `frontend/components/product/testing/fixtures.ts`
+- **Test fixtures**: Shared factories in `frontend/components/product/testing/fixtures.ts`: `createProduct()`, `createProducts()`, `createProductImage()`, `createProductImages()`
 - **Price formatting**: `Intl.NumberFormat('es-ES', { currency: 'EUR' })` — co-located in `ProductCard.tsx` as `formatPrice()`, extract to `lib/utils.ts` when reused
 
 ### Key Technical Constraints
