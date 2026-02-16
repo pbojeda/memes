@@ -309,6 +309,20 @@ describe('ImageGallery - Sort Order', () => {
     const firstThumbnailImg = thumbnails[0].querySelector('img');
     expect(firstThumbnailImg).toHaveAttribute('alt', 'Image A');
   });
+
+  it('should treat undefined sortOrder as Infinity (sort to end)', () => {
+    const images = [
+      createProductImage({ id: 'img-1', sortOrder: undefined, altText: 'Image C' }),
+      createProductImage({ id: 'img-2', sortOrder: 1, altText: 'Image A' }),
+      createProductImage({ id: 'img-3', sortOrder: 2, altText: 'Image B' }),
+    ];
+    render(<ImageGallery images={images} />);
+
+    const thumbnails = screen.getAllByRole('button', { name: /thumbnail/i });
+    expect(thumbnails[0].querySelector('img')).toHaveAttribute('alt', 'Image A');
+    expect(thumbnails[1].querySelector('img')).toHaveAttribute('alt', 'Image B');
+    expect(thumbnails[2].querySelector('img')).toHaveAttribute('alt', 'Image C');
+  });
 });
 
 describe('ImageGallery - Accessibility', () => {
@@ -326,6 +340,13 @@ describe('ImageGallery - Accessibility', () => {
 
     const img = screen.getByAltText('');
     expect(img).toBeInTheDocument();
+  });
+
+  it('should handle undefined url gracefully', () => {
+    const images = [createProductImage({ url: undefined })];
+    // Should render without crashing
+    const { container } = render(<ImageGallery images={images} />);
+    expect(container.querySelector('img')).toBeInTheDocument();
   });
 
   it('should have role="region" and aria-label on gallery container', () => {

@@ -62,20 +62,22 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
     );
   }
 
-  const currentImage = sortedImages[selectedIndex];
+  // Clamp selectedIndex to valid range if images array shrinks
+  const safeIndex = Math.min(selectedIndex, sortedImages.length - 1);
+  const currentImage = sortedImages[safeIndex];
   const hasMultipleImages = sortedImages.length > 1;
-  const isFirstImage = selectedIndex === 0;
-  const isLastImage = selectedIndex === sortedImages.length - 1;
+  const isFirstImage = safeIndex === 0;
+  const isLastImage = safeIndex === sortedImages.length - 1;
 
   const handlePrevious = () => {
     if (!isFirstImage) {
-      setSelectedIndex((prev) => prev - 1);
+      setSelectedIndex(safeIndex - 1);
     }
   };
 
   const handleNext = () => {
     if (!isLastImage) {
-      setSelectedIndex((prev) => prev + 1);
+      setSelectedIndex(safeIndex + 1);
     }
   };
 
@@ -136,7 +138,7 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
       {hasMultipleImages && (
         <div className="flex gap-2 overflow-x-auto">
           {sortedImages.map((image, index) => {
-            const isActive = index === selectedIndex;
+            const isActive = index === safeIndex;
             return (
               <button
                 key={image.id ?? index}
