@@ -41,6 +41,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 
 ### Product Components (`frontend/components/product/`)
 - `ProductCard` - Presentational card: image (next/image + placeholder), localized title, EUR price + compare-at strikethrough, Hot badge, star rating + review count, links to `/products/{slug}`
+- `ProductGrid` - Responsive grid of ProductCards: 3 states (loading skeletons, empty with PackageOpen icon, populated). Props: `products`, `loading?`, `className?`, `skeletonCount?`, `columns?`. Default grid: 1→2→3→4 cols. Server Component.
 
 ### UI Primitives (`frontend/components/ui/`)
 - `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge` (shadcn/ui + Radix)
@@ -118,6 +119,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
 - **Test mock**: Mock `next/image` filtering out `fill`/`sizes` props; mock `lucide-react` icons as simple SVGs with `data-testid`
+- **Test fixtures**: Shared `createProduct()` and `createProducts()` factories in `frontend/components/product/testing/fixtures.ts`
 - **Price formatting**: `Intl.NumberFormat('es-ES', { currency: 'EUR' })` — co-located in `ProductCard.tsx` as `formatPrice()`, extract to `lib/utils.ts` when reused
 
 ### Key Technical Constraints
