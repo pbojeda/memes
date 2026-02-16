@@ -158,14 +158,27 @@ describe('Product Routes Integration', () => {
       expect(mockProductService.listProducts).toHaveBeenCalledWith({});
     });
 
-    it('should call listProducts with parsed query parameters', async () => {
+    it('should call listProducts with parsed query parameters (correct types)', async () => {
       (mockProductService.listProducts as jest.Mock).mockResolvedValue(mockListResult);
 
       await request(testApp).get(
         '/products?page=2&limit=10&search=test&productTypeId=pt-123&isActive=true&isHot=false&minPrice=10&maxPrice=50&sortBy=price&sortDirection=asc'
       );
 
-      expect(mockProductService.listProducts).toHaveBeenCalledWith({
+      const callArgs = (mockProductService.listProducts as jest.Mock).mock.calls[0][0];
+
+      // Verify numeric types (not strings)
+      expect(typeof callArgs.page).toBe('number');
+      expect(typeof callArgs.limit).toBe('number');
+      expect(typeof callArgs.minPrice).toBe('number');
+      expect(typeof callArgs.maxPrice).toBe('number');
+
+      // Verify boolean types (not strings)
+      expect(typeof callArgs.isActive).toBe('boolean');
+      expect(typeof callArgs.isHot).toBe('boolean');
+
+      // Verify exact values
+      expect(callArgs).toEqual({
         page: 2,
         limit: 10,
         search: 'test',

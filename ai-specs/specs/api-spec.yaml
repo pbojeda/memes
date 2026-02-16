@@ -652,6 +652,29 @@ paths:
     parameters:
       - $ref: '#/components/parameters/ProductId'
 
+    get:
+      tags: [Products]
+      summary: Get product by ID (Staff only, includes soft-deleted)
+      operationId: getProductById
+      description: >
+        Admin endpoint to retrieve a product by UUID. Includes soft-deleted products.
+        The public endpoint uses slug instead (GET /products/{slug}).
+      security:
+        - BearerAuth: [manager, admin]
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
     patch:
       tags: [Products]
       summary: Update product (Staff only)

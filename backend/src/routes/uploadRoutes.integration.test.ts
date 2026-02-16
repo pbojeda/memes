@@ -247,6 +247,8 @@ describe('Upload Routes Integration', () => {
       expect(response.body.success).toBe(false);
       expect(response.body.error.code).toBe('FILE_TOO_LARGE');
       expect(response.body.error.message).toContain('maximum allowed size');
+      // Verify multer rejected the file BEFORE reaching the service
+      expect(mockUploadService.uploadFile).not.toHaveBeenCalled();
     });
   });
 });
