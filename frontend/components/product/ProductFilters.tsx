@@ -87,7 +87,7 @@ export function ProductFilters({
             type="text"
             placeholder="Search products..."
             value={value.search ?? ''}
-            onChange={(e) => onFiltersChange({ search: e.target.value })}
+            onChange={(e) => onFiltersChange({ search: e.target.value || undefined })}
             className="pl-9"
           />
         </div>
@@ -110,11 +110,13 @@ export function ProductFilters({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={TYPE_ALL_SENTINEL}>All types</SelectItem>
-              {types.map((type) => (
-                <SelectItem key={type.id} value={type.slug ?? ''}>
-                  {getLocalizedName(type.name, type.slug ?? '')}
-                </SelectItem>
-              ))}
+              {types
+                .filter((type) => type.slug)
+                .map((type) => (
+                  <SelectItem key={type.id} value={type.slug!}>
+                    {getLocalizedName(type.name, type.slug!)}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>
