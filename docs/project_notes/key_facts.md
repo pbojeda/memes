@@ -105,6 +105,13 @@ This file stores project configuration, constants, and frequently-needed **non-s
   - Allowed types: image/jpeg, image/png, image/webp
   - Cleanup on delete: best-effort (log errors, no throw)
 
+### Integration Tests (`backend/src/routes/*.integration.test.ts`)
+- **Pattern**: supertest + jest mocks, one file per route group
+- **Mock level**: Service layer (not Prisma) — controllers call services, so mock at that boundary
+- **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
+- **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes
+- **Total**: 962 backend tests (as of B3.10)
+
 ### Key Technical Constraints
 - **Express 5 + path-to-regexp v8**: No inline regex in route params (see ADR-006)
 - **Prisma**: No DB CHECK constraints — validation enforced at application layer
