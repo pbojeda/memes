@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.3 — Implement ProductGrid component |
+| Branch | feature/sprint3-F3.3-product-grid |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/F3.3-product-grid.md |
 
 ---
 
@@ -55,7 +55,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | F3.1 | Create product catalog page | High | ⏳ | | Public-facing, paginated |
 | F3.2 | Implement ProductCard component | High | ✅ | feature/sprint3-F3.2-product-card | Completed 2026-02-16 |
-| F3.3 | Implement ProductGrid component | High | ⏳ | | Responsive layout |
+| F3.3 | Implement ProductGrid component | High | 🔄 | feature/sprint3-F3.3-product-grid | Responsive layout |
 | F3.4 | Implement ProductFilters component | High | ⏳ | | Type, price range, sorting |
 | F3.5 | Create product detail page | High | ⏳ | | Gallery, description, sizes, reviews |
 | F3.6 | Implement image gallery component | Medium | ⏳ | | Multiple images, navigation |
