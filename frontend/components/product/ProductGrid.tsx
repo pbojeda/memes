@@ -1,3 +1,4 @@
+import { PackageOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProductCard } from './ProductCard';
 import type { components } from '@/lib/api/types';
@@ -24,12 +25,16 @@ function ProductCardSkeleton() {
       {/* Image skeleton */}
       <div className="aspect-square w-full bg-muted animate-pulse" />
 
-      {/* Content skeleton */}
+      {/* Title skeleton */}
       <div className="p-4 space-y-2">
-        {/* Title line 1 */}
         <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-        {/* Title line 2 */}
         <div className="h-4 bg-muted animate-pulse rounded w-1/2" />
+      </div>
+
+      {/* Footer skeleton (price + rating) */}
+      <div className="px-4 pb-4 space-y-1">
+        <div className="h-5 bg-muted animate-pulse rounded w-1/3" />
+        <div className="h-4 bg-muted animate-pulse rounded w-1/4" />
       </div>
     </div>
   );
@@ -79,10 +84,11 @@ export function ProductGrid({
     );
   }
 
-  // Empty state: no products to display
+  // Empty state: filters returned no results, search has no matches, or category is empty
   if (products.length === 0) {
     return (
       <div className={cn('text-center py-12', className)}>
+        <PackageOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
         <p className="text-muted-foreground">No products found</p>
       </div>
     );

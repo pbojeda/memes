@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ProductGrid } from './ProductGrid';
+import { createProduct, createProducts } from './testing/fixtures';
 import type { components } from '@/lib/api/types';
 
 type Product = components['schemas']['Product'];
@@ -13,36 +14,12 @@ jest.mock('./ProductCard', () => ({
   ),
 }));
 
-// Factory function for creating test products
-const createProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: `prod-${overrides.id ?? '1'}`,
-  title: overrides.title ?? 'Test Product',
-  slug: overrides.slug ?? 'test-product',
-  price: overrides.price ?? 24.99,
-  compareAtPrice: overrides.compareAtPrice ?? undefined,
-  isHot: overrides.isHot ?? false,
-  isActive: overrides.isActive ?? true,
-  averageRating: overrides.averageRating ?? 4.5,
-  reviewsCount: overrides.reviewsCount ?? 10,
-  primaryImage: overrides.primaryImage ?? {
-    id: 'img-1',
-    url: 'https://example.com/image.jpg',
-    altText: 'Test image',
-    isPrimary: true,
-    sortOrder: 0,
-  },
-  ...overrides,
-});
-
-// Helper to create an array of products
-const createProducts = (count: number): Product[] => {
-  return Array.from({ length: count }, (_, i) =>
-    createProduct({
-      id: `prod-${i + 1}`,
-      title: `Product ${i + 1}`,
-    })
-  );
-};
+// Mock lucide-react icons (used in empty state)
+jest.mock('lucide-react', () => ({
+  PackageOpen: (props: Record<string, unknown>) => (
+    <svg data-testid="package-open-icon" {...props} />
+  ),
+}));
 
 describe('ProductGrid - Loading state', () => {
   it('should render skeleton placeholders when loading is true (default count = 8)', () => {
@@ -89,6 +66,12 @@ describe('ProductGrid - Empty state', () => {
     render(<ProductGrid products={[]} loading={false} />);
 
     expect(screen.getByText('No products found')).toBeInTheDocument();
+  });
+
+  it('should render an icon in the empty state', () => {
+    render(<ProductGrid products={[]} loading={false} />);
+
+    expect(screen.getByTestId('package-open-icon')).toBeInTheDocument();
   });
 
   it('should not render empty message when loading', () => {
@@ -148,6 +131,24 @@ describe('ProductGrid - Grid layout', () => {
 
     const grid = container.querySelector('.grid');
     expect(grid).toHaveClass('custom-class');
+  });
+
+  it('should apply custom className during loading state', () => {
+    const { container } = render(
+      <ProductGrid products={[]} loading={true} className="loading-class" />
+    );
+
+    const grid = container.querySelector('.grid');
+    expect(grid).toHaveClass('loading-class');
+  });
+
+  it('should apply custom className to empty state container', () => {
+    const { container } = render(
+      <ProductGrid products={[]} loading={false} className="empty-class" />
+    );
+
+    const emptyContainer = container.querySelector('.empty-class');
+    expect(emptyContainer).toBeInTheDocument();
   });
 });
 
