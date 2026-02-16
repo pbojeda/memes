@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.6 - Image gallery component |
+| Branch | feature/sprint3-F3.6-image-gallery |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F3.6-image-gallery.md |
 
 ---
 
@@ -58,7 +58,7 @@ Blocked: 0 tasks
 | F3.3 | Implement ProductGrid component | High | ✅ | feature/sprint3-F3.3-product-grid | Completed 2026-02-16 |
 | F3.4 | Implement ProductFilters component | High | ✅ | feature/sprint3-F3.4-product-filters | Completed 2026-02-16 |
 | F3.5 | Create product detail page | High | ⏳ | | Gallery, description, sizes, reviews |
-| F3.6 | Implement image gallery component | Medium | ⏳ | | Multiple images, navigation |
+| F3.6 | Implement image gallery component | Medium | 🔄 | feature/sprint3-F3.6-image-gallery | Multiple images, navigation |
 | F3.7 | Implement reviews display | Medium | ⏳ | | Star ratings, comments |
 | F3.8 | Create admin products list page | High | ⏳ | | Table with CRUD actions |
 | F3.9 | Create admin product form (create/edit) | High | ⏳ | | Multi-field form, image upload |
