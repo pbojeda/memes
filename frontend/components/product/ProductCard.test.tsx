@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ProductCard } from './ProductCard';
-import type { components } from '@/lib/api/types';
-
-type Product = components['schemas']['Product'];
+import { createProduct } from './testing/fixtures';
 
 // Mock next/link (same pattern as Footer.test.tsx)
 jest.mock('next/link', () => {
@@ -35,27 +33,6 @@ jest.mock('lucide-react', () => ({
   Star: (props: Record<string, unknown>) => <svg data-testid="star-icon" {...props} />,
   ImageOff: (props: Record<string, unknown>) => <svg data-testid="image-off-icon" {...props} />,
 }));
-
-// Factory function for creating test products
-const createProduct = (overrides: Partial<Product> = {}): Product => ({
-  id: 'prod-1',
-  title: 'Funny Cat Meme T-Shirt',
-  slug: 'funny-cat-meme-tshirt',
-  price: 24.99,
-  compareAtPrice: 34.99,
-  isHot: false,
-  isActive: true,
-  averageRating: 4.5,
-  reviewsCount: 12,
-  primaryImage: {
-    id: 'img-1',
-    url: 'https://res.cloudinary.com/test/image/upload/v1/products/cat-meme.jpg',
-    altText: 'Funny cat meme on a white t-shirt',
-    isPrimary: true,
-    sortOrder: 0,
-  },
-  ...overrides,
-});
 
 describe('ProductCard - Title', () => {
   it('should render product title as string', () => {
