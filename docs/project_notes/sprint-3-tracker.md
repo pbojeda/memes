@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B3.10 — Write product integration tests |
+| Branch | feature/sprint3-B3.10-product-integration-tests |
+| Step | 2b/5 (Implement) |
+| Ticket | Simple (no ticket) |
 
 ---
 
@@ -45,7 +45,7 @@ Blocked: 0 tasks
 | B3.7 | Implement product image upload | High | ✅ | feature/sprint3-B3.7-product-image-upload | Completed 2026-02-13 |
 | B3.8 | Implement product review management | Medium | ✅ | feature/sprint3-B3.8-product-review-management | Completed 2026-02-13 |
 | B3.9 | Create admin product endpoints | High | ✅ | feature/sprint3-B3.9-admin-product-endpoints | Completed 2026-02-13 |
-| B3.10 | Write product integration tests | High | ⏳ | | Full endpoint coverage. **Must include upload + product image endpoints** (from B3.7 code review) |
+| B3.10 | Write product integration tests | High | 🔄 | feature/sprint3-B3.10-product-integration-tests | Full endpoint coverage. **Must include upload + product image endpoints** (from B3.7 code review) |
 
 ---
 
