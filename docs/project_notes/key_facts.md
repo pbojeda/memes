@@ -45,7 +45,8 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `ProductFilters` - Controlled client component (`'use client'`): search input, type Select, min/max price, sort Select, Hot checkbox, clear button. Props: `value: ProductFiltersValue`, `onFiltersChange`, `types?: ProductType[]`, `className?`. Emits `undefined` for cleared/default values (not empty strings). Uses sentinel `__all__` for "All types" in Radix Select (which doesn't allow empty string values).
 
 ### UI Primitives (`frontend/components/ui/`)
-- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `DropdownMenu`, `Table`, `Select` (shadcn/ui + Radix)
+- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `DropdownMenu`, `Table`, `Select`, `Pagination` (shadcn/ui + Radix)
+- `Pagination` - Reusable pagination: prev/next buttons, page numbers with ellipsis truncation (<=7 shows all, >7 shows first/last/current±1). Props: `currentPage`, `totalPages`, `onPageChange`, `className?`. Returns null when totalPages <= 1. Accessible: `<nav aria-label="Pagination">`, `aria-current="page"` on current.
 - **Radix Select testing**: Radix portals don't work in JSDOM — mock `radix-ui` Select with native `<select>` elements in tests. See `ProductFilters.test.tsx` for the pattern.
 
 ### Validations (`frontend/lib/validations/auth.ts`)
@@ -53,8 +54,12 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `validatePassword(password)` - Password policy check (12+ chars, uppercase, lowercase, number)
 - `validatePasswordMatch(password, confirm)` - Confirm password match
 
+### Pages (`frontend/app/`)
+- `/products` - Catalog page (Client Component): assembles ProductFilters + ProductGrid + Pagination with bidirectional URL state sync. Reads/writes searchParams (search, typeSlug, minPrice, maxPrice, isHot, sort, page). Filter changes reset page to 1. Error state with retry. Suspense wrapper for useSearchParams.
+
 ### Services (`frontend/lib/services/`)
 - `authService` - login, register, logout, refresh, forgotPassword, resetPassword
+- `productService` - `list(params?)` → `ProductListResponse` (data + meta with pagination). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
 
 ### Stores (`frontend/stores/`)
 - `authStore` (Zustand) - user, tokens, isAuthenticated, loading, error states
