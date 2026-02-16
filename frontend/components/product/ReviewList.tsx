@@ -23,6 +23,10 @@ export function ReviewList({ productId, className }: ReviewListProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setPage(1);
+  }, [productId]);
+
+  useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
       setError(null);
@@ -97,8 +101,8 @@ export function ReviewList({ productId, className }: ReviewListProps) {
 
       {/* Review cards */}
       <div className="space-y-4">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
+        {reviews.map((review, index) => (
+          <ReviewCard key={review.id ?? `review-${index}`} review={review} />
         ))}
       </div>
 
