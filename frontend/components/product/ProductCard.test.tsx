@@ -30,6 +30,12 @@ jest.mock('next/image', () => {
   };
 });
 
+// Mock lucide-react icons
+jest.mock('lucide-react', () => ({
+  Star: (props: Record<string, unknown>) => <svg data-testid="star-icon" {...props} />,
+  ImageOff: (props: Record<string, unknown>) => <svg data-testid="image-off-icon" {...props} />,
+}));
+
 // Factory function for creating test products
 const createProduct = (overrides: Partial<Product> = {}): Product => ({
   id: 'prod-1',

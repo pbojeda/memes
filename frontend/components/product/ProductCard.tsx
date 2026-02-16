@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star } from 'lucide-react';
+import { ImageOff, Star } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn, getLocalizedName } from '@/lib/utils';
@@ -53,12 +53,15 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
   // Derived state
   const displayTitle = getLocalizedName(title, '');
-  const hasDiscount =
+  const imageUrl = primaryImage?.url;
+  const imageAlt = primaryImage?.altText ?? displayTitle;
+  const discountPrice =
     compareAtPrice !== undefined &&
     price !== undefined &&
-    compareAtPrice > price;
+    compareAtPrice > price
+      ? compareAtPrice
+      : undefined;
   const hasReviews = (reviewsCount ?? 0) > 0;
-  const hasImage = primaryImage?.url !== undefined;
 
   return (
     <Card className={cn('overflow-hidden py-0 group', className)}>
@@ -68,10 +71,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
       >
         {/* Image area with Hot badge */}
         <div className="relative aspect-square w-full overflow-hidden bg-muted">
-          {hasImage ? (
+          {imageUrl ? (
             <Image
-              src={primaryImage!.url!}
-              alt={primaryImage!.altText ?? displayTitle}
+              src={imageUrl}
+              alt={imageAlt}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover transition-transform group-hover:scale-105"
@@ -81,7 +84,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
               className="flex items-center justify-center h-full text-muted-foreground"
               aria-label="No product image"
             >
-              <span className="text-4xl">📷</span>
+              <ImageOff className="h-12 w-12" />
             </div>
           )}
           {isHot && (
@@ -105,9 +108,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
             {price !== undefined && (
               <span className="font-bold text-base">{formatPrice(price)}</span>
             )}
-            {hasDiscount && (
+            {discountPrice !== undefined && (
               <span className="text-sm text-muted-foreground line-through">
-                {formatPrice(compareAtPrice!)}
+                {formatPrice(discountPrice)}
               </span>
             )}
           </div>
