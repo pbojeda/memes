@@ -2,6 +2,8 @@ import type { components } from '@/lib/api/types';
 
 type Product = components['schemas']['Product'];
 type ProductImage = components['schemas']['ProductImage'];
+type Review = components['schemas']['Review'];
+type ReviewListResponse = components['schemas']['ReviewListResponse'];
 
 /**
  * Factory function for creating test products with sensible defaults.
@@ -69,3 +71,61 @@ export const createProductImages = (count: number): ProductImage[] =>
       isPrimary: i === 0,
     })
   );
+
+/**
+ * Factory function for creating test reviews with sensible defaults.
+ * Override any field via the `overrides` parameter.
+ */
+export const createReview = (overrides: Partial<Review> = {}): Review => ({
+  id: 'rev-1',
+  authorName: 'John Doe',
+  rating: 4,
+  comment: 'Great product! Very satisfied with my purchase.',
+  isAiGenerated: false,
+  isVisible: true,
+  createdAt: '2026-02-10T12:00:00Z',
+  ...overrides,
+});
+
+/**
+ * Create an array of distinct reviews.
+ * Each review gets a unique id, authorName, rating (cycling 5→1), and createdAt (decrementing by day).
+ */
+export const createReviews = (count: number): Review[] =>
+  Array.from({ length: count }, (_, i) => {
+    const baseDate = new Date('2026-02-10T12:00:00Z');
+    baseDate.setDate(baseDate.getDate() - i);
+
+    return createReview({
+      id: `rev-${i + 1}`,
+      authorName: `User ${i + 1}`,
+      rating: 5 - (i % 5),
+      comment: `Comment from user ${i + 1}`,
+      createdAt: baseDate.toISOString(),
+    });
+  });
+
+/**
+ * Factory function for creating test review list responses with sensible defaults.
+ * Override any field via the `overrides` parameter.
+ */
+export const createReviewListResponse = (
+  overrides: Partial<ReviewListResponse> = {}
+): ReviewListResponse => ({
+  data: createReviews(3),
+  meta: {
+    total: 3,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    averageRating: 4.0,
+    ratingDistribution: {
+      5: 1,
+      4: 1,
+      3: 1,
+      2: 0,
+      1: 0,
+    },
+  },
+  ...overrides,
+});
