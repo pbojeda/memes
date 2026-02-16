@@ -39,8 +39,11 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `UserMenu` - Auth-aware dropdown: Login/Register links (unauth) or user initial + email + role badge + logout (auth)
 - `ProtectedRoute` - Route guard with role-based access and returnTo redirect
 
+### Product Components (`frontend/components/product/`)
+- `ProductCard` - Presentational card: image (next/image + placeholder), localized title, EUR price + compare-at strikethrough, Hot badge, star rating + review count, links to `/products/{slug}`
+
 ### UI Primitives (`frontend/components/ui/`)
-- `Button`, `Input`, `Label`, `Card`, `Alert` (shadcn/ui)
+- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge` (shadcn/ui + Radix)
 
 ### Validations (`frontend/lib/validations/auth.ts`)
 - `validateEmail(email)` - Email format validation
@@ -111,6 +114,11 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
 - **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes
 - **Total**: 962 backend tests (as of B3.10)
+
+### Frontend Image Config
+- **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
+- **Test mock**: Mock `next/image` filtering out `fill`/`sizes` props; mock `lucide-react` icons as simple SVGs with `data-testid`
+- **Price formatting**: `Intl.NumberFormat('es-ES', { currency: 'EUR' })` — co-located in `ProductCard.tsx` as `formatPrice()`, extract to `lib/utils.ts` when reused
 
 ### Key Technical Constraints
 - **Express 5 + path-to-regexp v8**: No inline regex in route params (see ADR-006)
