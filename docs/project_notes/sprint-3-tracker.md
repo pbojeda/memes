@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████░░░░░░░░░░░░░] 50%
+Progress: [█████████████░░░░░░░░░░░░] 55%
 
-Completed: 10/20 tasks
+Completed: 11/20 tasks
 In Progress: 0 tasks
-Pending: 10 tasks
+Pending: 9 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.2 — Implement ProductCard component |
-| Branch | feature/sprint3-F3.2-product-card |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.2-product-card.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -54,7 +54,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F3.1 | Create product catalog page | High | ⏳ | | Public-facing, paginated |
-| F3.2 | Implement ProductCard component | High | 🔄 | feature/sprint3-F3.2-product-card | Image, title, price, hot badge |
+| F3.2 | Implement ProductCard component | High | ✅ | feature/sprint3-F3.2-product-card | Completed 2026-02-16 |
 | F3.3 | Implement ProductGrid component | High | ⏳ | | Responsive layout |
 | F3.4 | Implement ProductFilters component | High | ⏳ | | Type, price range, sorting |
 | F3.5 | Create product detail page | High | ⏳ | | Gallery, description, sizes, reviews |
@@ -170,8 +170,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-13 | B3.9 | 53d90bd | Admin product endpoints (create, update, list, getById, activate, deactivate) + 409 error mapping (35 new tests), 760 total, PR #53 |
 | 2026-02-13 | B3.8 | 3e386c3 | Product review CRUD + visibility toggle + analytics (avgRating, distribution), rating 1-5 at validator level (80 new tests), 840 total, PR #54 |
 | 2026-02-16 | B3.10 | b93bf35 | Integration tests for product, image, upload, review routes (122 new tests), 962 total, PR #55. Also documented GET /products/{productId} in api-spec |
+| 2026-02-16 | F3.2 | a0c30da | ProductCard component with image, title, EUR price, Hot badge, star rating, link (17 new tests), 254 frontend total, PR #56 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-16 (B3.10 merged — backend complete!)*
+*Last Updated: 2026-02-16 (F3.2 merged — 55%)*
