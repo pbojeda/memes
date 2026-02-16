@@ -56,7 +56,7 @@ model User {
 
 model ProductType {
   id        String   @id @default(uuid())
-  name      Json     // {"es": "Camiseta", "en": "T-Shirt"}
+  name      Json // {"es": "Camiseta", "en": "T-Shirt"}
   slug      String   @unique
   hasSizes  Boolean  @default(false) @map("has_sizes")
   isActive  Boolean  @default(true) @map("is_active")
@@ -74,8 +74,8 @@ model ProductType {
 model Product {
   id                    String    @id @default(uuid())
   productTypeId         String    @map("product_type_id")
-  title                 Json      // {"es": "...", "en": "..."}
-  description           Json      // {"es": "...", "en": "..."}
+  title                 Json // {"es": "...", "en": "..."}
+  description           Json // {"es": "...", "en": "..."}
   slug                  String    @unique
   price                 Decimal   @db.Decimal(10, 2)
   compareAtPrice        Decimal?  @map("compare_at_price") @db.Decimal(10, 2)
@@ -95,10 +95,10 @@ model Product {
   deletedAt             DateTime? @map("deleted_at")
 
   // Relations
-  productType ProductType     @relation(fields: [productTypeId], references: [id])
-  createdBy   User?           @relation("ProductCreator", fields: [createdByUserId], references: [id])
-  images      ProductImage[]
-  reviews     ProductReview[]
+  productType  ProductType     @relation(fields: [productTypeId], references: [id])
+  createdBy    User?           @relation("ProductCreator", fields: [createdByUserId], references: [id])
+  images       ProductImage[]
+  reviews      ProductReview[]
   priceHistory PriceHistory[]
   // Relations deferred: orderItems OrderItem[] (Sprint 5)
 
