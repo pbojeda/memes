@@ -95,6 +95,20 @@ describe('productValidator', () => {
         expect(result.slug).toBe('producto-test');
       });
 
+      it('should return undefined slug when slug is not provided', () => {
+        const input: CreateProductInput = {
+          title: { es: 'Producto' },
+          description: { es: 'Descripción' },
+          price: 10.00,
+          productTypeId: '123e4567-e89b-12d3-a456-426614174000',
+          color: 'Rojo',
+        };
+
+        const result = validateCreateProductInput(input);
+
+        expect(result.slug).toBeUndefined();
+      });
+
       it('should accept title with multiple language keys', () => {
         const input: CreateProductInput = {
           title: { es: 'Camiseta', en: 'T-Shirt', fr: 'T-Shirt' },
@@ -241,7 +255,7 @@ describe('productValidator', () => {
     });
 
     describe('slug validation', () => {
-      it('should throw InvalidProductDataError when slug is missing', () => {
+      it('should not require slug — omitting it returns undefined slug', () => {
         const input = {
           title: { es: 'Producto' },
           description: { es: 'Descripción' },
@@ -250,8 +264,9 @@ describe('productValidator', () => {
           color: 'Rojo',
         };
 
-        expect(() => validateCreateProductInput(input as never)).toThrow(InvalidProductDataError);
-        expect(() => validateCreateProductInput(input as never)).toThrow('Slug is required');
+        // No slug provided — should validate without error
+        const result = validateCreateProductInput(input as never);
+        expect(result.slug).toBeUndefined();
       });
 
       it('should throw InvalidProductDataError when slug contains uppercase', () => {

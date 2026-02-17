@@ -3,18 +3,18 @@
 **Goal:** Implement full product management (catalog, detail, admin CRUD, images, reviews).
 **Start Date:** 2026-02-11
 **End Date:** 2026-02-17
-**Status:** Complete
+**Status:** In Progress
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [█████████████████████████] 100%
+Progress: [███████████████████████░░] 92%
 
-Completed: 22/22 tasks
+Completed: 22/24 tasks
 In Progress: 0 tasks
-Pending: 0 tasks
+Pending: 2 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.13 — Backend auto-generate slug from title when not provided |
+| Branch | feature/sprint3-F3.13-auto-generate-slug |
+| Step | 2b/5 (Implement) |
+| Ticket | Standard — `docs/tickets/F3.13-auto-generate-slug.md` |
 
 ---
 
@@ -65,6 +65,8 @@ Blocked: 0 tasks
 | F3.10 | Write product component tests | High | ✅ | — | TDD throughout F3.1–F3.9; all 26 source files covered (414 tests). Completed 2026-02-17 |
 | F3.11 | Fix: Add "New Product" button to admin products list | High | ✅ | feature/sprint3-F3.11-new-product-button | Completed 2026-02-17 |
 | F3.12 | Fix: Localized name object rendered as React child in ProductForm | High | ✅ | feature/sprint3-F3.12-fix-localized-name-productform | Completed 2026-02-17 |
+| F3.13 | Fix: Backend auto-generate slug from title.es when not provided | High | 🔄 | feature/sprint3-F3.13-auto-generate-slug | createProduct requires slug but frontend doesn't send it |
+| F3.14 | Fix: Add file upload support to ProductImageManager | High | ⏳ | | Connect existing Cloudinary upload endpoint to image manager UI |
 
 ---
 

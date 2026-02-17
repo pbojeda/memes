@@ -1323,6 +1323,8 @@ export interface components {
             productTypeId: string;
             title: components["schemas"]["LocalizedString"];
             description: components["schemas"]["LocalizedString"];
+            /** @description URL slug. If omitted, auto-generated from title.es. */
+            slug?: string;
             price: number;
             compareAtPrice?: number;
             availableSizes?: ("S" | "M" | "L" | "XL" | "XXL")[];

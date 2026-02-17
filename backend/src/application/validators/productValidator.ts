@@ -10,7 +10,7 @@ export interface LocalizedText {
 export interface CreateProductInput {
   title: LocalizedText;
   description: LocalizedText;
-  slug: string;
+  slug?: string;
   price: number;
   compareAtPrice?: number;
   availableSizes?: string[];
@@ -24,7 +24,7 @@ export interface CreateProductInput {
 export interface ValidatedCreateProductInput {
   title: LocalizedText;
   description: LocalizedText;
-  slug: string;
+  slug?: string;   // undefined when not provided — service will generate it
   price: number;
   compareAtPrice?: number;
   availableSizes?: string[];
@@ -207,7 +207,7 @@ function validateString(value: unknown, fieldName: string, maxLength: number, re
 export function validateCreateProductInput(input: CreateProductInput): ValidatedCreateProductInput {
   const title = validateLocalizedText(input.title, 'Title', MAX_TITLE_LENGTH);
   const description = validateLocalizedText(input.description, 'Description', MAX_DESCRIPTION_LENGTH);
-  const slug = validateSlug(input.slug, 'slug');
+  const slug = input.slug !== undefined ? validateSlug(input.slug, 'slug') : undefined;
   const price = validatePrice(input.price, 'price');
   const compareAtPrice = validateCompareAtPrice(price, input.compareAtPrice, 'compareAtPrice');
   const availableSizes = validateAvailableSizes(input.availableSizes, 'availableSizes');
