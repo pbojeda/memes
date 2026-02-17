@@ -51,3 +51,9 @@ Each bug entry should include:
 - **Cause**: Backend returns `name` as `LocalizedString` JSON (`{es: "Camiseta"}`), but frontend renders `{pt.name}` expecting a string
 - **Fix**: Created `getLocalizedName()` helper in `frontend/lib/utils.ts` and used it in all 4 components that render product type names
 - **Prevention**: When i18n fields flow through the API, always use the helper to extract the display string
+
+### 2026-02-17 — ProductType name renders as `[object Object]` in ProductForm (recurrence)
+- **Symptom**: Same error as 2026-02-11 — "Objects are not valid as a React child" — but in the `ProductForm` Select dropdown (F3.9, written later)
+- **Cause**: `{pt.name}` used directly instead of `{getLocalizedName(pt.name)}`. Test mocks used plain strings (`name: 'T-Shirts'`) instead of localized objects, which hid the bug.
+- **Fix**: Applied `getLocalizedName(pt.name)` in `ProductForm.tsx`; updated test mocks to use `{es: 'Camisetas', en: 'T-Shirts'}` format
+- **Prevention**: Test mocks for entities with localized fields must always use the `{es, en}` object format, never plain strings — otherwise the test passes but production breaks
