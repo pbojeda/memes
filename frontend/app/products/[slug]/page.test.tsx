@@ -1,7 +1,6 @@
 // 1. Mock next/navigation — page uses useParams to get slug
 jest.mock('next/navigation', () => ({
   useParams: jest.fn(() => ({ slug: 'funny-cat-meme-tshirt' })),
-  useRouter: jest.fn(() => ({ push: jest.fn() })),
 }));
 
 // 2. Mock productService

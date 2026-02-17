@@ -201,11 +201,9 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Reviews section */}
-      {product.id && (
-        <div className="mt-12">
-          <ReviewList productId={product.id} />
-        </div>
-      )}
+      <div className="mt-12">
+        <ReviewList productId={product.id ?? ''} />
+      </div>
     </main>
   );
 }
