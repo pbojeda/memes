@@ -3,18 +3,18 @@
 **Goal:** Implement full product management (catalog, detail, admin CRUD, images, reviews).
 **Start Date:** 2026-02-11
 **End Date:** 2026-02-17
-**Status:** In Progress
+**Status:** Complete
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [████████████████████████░] 96%
+Progress: [█████████████████████████] 100%
 
-Completed: 23/24 tasks
+Completed: 24/24 tasks
 In Progress: 0 tasks
-Pending: 1 task
+Pending: 0 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.14 — Add file upload support to ProductImageManager |
-| Branch | feature/sprint3-F3.14-file-upload-image-manager |
-| Step | 2b/5 (Implement) |
-| Ticket | docs/tickets/F3.14-file-upload-image-manager.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -66,7 +66,7 @@ Blocked: 0 tasks
 | F3.11 | Fix: Add "New Product" button to admin products list | High | ✅ | feature/sprint3-F3.11-new-product-button | Completed 2026-02-17 |
 | F3.12 | Fix: Localized name object rendered as React child in ProductForm | High | ✅ | feature/sprint3-F3.12-fix-localized-name-productform | Completed 2026-02-17 |
 | F3.13 | Fix: Backend auto-generate slug from title.es when not provided | High | ✅ | feature/sprint3-F3.13-auto-generate-slug | Completed 2026-02-17 |
-| F3.14 | Fix: Add file upload support to ProductImageManager | High | ⏳ | | Connect existing Cloudinary upload endpoint to image manager UI |
+| F3.14 | Fix: Add file upload support to ProductImageManager | High | ✅ | feature/sprint3-F3.14-file-upload-image-manager | Completed 2026-02-17 |
 
 ---
 
@@ -132,6 +132,7 @@ F3.10 (TDD throughout F3.1–F3.9)
 | 2026-02-17 | F3.11 — Missing "New Product" button on admin products list | Added Button + Link to `/admin/products/new` |
 | 2026-02-17 | F3.12 — `pt.name` (localized object) rendered directly in ProductForm Select | Applied `getLocalizedName(pt.name)`, fixed test mocks to use `{es, en}` format |
 | 2026-02-17 | F3.13 — "Slug is required" error on product creation | Auto-generate slug from `title.es` via `generateSlug()`, collision retry with suffixes, slug made optional in validator |
+| 2026-02-17 | F3.14 — ProductImageManager only supports URL input, no file upload | Added uploadImage service + Upload File button + client-side MIME/size validation |
 
 ---
 
@@ -189,8 +190,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-17 | F3.11 | 8eb1313 | Add "New Product" button to admin products list page (2 new tests), 582 frontend total, PR #65 |
 | 2026-02-17 | F3.12 | 198f114 | Fix localized name in ProductForm Select via getLocalizedName(), fix test mocks to use {es,en} objects (1 new test), 583 frontend total, PR #66 |
 | 2026-02-17 | F3.13 | 449b216 | Auto-generate product slug from title.es with collision retry, new slugify utility, slug optional in validator/api-spec (15 new backend tests), 978 backend total, PR #67 |
+| 2026-02-17 | F3.14 | 5e3dec8 | File upload support in ProductImageManager: uploadImage service method, Upload File button, client-side MIME/size validation, folder param for Cloudinary (9 new tests), 592 frontend total, PR #68 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-17 (F3.11, F3.12 added — bugfixes found during manual testing)*
+*Last Updated: 2026-02-17 (F3.14 completed — Sprint 3 100% complete, 24/24 tasks)*
