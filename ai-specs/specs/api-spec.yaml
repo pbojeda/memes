@@ -566,6 +566,11 @@ paths:
           description: Filter hot/trending products
           schema:
             type: boolean
+        - name: isActive
+          in: query
+          description: Filter by active status (admin/staff only; ignored for unauthenticated requests)
+          schema:
+            type: boolean
         - name: sort
           in: query
           schema:

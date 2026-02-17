@@ -76,4 +76,14 @@ describe('AdminSidebar', () => {
     const nav = screen.getByRole('navigation', { name: /admin navigation/i });
     expect(nav).toBeInTheDocument();
   });
+
+  it('should render nav link for "Products" with correct href', () => {
+    (usePathname as jest.Mock).mockReturnValue('/admin');
+
+    render(<AdminSidebar />);
+
+    const link = screen.getByRole('link', { name: /products$/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/admin/products');
+  });
 });

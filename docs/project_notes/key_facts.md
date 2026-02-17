@@ -61,10 +61,14 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Pages (`frontend/app/`)
 - `/products` - Catalog page (Client Component): assembles ProductFilters + ProductGrid + Pagination with bidirectional URL state sync. Reads/writes searchParams (search, typeSlug, minPrice, maxPrice, isHot, sort, page). Filter changes reset page to 1. Error state with retry. Suspense wrapper for useSearchParams.
 - `/products/[slug]` - Product detail page (Client Component): composes ImageGallery + product info (title, description, price, sizes, color, Hot badge) + ReviewList. Fetches via `productService.getBySlug(slug)`. States: loading skeleton, error with retry, 404 (ApiException status check), populated. Uses `useParams` for slug extraction.
+- `/admin` - Admin layout with `ProtectedRoute allowedRoles={['ADMIN']}` + `AdminSidebar`. All admin sub-pages inherit this auth guard.
+- `/admin/product-types` - Product types CRUD page (Client Component): ProductTypesTable + create/edit/delete dialogs. Uses `productTypeService`.
+- `/admin/products` - Admin products list page (Client Component): AdminProductsTable with search (debounced 300ms), status filter (All/Active/Inactive via `isActive` param), pagination (limit: 20), and action buttons (Edit link, Activate/Deactivate toggle, Delete with confirmation dialog). Uses `adminProductService`. `actionLoadingId` pattern disables row buttons during async actions.
 
 ### Services (`frontend/lib/services/`)
 - `authService` - login, register, logout, refresh, forgotPassword, resetPassword
-- `productService` - `list(params?)` → `ProductListResponse` (data + meta with pagination). `getBySlug(slug)` → `ProductDetailResponse` (data: ProductDetail with images + reviews). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
+- `productService` - Public product access. `list(params?)` → `ProductListResponse` (data + meta with pagination). `getBySlug(slug)` → `ProductDetailResponse` (data: ProductDetail with images + reviews). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
+- `adminProductService` - Admin product management. `list(params?)` → `ProductListResponse` (same type as productService, but supports `isActive` filter). `activate(productId)` → `Product`. `deactivate(productId)` → `Product`. `delete(productId)` → `void` (soft delete, 204). Separate from `productService` intentionally — admin-only operations that will grow with F3.9.
 - `reviewService` - `list(productId, params?)` → `ReviewListResponse` (data: Review[] + meta with pagination + averageRating + ratingDistribution). Strips undefined params. Same pattern as productService.
 
 ### Stores (`frontend/stores/`)
