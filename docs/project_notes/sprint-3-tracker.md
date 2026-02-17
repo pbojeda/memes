@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████████████████░░░░░░░] 75%
+Progress: [████████████████████░░░░░] 80%
 
-Completed: 15/20 tasks
+Completed: 16/20 tasks
 In Progress: 0 tasks
-Pending: 5 tasks
+Pending: 4 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.7 — Implement reviews display |
-| Branch | feature/sprint3-F3.7-reviews-display |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.7-reviews-display.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -59,7 +59,7 @@ Blocked: 0 tasks
 | F3.4 | Implement ProductFilters component | High | ✅ | feature/sprint3-F3.4-product-filters | Completed 2026-02-16 |
 | F3.5 | Create product detail page | High | ⏳ | | Gallery, description, sizes, reviews |
 | F3.6 | Implement image gallery component | Medium | ✅ | feature/sprint3-F3.6-image-gallery | Completed 2026-02-16 |
-| F3.7 | Implement reviews display | Medium | 🔄 | feature/sprint3-F3.7-reviews-display | Star ratings, comments |
+| F3.7 | Implement reviews display | Medium | ✅ | feature/sprint3-F3.7-reviews-display | Completed 2026-02-16 |
 | F3.8 | Create admin products list page | High | ⏳ | | Table with CRUD actions |
 | F3.9 | Create admin product form (create/edit) | High | ⏳ | | Multi-field form, image upload |
 | F3.10 | Write product component tests | High | ⏳ | | TDD throughout F3.1–F3.9 |
@@ -175,8 +175,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-16 | F3.4 | 092ca2c | ProductFilters controlled component (search, type select, price range, sort, hot toggle, clear) + Select UI primitive (33 new tests), 304 frontend total, PR #58 |
 | 2026-02-16 | F3.1 | 931fb7a | Catalog page (/products) with URL-synced filters + pagination + productService + Pagination UI component (41 new tests), 345 frontend total, PR #59 |
 | 2026-02-16 | F3.6 | 1873b1f | ImageGallery component with main view, thumbnails, prev/next arrows, keyboard nav, sortOrder sorting, safeIndex bounds checking (27 new tests), 372 frontend total, PR #60 |
+| 2026-02-16 | F3.7 | d0bbfd3 | ReviewCard + ReviewSummary + ReviewList components, reviewService, review test fixtures (35 new tests), 407 frontend total, PR #61 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-16 (F3.6 merged — 75%)*
+*Last Updated: 2026-02-16 (F3.7 merged — 80%)*
