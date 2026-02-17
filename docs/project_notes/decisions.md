@@ -106,3 +106,23 @@ Handle UUID vs slug detection in the route handler via runtime regex check, not 
 - All future routes with mixed param formats must use handler-level detection
 - Slightly more complex handler code, but cleaner route definitions
 
+### ADR-007: Product detail page as client component — defer SSR/SEO to post-MVP (2026-02-17)
+
+**Context:**
+- F3.5 implements `/products/[slug]` as a public product detail page
+- Product detail pages are canonical SEO landing pages in e-commerce
+- The catalog page (`/products`) already uses the `'use client'` pattern with `useSearchParams`
+- A server+client split would enable SSR/ISR pre-rendering for better SEO and initial load
+
+**Decision:**
+Implement the entire page as a `'use client'` component using `useParams` for slug extraction, matching the catalog page pattern. Defer SSR/ISR conversion to post-MVP.
+
+**Alternatives Considered:**
+- Server Component wrapper that fetches data + passes to client child → Better for SEO, but adds complexity and requires handling server-side errors differently
+- Next.js `generateStaticParams` + ISR → Best for SEO + performance, but requires backend reachability at build time and cache invalidation strategy
+
+**Consequences:**
+- Search engine crawlers get a blank shell until JavaScript hydrates — poor SEO for product pages
+- Consistent pattern across all pages (simpler codebase for MVP)
+- **Post-MVP action:** Convert `/products/[slug]` to Server Component with `fetch` + ISR for SEO. Also consider `/products` catalog page. This is the single highest-impact SEO improvement available.
+
