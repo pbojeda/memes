@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████████████████████░░░] 90%
+Progress: [███████████████████████░░] 95%
 
-Completed: 18/20 tasks
+Completed: 19/20 tasks
 In Progress: 0 tasks
-Pending: 2 tasks
+Pending: 1 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.9 — Admin product form (create/edit) |
-| Branch | feature/sprint3-F3.9-admin-product-form |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.9-admin-product-form.md |
+| Task | — (none active) |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -61,7 +61,7 @@ Blocked: 0 tasks
 | F3.6 | Implement image gallery component | Medium | ✅ | feature/sprint3-F3.6-image-gallery | Completed 2026-02-16 |
 | F3.7 | Implement reviews display | Medium | ✅ | feature/sprint3-F3.7-reviews-display | Completed 2026-02-16 |
 | F3.8 | Create admin products list page | High | ✅ | feature/sprint3-F3.8-admin-products-list | Completed 2026-02-17 |
-| F3.9 | Create admin product form (create/edit) | High | 🔄 | feature/sprint3-F3.9-admin-product-form | Multi-field form, image upload |
+| F3.9 | Create admin product form (create/edit) | High | ✅ | feature/sprint3-F3.9-admin-product-form | Completed 2026-02-17 |
 | F3.10 | Write product component tests | High | ⏳ | | TDD throughout F3.1–F3.9 |
 
 ---
@@ -178,8 +178,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-16 | F3.7 | d0bbfd3 | ReviewCard + ReviewSummary + ReviewList components, reviewService, review test fixtures (35 new tests), 407 frontend total, PR #61 |
 | 2026-02-17 | F3.5 | 19fb010 | Product detail page (/products/[slug]) composing ImageGallery + ReviewList + product info, productService.getBySlug, formatPrice extracted to utils (37 new tests), 439 frontend total, PR #62 |
 | 2026-02-17 | F3.8 | f0f1066 | Admin products list page (/admin/products) with AdminProductsTable, DeleteProductDialog, adminProductService (list/activate/deactivate/delete), search + status filter + pagination, sidebar nav update, api-spec isActive param (90 new tests), 529 frontend total, PR #63 |
+| 2026-02-17 | F3.9 | 15e9fff | Admin product form (create/edit) with ProductForm, ProductImageManager, new/edit pages, adminProductService extended with 7 new methods (getById, create, update, listImages, addImage, updateImage, deleteImage), TD-005/6/7/8 documented (51 new tests), 580 frontend total, PR #64 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-17 (F3.8 merged — 90%)*
+*Last Updated: 2026-02-17 (F3.9 merged — 95%)*
