@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.5 — Product detail page |
+| Branch | feature/sprint3-F3.5-product-detail-page |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F3.5-product-detail-page.md |
 
 ---
 
@@ -57,7 +57,7 @@ Blocked: 0 tasks
 | F3.2 | Implement ProductCard component | High | ✅ | feature/sprint3-F3.2-product-card | Completed 2026-02-16 |
 | F3.3 | Implement ProductGrid component | High | ✅ | feature/sprint3-F3.3-product-grid | Completed 2026-02-16 |
 | F3.4 | Implement ProductFilters component | High | ✅ | feature/sprint3-F3.4-product-filters | Completed 2026-02-16 |
-| F3.5 | Create product detail page | High | ⏳ | | Gallery, description, sizes, reviews |
+| F3.5 | Create product detail page | High | 🔄 | feature/sprint3-F3.5-product-detail-page | Gallery, description, sizes, reviews |
 | F3.6 | Implement image gallery component | Medium | ✅ | feature/sprint3-F3.6-image-gallery | Completed 2026-02-16 |
 | F3.7 | Implement reviews display | Medium | ✅ | feature/sprint3-F3.7-reviews-display | Completed 2026-02-16 |
 | F3.8 | Create admin products list page | High | ⏳ | | Table with CRUD actions |

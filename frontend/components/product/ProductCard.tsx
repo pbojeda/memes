@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ImageOff, Star } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn, getLocalizedName } from '@/lib/utils';
+import { cn, formatPrice, getLocalizedName } from '@/lib/utils';
 import type { components } from '@/lib/api/types';
 
 type Product = components['schemas']['Product'];
@@ -11,18 +11,6 @@ type Product = components['schemas']['Product'];
 interface ProductCardProps {
   product: Product;
   className?: string;
-}
-
-/**
- * Format price as EUR currency in Spanish locale.
- * @param price - The numeric price to format
- * @returns Formatted price string (e.g., "24,99 €")
- */
-function formatPrice(price: number): string {
-  return new Intl.NumberFormat('es-ES', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(price);
 }
 
 /**
