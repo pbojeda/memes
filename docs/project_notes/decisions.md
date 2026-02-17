@@ -126,3 +126,24 @@ Implement the entire page as a `'use client'` component using `useParams` for sl
 - Consistent pattern across all pages (simpler codebase for MVP)
 - **Post-MVP action:** Convert `/products/[slug]` to Server Component with `fetch` + ISR for SEO. Also consider `/products` catalog page. This is the single highest-impact SEO improvement available.
 
+### ADR-008: Auto-generate product slug from title.es on backend (2026-02-17)
+
+**Context:**
+- The frontend `CreateProductRequest` never included a `slug` field — the admin form has no slug input
+- The backend `validateCreateProductInput` required `slug`, causing every product creation to fail with 400
+- Slugs are needed for SEO-friendly product URLs (`/products/:slug`)
+
+**Decision:**
+Auto-generate the slug from `title.es` on the backend when not provided. Use NFD normalization to strip accents, lowercase, replace non-alphanumeric chars with hyphens. On slug collision (Prisma P2002 on `slug` field), retry with `-1` through `-10` suffixes. Truncate auto-generated slugs to 97 chars (leaving room for suffixes within the 100-char limit). Explicit slugs are not truncated.
+
+**Alternatives Considered:**
+- Add slug field to frontend form → Rejected: extra friction for admins, slugs should be automatic
+- Generate slug on frontend → Rejected: slug uniqueness must be enforced server-side anyway; duplicate logic
+- Use UUID-based slugs → Rejected: not SEO-friendly
+
+**Consequences:**
+- Product creation "just works" from the admin form without a slug field
+- Slug can optionally be provided via API for programmatic clients
+- Collision retry has a limit (10) — in the unlikely case of 11 identical titles, creation fails with `ProductSlugAlreadyExistsError`
+- `generateSlug()` utility in `backend/src/utils/slugify.ts` can be reused for other entities
+

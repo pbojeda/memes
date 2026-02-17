@@ -95,7 +95,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Services (`backend/src/application/services/`)
 - `authService` - register, login, logout, refresh, password reset
 - `tokenService` - JWT generation, verification, refresh token rotation
-- `productService` - CRUD, listing with filters/pagination/sorting, soft delete/restore, slug-based detail
+- `productService` - CRUD, listing with filters/pagination/sorting, soft delete/restore, slug-based detail. `createProduct` auto-generates slug from `title.es` via `generateSlug()` when not provided; retries with `-1..-10` suffix on collision (P2002 scoped to `slug` field); auto-generated slugs truncated to 97 chars (MAX_SLUG_LENGTH=100 minus suffix room)
 - `productImageService` - CRUD for product images, Cloudinary upload/delete
 - `productReviewService` - CRUD, visibility toggle, analytics (averageRating, ratingDistribution)
 
@@ -105,6 +105,10 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `productImageValidator` - validateAddImageInput, validateUpdateImageInput
 - `productReviewValidator` - validateCreateReviewInput, validateUpdateReviewInput, validateToggleVisibilityInput, validateListReviewsInput
 - `shared` - validateUUID, validateSlug (reusable across validators)
+
+### Utilities (`backend/src/utils/`)
+- `slugify` - `generateSlug(text: string): string` — NFD normalization, accent stripping, lowercase, non-alphanumeric→hyphen, collapse consecutive hyphens, strip leading/trailing hyphens. Falls back to `'product'` on empty result. Output satisfies `/^[a-z0-9]+(?:-[a-z0-9]+)*$/`.
+- `responseHelpers` - `success()`, `created()`, `noContent()`, pagination meta builder
 
 ### Controllers (`backend/src/presentation/controllers/`)
 - `authController` - Auth endpoints
@@ -137,7 +141,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **Mock level**: Service layer (not Prisma) — controllers call services, so mock at that boundary
 - **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
 - **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes
-- **Total**: 962 backend tests (as of B3.10)
+- **Total**: 978 backend tests (as of F3.13)
 
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`

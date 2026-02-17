@@ -57,3 +57,9 @@ Each bug entry should include:
 - **Cause**: `{pt.name}` used directly instead of `{getLocalizedName(pt.name)}`. Test mocks used plain strings (`name: 'T-Shirts'`) instead of localized objects, which hid the bug.
 - **Fix**: Applied `getLocalizedName(pt.name)` in `ProductForm.tsx`; updated test mocks to use `{es: 'Camisetas', en: 'T-Shirts'}` format
 - **Prevention**: Test mocks for entities with localized fields must always use the `{es, en}` object format, never plain strings — otherwise the test passes but production breaks
+
+### 2026-02-17 — "Slug is required" error when creating a product via admin form
+- **Symptom**: Filling all fields in `/admin/products/new` and clicking Create returns 400: "Slug is required"
+- **Cause**: Frontend `CreateProductRequest` never included a `slug` field. Backend `validateCreateProductInput` required it. No auto-generation logic existed.
+- **Fix**: Made slug optional in validator; backend auto-generates from `title.es` via new `generateSlug()` utility; collision retry with `-1..-10` suffixes; truncation to 100 chars for auto-generated slugs
+- **Prevention**: When adding required fields to the backend, verify the frontend form sends them. API-spec and frontend types must stay in sync.
