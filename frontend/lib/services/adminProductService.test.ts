@@ -4,12 +4,18 @@ import { ApiException } from '../api/exceptions';
 import type { components } from '../api/types';
 
 type Product = components['schemas']['Product'];
+type ProductImage = components['schemas']['ProductImage'];
 type ProductListResponse = components['schemas']['ProductListResponse'];
+type CreateProductRequest = components['schemas']['CreateProductRequest'];
+type UpdateProductRequest = components['schemas']['UpdateProductRequest'];
+type CreateProductImageRequest = components['schemas']['CreateProductImageRequest'];
+type UpdateProductImageRequest = components['schemas']['UpdateProductImageRequest'];
 
 jest.mock('../api/client', () => ({
   apiClient: {
     get: jest.fn(),
     post: jest.fn(),
+    patch: jest.fn(),
     delete: jest.fn(),
   },
 }));
@@ -28,6 +34,14 @@ const mockProduct: Product = {
   primaryImage: undefined,
   reviewsCount: 0,
   averageRating: 0,
+};
+
+const mockProductImage: ProductImage = {
+  id: 'img-1',
+  url: 'https://res.cloudinary.com/test/image/upload/v1/products/image-1.jpg',
+  altText: 'Test image',
+  isPrimary: false,
+  sortOrder: 0,
 };
 
 const mockProductListResponse: ProductListResponse = {
@@ -248,6 +262,183 @@ describe('adminProductService', () => {
       );
 
       await expect(adminProductService.delete('nonexistent')).rejects.toThrow(ApiException);
+    });
+  });
+
+  describe('getById', () => {
+    it('should call GET /products/{productId}', async () => {
+      mockApiClient.get.mockResolvedValueOnce({ data: { data: mockProduct } });
+
+      await adminProductService.getById('prod-1');
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/products/prod-1');
+    });
+
+    it('should return the Product from response data', async () => {
+      mockApiClient.get.mockResolvedValueOnce({ data: { data: mockProduct } });
+
+      const result = await adminProductService.getById('prod-1');
+
+      expect(result).toEqual(mockProduct);
+    });
+
+    it('should propagate ApiException on 404', async () => {
+      mockApiClient.get.mockRejectedValueOnce(
+        new ApiException('NOT_FOUND', 'Product not found', 404)
+      );
+
+      await expect(adminProductService.getById('nonexistent')).rejects.toThrow(ApiException);
+    });
+  });
+
+  describe('create', () => {
+    const createData: CreateProductRequest = {
+      productTypeId: 'type-1',
+      title: { es: 'Producto Test' },
+      description: { es: 'Descripción test' },
+      price: 29.99,
+      color: 'white',
+      isActive: true,
+      isHot: false,
+    };
+
+    it('should call POST /products with the request body', async () => {
+      mockApiClient.post.mockResolvedValueOnce({ data: { data: mockProduct } });
+
+      await adminProductService.create(createData);
+
+      expect(mockApiClient.post).toHaveBeenCalledWith('/products', createData);
+    });
+
+    it('should return the Product from response data', async () => {
+      mockApiClient.post.mockResolvedValueOnce({ data: { data: mockProduct } });
+
+      const result = await adminProductService.create(createData);
+
+      expect(result).toEqual(mockProduct);
+    });
+
+    it('should propagate ApiException on 400', async () => {
+      mockApiClient.post.mockRejectedValueOnce(
+        new ApiException('VALIDATION_ERROR', 'Invalid data', 400)
+      );
+
+      await expect(adminProductService.create(createData)).rejects.toThrow(ApiException);
+    });
+  });
+
+  describe('update', () => {
+    const updateData: UpdateProductRequest = {
+      title: { es: 'Updated Title' },
+      price: 39.99,
+      priceChangeReason: 'Price increase',
+    };
+
+    it('should call PATCH /products/{productId} with the request body', async () => {
+      mockApiClient.patch.mockResolvedValueOnce({ data: { data: mockProduct } });
+
+      await adminProductService.update('prod-1', updateData);
+
+      expect(mockApiClient.patch).toHaveBeenCalledWith('/products/prod-1', updateData);
+    });
+
+    it('should return the Product from response data', async () => {
+      mockApiClient.patch.mockResolvedValueOnce({ data: { data: mockProduct } });
+
+      const result = await adminProductService.update('prod-1', updateData);
+
+      expect(result).toEqual(mockProduct);
+    });
+
+    it('should propagate ApiException on 404', async () => {
+      mockApiClient.patch.mockRejectedValueOnce(
+        new ApiException('NOT_FOUND', 'Product not found', 404)
+      );
+
+      await expect(adminProductService.update('nonexistent', updateData)).rejects.toThrow(ApiException);
+    });
+  });
+
+  describe('listImages', () => {
+    it('should call GET /products/{productId}/images', async () => {
+      mockApiClient.get.mockResolvedValueOnce({ data: { data: [mockProductImage] } });
+
+      await adminProductService.listImages('prod-1');
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/products/prod-1/images');
+    });
+
+    it('should return the ProductImage array from response data', async () => {
+      mockApiClient.get.mockResolvedValueOnce({ data: { data: [mockProductImage] } });
+
+      const result = await adminProductService.listImages('prod-1');
+
+      expect(result).toEqual([mockProductImage]);
+    });
+  });
+
+  describe('addImage', () => {
+    const imageData: CreateProductImageRequest = {
+      url: 'https://example.com/image.jpg',
+      isPrimary: false,
+      sortOrder: 1,
+    };
+
+    it('should call POST /products/{productId}/images with the image data', async () => {
+      mockApiClient.post.mockResolvedValueOnce({ data: { data: mockProductImage } });
+
+      await adminProductService.addImage('prod-1', imageData);
+
+      expect(mockApiClient.post).toHaveBeenCalledWith('/products/prod-1/images', imageData);
+    });
+
+    it('should return the ProductImage from response data', async () => {
+      mockApiClient.post.mockResolvedValueOnce({ data: { data: mockProductImage } });
+
+      const result = await adminProductService.addImage('prod-1', imageData);
+
+      expect(result).toEqual(mockProductImage);
+    });
+  });
+
+  describe('updateImage', () => {
+    const updateImageData: UpdateProductImageRequest = {
+      isPrimary: true,
+    };
+
+    it('should call PATCH /products/{productId}/images/{imageId} with the update data', async () => {
+      mockApiClient.patch.mockResolvedValueOnce({ data: { data: { ...mockProductImage, isPrimary: true } } });
+
+      await adminProductService.updateImage('prod-1', 'img-1', updateImageData);
+
+      expect(mockApiClient.patch).toHaveBeenCalledWith('/products/prod-1/images/img-1', updateImageData);
+    });
+
+    it('should return the ProductImage from response data', async () => {
+      const updatedImage = { ...mockProductImage, isPrimary: true };
+      mockApiClient.patch.mockResolvedValueOnce({ data: { data: updatedImage } });
+
+      const result = await adminProductService.updateImage('prod-1', 'img-1', updateImageData);
+
+      expect(result).toEqual(updatedImage);
+    });
+  });
+
+  describe('deleteImage', () => {
+    it('should call DELETE /products/{productId}/images/{imageId}', async () => {
+      mockApiClient.delete.mockResolvedValueOnce({ data: null, status: 204 });
+
+      await adminProductService.deleteImage('prod-1', 'img-1');
+
+      expect(mockApiClient.delete).toHaveBeenCalledWith('/products/prod-1/images/img-1');
+    });
+
+    it('should return void', async () => {
+      mockApiClient.delete.mockResolvedValueOnce({ data: null, status: 204 });
+
+      const result = await adminProductService.deleteImage('prod-1', 'img-1');
+
+      expect(result).toBeUndefined();
     });
   });
 });
