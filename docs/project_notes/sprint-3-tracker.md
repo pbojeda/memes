@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████████████░░░░░] 80%
+Progress: [█████████████████████░░░░] 85%
 
-Completed: 16/20 tasks
+Completed: 17/20 tasks
 In Progress: 0 tasks
-Pending: 4 tasks
+Pending: 3 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.5 — Product detail page |
-| Branch | feature/sprint3-F3.5-product-detail-page |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.5-product-detail-page.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -57,7 +57,7 @@ Blocked: 0 tasks
 | F3.2 | Implement ProductCard component | High | ✅ | feature/sprint3-F3.2-product-card | Completed 2026-02-16 |
 | F3.3 | Implement ProductGrid component | High | ✅ | feature/sprint3-F3.3-product-grid | Completed 2026-02-16 |
 | F3.4 | Implement ProductFilters component | High | ✅ | feature/sprint3-F3.4-product-filters | Completed 2026-02-16 |
-| F3.5 | Create product detail page | High | 🔄 | feature/sprint3-F3.5-product-detail-page | Gallery, description, sizes, reviews |
+| F3.5 | Create product detail page | High | ✅ | feature/sprint3-F3.5-product-detail-page | Completed 2026-02-17 |
 | F3.6 | Implement image gallery component | Medium | ✅ | feature/sprint3-F3.6-image-gallery | Completed 2026-02-16 |
 | F3.7 | Implement reviews display | Medium | ✅ | feature/sprint3-F3.7-reviews-display | Completed 2026-02-16 |
 | F3.8 | Create admin products list page | High | ⏳ | | Table with CRUD actions |
@@ -176,8 +176,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-16 | F3.1 | 931fb7a | Catalog page (/products) with URL-synced filters + pagination + productService + Pagination UI component (41 new tests), 345 frontend total, PR #59 |
 | 2026-02-16 | F3.6 | 1873b1f | ImageGallery component with main view, thumbnails, prev/next arrows, keyboard nav, sortOrder sorting, safeIndex bounds checking (27 new tests), 372 frontend total, PR #60 |
 | 2026-02-16 | F3.7 | d0bbfd3 | ReviewCard + ReviewSummary + ReviewList components, reviewService, review test fixtures (35 new tests), 407 frontend total, PR #61 |
+| 2026-02-17 | F3.5 | 19fb010 | Product detail page (/products/[slug]) composing ImageGallery + ReviewList + product info, productService.getBySlug, formatPrice extracted to utils (37 new tests), 439 frontend total, PR #62 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-16 (F3.7 merged — 80%)*
+*Last Updated: 2026-02-17 (F3.5 merged — 85%)*
