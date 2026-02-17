@@ -1,4 +1,5 @@
 import prisma from '../../lib/prisma';
+import { generateSlug } from '../../utils/slugify';
 import {
   validateCreateProductInput,
   validateUpdateProductInput,
@@ -20,38 +21,64 @@ import type { PaginationMeta } from '../../utils/responseHelpers';
 
 /**
  * Creates a new product.
+ * When slug is not provided, auto-generates it from title.es.
+ * On slug collision (P2002), retries with numeric suffix up to MAX_SLUG_RETRIES times.
+ *
  * @throws {InvalidProductDataError} If input validation fails
- * @throws {ProductSlugAlreadyExistsError} If slug already exists
+ * @throws {ProductSlugAlreadyExistsError} If slug collides after all retries are exhausted
  */
+const MAX_SLUG_RETRIES = 10;
+const MAX_SLUG_LENGTH = 100;
+const MAX_SLUG_BASE_LENGTH = MAX_SLUG_LENGTH - `-${MAX_SLUG_RETRIES}`.length;
+
 export async function createProduct(input: CreateProductInput): Promise<Product> {
   const validated = validateCreateProductInput(input);
 
-  try {
-    const product = await prisma.product.create({
-      data: {
-        title: validated.title,
-        description: validated.description,
-        slug: validated.slug,
-        price: validated.price,
-        compareAtPrice: validated.compareAtPrice,
-        availableSizes: validated.availableSizes,
-        productTypeId: validated.productTypeId,
-        color: validated.color,
-        isActive: validated.isActive,
-        isHot: validated.isHot,
-        salesCount: validated.salesCount,
-        viewCount: validated.viewCount,
-        createdByUserId: validated.createdByUserId ?? null,
-      },
-    });
+  // Explicit slug: use as-is (already validated to <= 100 chars)
+  // Auto-generated slug: truncate to leave room for collision suffixes (-1..-10)
+  const baseSlug = validated.slug
+    ?? generateSlug(validated.title.es).substring(0, MAX_SLUG_BASE_LENGTH).replace(/-$/, '');
 
-    return product;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-      throw new ProductSlugAlreadyExistsError();
+  for (let attempt = 0; attempt <= MAX_SLUG_RETRIES; attempt++) {
+    const slug = attempt === 0 ? baseSlug : `${baseSlug}-${attempt}`;
+
+    try {
+      const product = await prisma.product.create({
+        data: {
+          title: validated.title,
+          description: validated.description,
+          slug,
+          price: validated.price,
+          compareAtPrice: validated.compareAtPrice,
+          availableSizes: validated.availableSizes,
+          productTypeId: validated.productTypeId,
+          color: validated.color,
+          isActive: validated.isActive,
+          isHot: validated.isHot,
+          salesCount: validated.salesCount,
+          viewCount: validated.viewCount,
+          createdByUserId: validated.createdByUserId ?? null,
+        },
+      });
+
+      return product;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        const target = (error.meta?.target as string[] | undefined) ?? [];
+        if (!target.includes('slug')) {
+          throw error;
+        }
+        if (attempt === MAX_SLUG_RETRIES) {
+          throw new ProductSlugAlreadyExistsError();
+        }
+        continue;
+      }
+      throw error;
     }
-    throw error;
   }
+
+  // TypeScript requires an explicit throw here (unreachable at runtime)
+  throw new ProductSlugAlreadyExistsError();
 }
 
 /**

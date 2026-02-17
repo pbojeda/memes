@@ -3060,7 +3060,7 @@ components:
 
     CreateProductRequest:
       type: object
-      required: [productTypeId, title, description, price]
+      required: [productTypeId, title, description, price, color]
       properties:
         productTypeId:
           type: string
@@ -3069,6 +3069,11 @@ components:
           $ref: '#/components/schemas/LocalizedString'
         description:
           $ref: '#/components/schemas/LocalizedString'
+        slug:
+          type: string
+          maxLength: 100
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+          description: URL slug. If omitted, auto-generated from title.es.
         price:
           type: number
           minimum: 0

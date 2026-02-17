@@ -43,7 +43,7 @@ describe('productService', () => {
     const validInput = {
       title: { es: 'Camiseta Premium' },
       description: { es: 'Una camiseta de alta calidad' },
-      slug: 'camiseta-premium',
+      // slug intentionally omitted — service should auto-generate
       price: 29.99,
       productTypeId: '123e4567-e89b-12d3-a456-426614174000',
       color: 'Rojo',
@@ -73,25 +73,15 @@ describe('productService', () => {
       updatedAt: new Date('2026-02-11'),
     };
 
-    it('should create product with valid input', async () => {
+    it('should create product with valid input (auto-generated slug from title.es)', async () => {
       (mockPrisma.product.create as jest.Mock).mockResolvedValue(mockCreatedProduct);
 
       const result = await createProduct(validInput);
 
       expect(mockPrisma.product.create).toHaveBeenCalledWith({
-        data: {
-          title: { es: 'Camiseta Premium' },
-          description: { es: 'Una camiseta de alta calidad' },
-          slug: 'camiseta-premium',
-          price: 29.99,
-          productTypeId: '123e4567-e89b-12d3-a456-426614174000',
-          color: 'Rojo',
-          isActive: true,
-          isHot: false,
-          salesCount: 0,
-          viewCount: 0,
-          createdByUserId: null,
-        },
+        data: expect.objectContaining({
+          slug: 'camiseta-premium',  // auto-generated from 'Camiseta Premium'
+        }),
       });
       expect(result).toEqual(mockCreatedProduct);
     });
@@ -148,10 +138,107 @@ describe('productService', () => {
         new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
           code: 'P2002',
           clientVersion: '6.0.0',
+          meta: { target: ['slug'] },
         })
       );
 
       await expect(createProduct(validInput)).rejects.toThrow(ProductSlugAlreadyExistsError);
+    });
+
+    it('should use provided slug when slug is explicitly given', async () => {
+      const inputWithSlug = { ...validInput, slug: 'my-custom-slug' };
+      (mockPrisma.product.create as jest.Mock).mockResolvedValue({
+        ...mockCreatedProduct,
+        slug: 'my-custom-slug',
+      });
+
+      await createProduct(inputWithSlug);
+
+      expect(mockPrisma.product.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ slug: 'my-custom-slug' }),
+      });
+    });
+
+    it('should not truncate explicitly provided slugs near MAX_SLUG_LENGTH', async () => {
+      const longSlug = 'a'.repeat(100);
+      const inputWithLongSlug = { ...validInput, slug: longSlug };
+      (mockPrisma.product.create as jest.Mock).mockResolvedValue({
+        ...mockCreatedProduct,
+        slug: longSlug,
+      });
+
+      await createProduct(inputWithLongSlug);
+
+      expect(mockPrisma.product.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ slug: longSlug }),
+      });
+    });
+
+    it('should retry with numeric suffix on slug collision', async () => {
+      const p2002Error = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '6.0.0',
+        meta: { target: ['slug'] },
+      });
+      const mockProductWithSuffix = { ...mockCreatedProduct, slug: 'camiseta-premium-1' };
+
+      // First attempt fails with P2002, second attempt succeeds
+      (mockPrisma.product.create as jest.Mock)
+        .mockRejectedValueOnce(p2002Error)
+        .mockResolvedValueOnce(mockProductWithSuffix);
+
+      const result = await createProduct(validInput);
+
+      expect(mockPrisma.product.create).toHaveBeenCalledTimes(2);
+      expect(mockPrisma.product.create).toHaveBeenNthCalledWith(1,
+        { data: expect.objectContaining({ slug: 'camiseta-premium' }) }
+      );
+      expect(mockPrisma.product.create).toHaveBeenNthCalledWith(2,
+        { data: expect.objectContaining({ slug: 'camiseta-premium-1' }) }
+      );
+      expect(result).toEqual(mockProductWithSuffix);
+    });
+
+    it('should throw ProductSlugAlreadyExistsError after 10 collision retries when slug was explicitly provided', async () => {
+      const p2002Error = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '6.0.0',
+        meta: { target: ['slug'] },
+      });
+
+      // All 11 attempts (base + 10 suffixes) fail
+      (mockPrisma.product.create as jest.Mock).mockRejectedValue(p2002Error);
+
+      const inputWithSlug = { ...validInput, slug: 'taken-slug' };
+
+      await expect(createProduct(inputWithSlug)).rejects.toThrow(ProductSlugAlreadyExistsError);
+      // 1 base attempt + 10 suffix attempts = 11 total
+      expect(mockPrisma.product.create).toHaveBeenCalledTimes(11);
+    });
+
+    it('should throw ProductSlugAlreadyExistsError after 10 retries for auto-generated slug', async () => {
+      const p2002Error = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '6.0.0',
+        meta: { target: ['slug'] },
+      });
+
+      (mockPrisma.product.create as jest.Mock).mockRejectedValue(p2002Error);
+
+      await expect(createProduct(validInput)).rejects.toThrow(ProductSlugAlreadyExistsError);
+      expect(mockPrisma.product.create).toHaveBeenCalledTimes(11);
+    });
+
+    it('should re-throw P2002 on non-slug constraint immediately without retrying', async () => {
+      const p2002Error = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '6.0.0',
+        meta: { target: ['productTypeId', 'color'] },
+      });
+      (mockPrisma.product.create as jest.Mock).mockRejectedValue(p2002Error);
+
+      await expect(createProduct(validInput)).rejects.toThrow(p2002Error);
+      expect(mockPrisma.product.create).toHaveBeenCalledTimes(1);
     });
 
     it('should re-throw non-P2002 Prisma errors on create', async () => {
