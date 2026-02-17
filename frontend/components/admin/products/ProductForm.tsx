@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ProductImageManager } from './ProductImageManager';
+import { getLocalizedName } from '@/lib/utils';
 
 type Product = components['schemas']['Product'];
 type ProductImage = components['schemas']['ProductImage'];
@@ -301,7 +302,7 @@ export function ProductForm({ product, initialImages, onSuccess }: ProductFormPr
             <SelectContent>
               {productTypes.filter((pt) => pt.id).map((pt) => (
                 <SelectItem key={pt.id} value={pt.id!}>
-                  {pt.name}
+                  {getLocalizedName(pt.name)}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -92,8 +92,8 @@ const mockAdminProductService = adminProductService as jest.Mocked<typeof adminP
 const mockProductTypeService = productTypeService as jest.Mocked<typeof productTypeService>;
 
 const mockProductTypes: ProductType[] = [
-  { id: 'type-1', name: 'T-Shirts', slug: 't-shirts', hasSizes: true, isActive: true, sortOrder: 1 },
-  { id: 'type-2', name: 'Mugs', slug: 'mugs', hasSizes: false, isActive: true, sortOrder: 2 },
+  { id: 'type-1', name: { es: 'Camisetas', en: 'T-Shirts' } as unknown as string, slug: 't-shirts', hasSizes: true, isActive: true, sortOrder: 1 },
+  { id: 'type-2', name: { es: 'Tazas', en: 'Mugs' } as unknown as string, slug: 'mugs', hasSizes: false, isActive: true, sortOrder: 2 },
 ];
 
 const mockProduct: Product = {
@@ -107,7 +107,7 @@ const mockProduct: Product = {
   color: 'black',
   isActive: true,
   isHot: true,
-  productType: { id: 'type-1', name: 'T-Shirts', slug: 't-shirts' },
+  productType: { id: 'type-1', name: { es: 'Camisetas', en: 'T-Shirts' } as unknown as string, slug: 't-shirts' },
   createdAt: '2026-02-01T00:00:00Z',
 };
 
@@ -185,6 +185,18 @@ describe('ProductForm', () => {
       });
 
       expect(mockProductTypeService.getAll).toHaveBeenCalledWith({ isActive: true });
+    });
+
+    it('should display localized product type names via getLocalizedName', async () => {
+      render(<ProductForm />);
+
+      await waitFor(() => {
+        const select = screen.getByTestId('select-trigger') as HTMLSelectElement;
+        const options = Array.from(select.querySelectorAll('option')).filter((o) => o.value !== '');
+        const optionTexts = options.map((o) => o.textContent);
+        expect(optionTexts).toContain('Camisetas');
+        expect(optionTexts).toContain('Tazas');
+      });
     });
 
     it('should validate required: title.es shows error when empty on submit', async () => {

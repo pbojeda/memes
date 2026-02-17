@@ -3,18 +3,18 @@
 **Goal:** Implement full product management (catalog, detail, admin CRUD, images, reviews).
 **Start Date:** 2026-02-11
 **End Date:** —
-**Status:** Complete
+**Status:** In Progress
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [█████████████████████████] 100%
+Progress: [████████████████████████░] 96%
 
-Completed: 20/20 tasks
+Completed: 21/22 tasks
 In Progress: 0 tasks
-Pending: 0 tasks
+Pending: 1 task
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — (none active) |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.12 — Fix localized name object rendered as React child in ProductForm |
+| Branch | feature/sprint3-F3.12-fix-localized-name-productform |
+| Step | 2b/5 (Implement) |
+| Ticket | Simple (no ticket) |
 
 ---
 
@@ -63,6 +63,8 @@ Blocked: 0 tasks
 | F3.8 | Create admin products list page | High | ✅ | feature/sprint3-F3.8-admin-products-list | Completed 2026-02-17 |
 | F3.9 | Create admin product form (create/edit) | High | ✅ | feature/sprint3-F3.9-admin-product-form | Completed 2026-02-17 |
 | F3.10 | Write product component tests | High | ✅ | — | TDD throughout F3.1–F3.9; all 26 source files covered (414 tests). Completed 2026-02-17 |
+| F3.11 | Fix: Add "New Product" button to admin products list | High | ✅ | feature/sprint3-F3.11-new-product-button | Completed 2026-02-17 |
+| F3.12 | Fix: Localized name object rendered as React child in ProductForm | High | 🔄 | feature/sprint3-F3.12-fix-localized-name-productform | pt.name is {es,en} object, needs getLocalizedName() |
 
 ---
 
@@ -125,7 +127,8 @@ F3.10 (TDD throughout F3.1–F3.9)
 
 | Date | Bug | Solution |
 |------|-----|----------|
-| - | - | - |
+| 2026-02-17 | F3.11 — Missing "New Product" button on admin products list | Added Button + Link to `/admin/products/new` |
+| 2026-02-17 | F3.12 — `pt.name` (localized object) rendered directly in ProductForm Select | Applied `getLocalizedName(pt.name)`, fixed test mocks to use `{es, en}` format |
 
 ---
 
@@ -180,8 +183,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-17 | F3.8 | f0f1066 | Admin products list page (/admin/products) with AdminProductsTable, DeleteProductDialog, adminProductService (list/activate/deactivate/delete), search + status filter + pagination, sidebar nav update, api-spec isActive param (90 new tests), 529 frontend total, PR #63 |
 | 2026-02-17 | F3.9 | 15e9fff | Admin product form (create/edit) with ProductForm, ProductImageManager, new/edit pages, adminProductService extended with 7 new methods (getById, create, update, listImages, addImage, updateImage, deleteImage), TD-005/6/7/8 documented (51 new tests), 580 frontend total, PR #64 |
 | 2026-02-17 | F3.10 | — | No additional code needed — TDD throughout F3.1–F3.9 achieved full coverage: 26 source files, 25 test suites, 414 product tests, 580 frontend total |
+| 2026-02-17 | F3.11 | 8eb1313 | Add "New Product" button to admin products list page (2 new tests), 582 frontend total, PR #65 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-17 (F3.10 closed — 100% Sprint Complete)*
+*Last Updated: 2026-02-17 (F3.11, F3.12 added — bugfixes found during manual testing)*
