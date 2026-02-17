@@ -60,10 +60,11 @@ This file stores project configuration, constants, and frequently-needed **non-s
 
 ### Pages (`frontend/app/`)
 - `/products` - Catalog page (Client Component): assembles ProductFilters + ProductGrid + Pagination with bidirectional URL state sync. Reads/writes searchParams (search, typeSlug, minPrice, maxPrice, isHot, sort, page). Filter changes reset page to 1. Error state with retry. Suspense wrapper for useSearchParams.
+- `/products/[slug]` - Product detail page (Client Component): composes ImageGallery + product info (title, description, price, sizes, color, Hot badge) + ReviewList. Fetches via `productService.getBySlug(slug)`. States: loading skeleton, error with retry, 404 (ApiException status check), populated. Uses `useParams` for slug extraction.
 
 ### Services (`frontend/lib/services/`)
 - `authService` - login, register, logout, refresh, forgotPassword, resetPassword
-- `productService` - `list(params?)` → `ProductListResponse` (data + meta with pagination). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
+- `productService` - `list(params?)` → `ProductListResponse` (data + meta with pagination). `getBySlug(slug)` → `ProductDetailResponse` (data: ProductDetail with images + reviews). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
 - `reviewService` - `list(productId, params?)` → `ReviewListResponse` (data: Review[] + meta with pagination + averageRating + ratingDistribution). Strips undefined params. Same pattern as productService.
 
 ### Stores (`frontend/stores/`)
@@ -132,7 +133,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
 - **Test mock**: Mock `next/image` filtering out `fill`/`sizes` props; mock `lucide-react` icons as simple SVGs with `data-testid`
 - **Test fixtures**: Shared factories in `frontend/components/product/testing/fixtures.ts`: `createProduct()`, `createProducts()`, `createProductImage()`, `createProductImages()`, `createReview()`, `createReviews()`, `createReviewListResponse()`
-- **Price formatting**: `Intl.NumberFormat('es-ES', { currency: 'EUR' })` — co-located in `ProductCard.tsx` as `formatPrice()`, extract to `lib/utils.ts` when reused
+- **Price formatting**: `formatPrice()` in `lib/utils.ts` — `Intl.NumberFormat('es-ES', { currency: 'EUR' })`. Used by ProductCard and product detail page.
 
 ### Key Technical Constraints
 - **Express 5 + path-to-regexp v8**: No inline regex in route params (see ADR-006)

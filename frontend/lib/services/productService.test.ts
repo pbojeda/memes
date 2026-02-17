@@ -50,6 +50,50 @@ describe('productService', () => {
     jest.clearAllMocks();
   });
 
+  describe('getBySlug', () => {
+    const mockProductDetail = {
+      id: 'prod-1',
+      title: 'Funny Cat Meme T-Shirt',
+      slug: 'funny-cat',
+      price: 24.99,
+      compareAtPrice: 34.99,
+      isHot: true,
+      isActive: true,
+      productType: { id: 'pt-1', name: 'T-Shirts', slug: 'tshirts', hasSizes: true },
+      description: 'A great meme t-shirt',
+      availableSizes: ['S', 'M', 'L'],
+      color: 'white',
+      images: [],
+      reviews: [],
+    };
+
+    const mockDetailResponse = { data: mockProductDetail };
+
+    it('should call GET /products/{slug}', async () => {
+      mockApiClient.get.mockResolvedValueOnce({ data: mockDetailResponse });
+
+      await productService.getBySlug('funny-cat');
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/products/funny-cat');
+    });
+
+    it('should return ProductDetailResponse data', async () => {
+      mockApiClient.get.mockResolvedValueOnce({ data: mockDetailResponse });
+
+      const result = await productService.getBySlug('funny-cat');
+
+      expect(result).toEqual(mockDetailResponse);
+    });
+
+    it('should propagate errors from apiClient', async () => {
+      mockApiClient.get.mockRejectedValueOnce(
+        new ApiException('NOT_FOUND', 'Product not found', 404)
+      );
+
+      await expect(productService.getBySlug('non-existent')).rejects.toThrow(ApiException);
+    });
+  });
+
   describe('list', () => {
     it('should call GET /products with empty params when none provided', async () => {
       mockApiClient.get.mockResolvedValueOnce({

@@ -16,3 +16,16 @@ export function getLocalizedName(name: string | Record<string, string> | undefin
   const values = Object.values(name);
   return values[0] ?? fallback;
 }
+
+/**
+ * Format price as EUR currency in Spanish locale.
+ * Single-market EUR store — hardcoded per business requirements (MVP scope).
+ * @param price - The numeric price to format
+ * @returns Formatted price string (e.g., "24,99 €")
+ */
+export function formatPrice(price: number): string {
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(price);
+}
