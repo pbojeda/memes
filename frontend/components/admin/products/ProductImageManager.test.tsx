@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ProductImageManager } from './ProductImageManager';
 import { adminProductService } from '@/lib/services/adminProductService';
@@ -22,6 +22,7 @@ jest.mock('../../../lib/services/adminProductService', () => ({
     addImage: jest.fn(),
     updateImage: jest.fn(),
     deleteImage: jest.fn(),
+    uploadImage: jest.fn(),
   },
 }));
 
@@ -215,5 +216,204 @@ describe('ProductImageManager', () => {
     await waitFor(() => {
       expect(screen.getByRole('alert')).toHaveTextContent('Upload failed');
     });
+  });
+
+  it('should render an Upload File button', () => {
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /upload file/i })).toBeInTheDocument();
+  });
+
+  it('should render a hidden file input with accept image/* and aria-label', () => {
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i) as HTMLInputElement;
+    expect(fileInput).toBeInTheDocument();
+    expect(fileInput.type).toBe('file');
+    expect(fileInput.accept).toBe('image/*');
+  });
+
+  it('should upload file and call addImage with returned URL on file selection', async () => {
+    const user = userEvent.setup();
+    const newImage = createProductImage({ id: 'img-new', sortOrder: 0, isPrimary: true });
+    mockAdminProductService.uploadImage.mockResolvedValueOnce({
+      url: 'https://res.cloudinary.com/test/img.jpg',
+    });
+    mockAdminProductService.addImage.mockResolvedValueOnce(newImage);
+
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const file = new File(['img'], 'photo.jpg', { type: 'image/jpeg' });
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(mockAdminProductService.uploadImage).toHaveBeenCalledWith(
+        expect.any(File)
+      );
+    });
+
+    expect(mockAdminProductService.addImage).toHaveBeenCalledWith(productId, {
+      url: 'https://res.cloudinary.com/test/img.jpg',
+      isPrimary: true,
+      sortOrder: 0,
+    });
+    expect(mockOnImagesChange).toHaveBeenCalledWith([newImage]);
+  });
+
+  it('should show loading state during file upload', async () => {
+    const user = userEvent.setup();
+    mockAdminProductService.uploadImage.mockImplementation(
+      () => new Promise(() => {})
+    );
+
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const file = new File(['img'], 'photo.jpg', { type: 'image/jpeg' });
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /uploading/i })).toBeDisabled();
+    });
+  });
+
+  it('should show error message when file upload fails', async () => {
+    const user = userEvent.setup();
+    mockAdminProductService.uploadImage.mockRejectedValueOnce(new Error('File too large'));
+
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const file = new File(['img'], 'photo.jpg', { type: 'image/jpeg' });
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('File too large');
+    });
+
+    expect(mockAdminProductService.addImage).not.toHaveBeenCalled();
+  });
+
+  it('should show error when upload returns no URL', async () => {
+    const user = userEvent.setup();
+    mockAdminProductService.uploadImage.mockResolvedValueOnce({});
+
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const file = new File(['img'], 'photo.jpg', { type: 'image/jpeg' });
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Upload did not return a URL');
+    });
+
+    expect(mockAdminProductService.addImage).not.toHaveBeenCalled();
+    expect(mockOnImagesChange).not.toHaveBeenCalled();
+  });
+
+  it('should reject non-image file types', async () => {
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const file = new File(['data'], 'doc.pdf', { type: 'application/pdf' });
+    // Use fireEvent to bypass accept attribute filtering (simulates drag-and-drop bypass)
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Only JPEG, PNG, and WebP images are supported');
+    });
+
+    expect(mockAdminProductService.uploadImage).not.toHaveBeenCalled();
+  });
+
+  it('should reject files larger than 5 MB', async () => {
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const largeContent = new Uint8Array(5 * 1024 * 1024 + 1);
+    const file = new File([largeContent], 'huge.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('File must be 5 MB or smaller');
+    });
+
+    expect(mockAdminProductService.uploadImage).not.toHaveBeenCalled();
+  });
+
+  it('should show error message when addImage fails after successful upload', async () => {
+    const user = userEvent.setup();
+    mockAdminProductService.uploadImage.mockResolvedValueOnce({
+      url: 'https://res.cloudinary.com/test/img.jpg',
+    });
+    mockAdminProductService.addImage.mockRejectedValueOnce(new Error('Server error'));
+
+    render(
+      <ProductImageManager
+        productId={productId}
+        images={[]}
+        onImagesChange={mockOnImagesChange}
+      />
+    );
+
+    const fileInput = screen.getByLabelText(/upload image file/i);
+    const file = new File(['img'], 'photo.jpg', { type: 'image/jpeg' });
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Server error');
+    });
+
+    expect(mockOnImagesChange).not.toHaveBeenCalled();
   });
 });

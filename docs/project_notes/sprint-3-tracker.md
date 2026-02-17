@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.14 — Add file upload support to ProductImageManager |
+| Branch | feature/sprint3-F3.14-file-upload-image-manager |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/F3.14-file-upload-image-manager.md |
 
 ---
 

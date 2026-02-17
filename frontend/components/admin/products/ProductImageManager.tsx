@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import type { components } from '@/lib/api/types';
 import { adminProductService } from '@/lib/services/adminProductService';
@@ -10,6 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 type ProductImage = components['schemas']['ProductImage'];
+
+// Client-side UX checks only. The backend validates actual file content via uploadValidator.
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 interface ProductImageManagerProps {
   productId: string;
@@ -26,6 +30,7 @@ export function ProductImageManager({
   const [newImageUrl, setNewImageUrl] = useState('');
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sortedImages = [...images].sort(
     (a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
@@ -95,6 +100,48 @@ export function ProductImageManager({
     }
   }
 
+  async function handleUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      setApiError('Only JPEG, PNG, and WebP images are supported');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      setApiError('File must be 5 MB or smaller');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    setActionLoadingId('uploading');
+    setApiError(null);
+    try {
+      const uploadResult = await adminProductService.uploadImage(file);
+      const url = uploadResult.url;
+      if (!url) {
+        setApiError('Upload did not return a URL');
+        return;
+      }
+      // Note: if addImage fails here, the file is already uploaded to Cloudinary
+      // and the URL is orphaned. There is no cleanup mechanism for this case.
+      const newImage = await adminProductService.addImage(productId, {
+        url,
+        isPrimary: images.length === 0,
+        sortOrder: images.length,
+      });
+      onImagesChange([...images, newImage]);
+    } catch (err) {
+      setApiError(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
+      setActionLoadingId(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  }
+
   return (
     <div className="space-y-4">
       {apiError && (
@@ -145,6 +192,15 @@ export function ProductImageManager({
         </div>
       ))}
 
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        className="hidden"
+        onChange={handleUploadFile}
+        aria-label="Upload image file"
+      />
+
       {isAdding ? (
         <div className="flex items-center gap-2">
           <Input
@@ -171,9 +227,18 @@ export function ProductImageManager({
           </Button>
         </div>
       ) : (
-        <Button variant="outline" onClick={() => setIsAdding(true)}>
-          Add Image
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setIsAdding(true)}>
+            Add Image
+          </Button>
+          <Button
+            variant="outline"
+            disabled={actionLoadingId === 'uploading'}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {actionLoadingId === 'uploading' ? 'Uploading...' : 'Upload File'}
+          </Button>
+        </div>
       )}
     </div>
   );

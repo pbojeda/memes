@@ -9,6 +9,7 @@ type CreateProductRequest = components['schemas']['CreateProductRequest'];
 type UpdateProductRequest = components['schemas']['UpdateProductRequest'];
 type CreateProductImageRequest = components['schemas']['CreateProductImageRequest'];
 type UpdateProductImageRequest = components['schemas']['UpdateProductImageRequest'];
+type UploadResponse = components['schemas']['UploadResponse'];
 
 export const adminProductService = {
   /**
@@ -120,5 +121,21 @@ export const adminProductService = {
    */
   async deleteImage(productId: string, imageId: string): Promise<void> {
     await apiClient.delete(`/products/${productId}/images/${imageId}`);
+  },
+
+  /**
+   * Upload an image file to Cloudinary via the backend upload endpoint.
+   * Sends multipart/form-data — axios sets the Content-Type header automatically.
+   * Returns the upload response data (url, filename, size, mimeType).
+   */
+  async uploadImage(file: File): Promise<NonNullable<UploadResponse['data']>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'products');
+    const response = await apiClient.post<UploadResponse>('/upload/image', formData);
+    if (!response.data.data) {
+      throw new Error('Upload response missing data');
+    }
+    return response.data.data;
   },
 };
