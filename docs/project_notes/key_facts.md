@@ -39,6 +39,10 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `UserMenu` - Auth-aware dropdown: Login/Register links (unauth) or user initial + email + role badge + logout (auth)
 - `ProtectedRoute` - Route guard with role-based access and returnTo redirect
 
+### Admin Product Components (`frontend/components/admin/products/`)
+- `ProductForm` - Shared form for create/edit products. Props: `product?: Product`, `initialImages?: ProductImage[]`, `onSuccess?: (product: Product) => void`. Flat form state (titleEs/En, descriptionEs/En, productTypeId, price, compareAtPrice, color, availableSizes, isActive, isHot, memeSourceUrl, memeIsOriginal, priceChangeReason). Self-contained product type loading. Validation: titleEs required, productTypeId required, price required/>=0/NaN check. `isActive` disabled in edit mode (managed via activate/deactivate endpoints). `priceChangeReason` shown only when price changed (tracked via `useRef`). Renders `ProductImageManager` in edit mode only.
+- `ProductImageManager` - Controlled component for image CRUD. Props: `productId: string`, `images: ProductImage[]`, `onImagesChange`. Add image by URL (with protocol validation), delete, set primary. `actionLoadingId` pattern. Auto-sets first image as primary (`isPrimary: images.length === 0`). Sorts by `sortOrder` ascending.
+
 ### Product Components (`frontend/components/product/`)
 - `ProductCard` - Presentational card: image (next/image + placeholder), localized title, EUR price + compare-at strikethrough, Hot badge, star rating + review count, links to `/products/{slug}`
 - `ProductGrid` - Responsive grid of ProductCards: 3 states (loading skeletons, empty with PackageOpen icon, populated). Props: `products`, `loading?`, `className?`, `skeletonCount?`, `columns?`. Default grid: 1→2→3→4 cols. Server Component.
@@ -64,11 +68,13 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `/admin` - Admin layout with `ProtectedRoute allowedRoles={['ADMIN']}` + `AdminSidebar`. All admin sub-pages inherit this auth guard.
 - `/admin/product-types` - Product types CRUD page (Client Component): ProductTypesTable + create/edit/delete dialogs. Uses `productTypeService`.
 - `/admin/products` - Admin products list page (Client Component): AdminProductsTable with search (debounced 300ms), status filter (All/Active/Inactive via `isActive` param), pagination (limit: 20), and action buttons (Edit link, Activate/Deactivate toggle, Delete with confirmation dialog). Uses `adminProductService`. `actionLoadingId` pattern disables row buttons during async actions.
+- `/admin/products/new` - Create product page (Client Component): thin wrapper rendering `ProductForm` in create mode. On success, redirects to `/admin/products/{id}/edit` for image management.
+- `/admin/products/[productId]/edit` - Edit product page (Client Component): fetches product + images via `Promise.all([getById, listImages])`, renders `ProductForm` in edit mode with `ProductImageManager`. Loading/error/retry states. `onSuccess={setProduct}` keeps local state updated.
 
 ### Services (`frontend/lib/services/`)
 - `authService` - login, register, logout, refresh, forgotPassword, resetPassword
 - `productService` - Public product access. `list(params?)` → `ProductListResponse` (data + meta with pagination). `getBySlug(slug)` → `ProductDetailResponse` (data: ProductDetail with images + reviews). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
-- `adminProductService` - Admin product management. `list(params?)` → `ProductListResponse` (same type as productService, but supports `isActive` filter). `activate(productId)` → `Product`. `deactivate(productId)` → `Product`. `delete(productId)` → `void` (soft delete, 204). Separate from `productService` intentionally — admin-only operations that will grow with F3.9.
+- `adminProductService` - Admin product management. `list(params?)` → `ProductListResponse`. `getById(productId)` → `Product`. `create(data: CreateProductRequest)` → `Product`. `update(productId, data: UpdateProductRequest)` → `Product`. `activate(productId)` → `Product`. `deactivate(productId)` → `Product`. `delete(productId)` → `void`. `listImages(productId)` → `ProductImage[]`. `addImage(productId, data)` → `ProductImage`. `updateImage(productId, imageId, data)` → `ProductImage`. `deleteImage(productId, imageId)` → `void`. Separate from `productService` — admin-only operations.
 - `reviewService` - `list(productId, params?)` → `ReviewListResponse` (data: Review[] + meta with pagination + averageRating + ratingDistribution). Strips undefined params. Same pattern as productService.
 
 ### Stores (`frontend/stores/`)
