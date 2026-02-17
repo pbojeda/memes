@@ -104,8 +104,13 @@ function validate(state: FormState): FormErrors {
   }
   if (!state.price.trim()) {
     errors.price = 'Price is required';
-  } else if (parseFloat(state.price) < 0) {
-    errors.price = 'Price must be 0 or greater';
+  } else {
+    const parsed = parseFloat(state.price);
+    if (isNaN(parsed) || !isFinite(parsed)) {
+      errors.price = 'Price must be a valid number';
+    } else if (parsed < 0) {
+      errors.price = 'Price must be 0 or greater';
+    }
   }
   return errors;
 }
@@ -381,6 +386,9 @@ export function ProductForm({ product, initialImages, onSuccess }: ProductFormPr
               disabled={isEditMode}
             />
             <Label htmlFor="isActive">Active</Label>
+            {isEditMode && (
+              <span className="text-xs text-muted-foreground">(use Activate/Deactivate on list page)</span>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <Checkbox
