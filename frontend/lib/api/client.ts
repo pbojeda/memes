@@ -75,6 +75,10 @@ function createApiClient(): AxiosInstance {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
       }
+      // Let axios auto-set Content-Type for FormData (multipart/form-data with boundary)
+      if (config.data instanceof FormData && config.headers) {
+        delete config.headers['Content-Type'];
+      }
       return config;
     },
     (error) => Promise.reject(error)

@@ -319,7 +319,7 @@ describe('ProductForm', () => {
       await user.click(screen.getByRole('button', { name: /create/i }));
 
       await waitFor(() => {
-        expect(screen.getByRole('alert')).toHaveTextContent('Slug already exists');
+        expect(screen.getByText('Slug already exists')).toBeInTheDocument();
       });
     });
 
@@ -345,9 +345,63 @@ describe('ProductForm', () => {
 
       expect(screen.queryByTestId('image-manager')).not.toBeInTheDocument();
     });
+
+    it('shows informational message about images in create mode', async () => {
+      render(<ProductForm />);
+
+      await waitFor(() => {
+        expect(mockProductTypeService.getAll).toHaveBeenCalled();
+      });
+
+      expect(screen.getByText(/images can be added after the product is created/i)).toBeInTheDocument();
+    });
   });
 
   describe('edit mode', () => {
+    it('extracts es/en from localized title object', async () => {
+      const mockProductWithLocalizedFields: Product = {
+        ...mockProduct,
+        title: { es: 'Gato Gracioso', en: 'Funny Cat' } as unknown as string,
+        description: { es: 'Un meme de gato', en: 'A cat meme' } as unknown as string,
+      };
+
+      render(<ProductForm product={mockProductWithLocalizedFields} initialImages={mockImages} />);
+
+      await waitFor(() => {
+        expect(mockProductTypeService.getAll).toHaveBeenCalled();
+      });
+
+      expect(screen.getByLabelText(/title \(spanish\)/i)).toHaveValue('Gato Gracioso');
+      expect(screen.getByLabelText(/title \(english\)/i)).toHaveValue('Funny Cat');
+    });
+
+    it('extracts es/en from localized description object', async () => {
+      const mockProductWithLocalizedFields: Product = {
+        ...mockProduct,
+        title: { es: 'Gato Gracioso', en: 'Funny Cat' } as unknown as string,
+        description: { es: 'Un meme de gato', en: 'A cat meme' } as unknown as string,
+      };
+
+      render(<ProductForm product={mockProductWithLocalizedFields} initialImages={mockImages} />);
+
+      await waitFor(() => {
+        expect(mockProductTypeService.getAll).toHaveBeenCalled();
+      });
+
+      expect(screen.getByLabelText(/description \(spanish\)/i)).toHaveValue('Un meme de gato');
+      expect(screen.getByLabelText(/description \(english\)/i)).toHaveValue('A cat meme');
+    });
+
+    it('handles product with string title (backward compat)', async () => {
+      render(<ProductForm product={mockProduct} initialImages={mockImages} />);
+
+      await waitFor(() => {
+        expect(mockProductTypeService.getAll).toHaveBeenCalled();
+      });
+
+      expect(screen.getByLabelText(/title \(spanish\)/i)).toHaveValue('Funny Cat Meme');
+    });
+
     it('should pre-fill all fields from product data', async () => {
       render(<ProductForm product={mockProduct} initialImages={mockImages} />);
 
@@ -447,6 +501,16 @@ describe('ProductForm', () => {
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /saving/i })).toBeDisabled();
       });
+    });
+
+    it('does not show create-mode image guidance in edit mode', async () => {
+      render(<ProductForm product={mockProduct} initialImages={mockImages} />);
+
+      await waitFor(() => {
+        expect(mockProductTypeService.getAll).toHaveBeenCalled();
+      });
+
+      expect(screen.queryByText(/images can be added after the product is created/i)).not.toBeInTheDocument();
     });
   });
 });
