@@ -44,6 +44,9 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `ProductGrid` - Responsive grid of ProductCards: 3 states (loading skeletons, empty with PackageOpen icon, populated). Props: `products`, `loading?`, `className?`, `skeletonCount?`, `columns?`. Default grid: 1→2→3→4 cols. Server Component.
 - `ProductFilters` - Controlled client component (`'use client'`): search input, type Select, min/max price, sort Select, Hot checkbox, clear button. Props: `value: ProductFiltersValue`, `onFiltersChange`, `types?: ProductType[]`, `className?`. Emits `undefined` for cleared/default values (not empty strings). Uses sentinel `__all__` for "All types" in Radix Select (which doesn't allow empty string values).
 - `ImageGallery` - Client component (`'use client'`): main image (next/image fill) + thumbnail strip + prev/next arrow buttons + keyboard nav (ArrowLeft/ArrowRight). Props: `images?: ProductImage[]`, `className?`. Sorts by `sortOrder` asc, `isPrimary` desc tiebreaker. Handles 0 images (ImageOff placeholder), 1 image (no nav controls). Uses `safeIndex` bounds checking for dynamic image array changes.
+- `ReviewCard` - Presentational component: author name (bold), 5 star icons (filled/empty based on rating), comment text, relative date via `Intl.RelativeTimeFormat('en')`. Props: `review: Review`, `className?`. Handles undefined fields gracefully.
+- `ReviewSummary` - Presentational component: large average rating number (`.toFixed(1)`), 5 stars (filled by `Math.round`), "Based on N review(s)" text, 5 distribution bars (5→1) with percentage widths. Props: `averageRating`, `totalReviews`, `ratingDistribution: Record<number, number>`, `className?`. Handles zero total (no division by zero) and missing keys (`?? 0`).
+- `ReviewList` - Client component (`'use client'`): fetches reviews via `reviewService.list(productId, { page, limit: 5 })`, manages loading/error/empty/populated states. Composes ReviewSummary + ReviewCard list + Pagination. Props: `productId: string`, `className?`. Resets page to 1 on productId change.
 
 ### UI Primitives (`frontend/components/ui/`)
 - `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `DropdownMenu`, `Table`, `Select`, `Pagination` (shadcn/ui + Radix)
@@ -61,6 +64,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Services (`frontend/lib/services/`)
 - `authService` - login, register, logout, refresh, forgotPassword, resetPassword
 - `productService` - `list(params?)` → `ProductListResponse` (data + meta with pagination). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
+- `reviewService` - `list(productId, params?)` → `ReviewListResponse` (data: Review[] + meta with pagination + averageRating + ratingDistribution). Strips undefined params. Same pattern as productService.
 
 ### Stores (`frontend/stores/`)
 - `authStore` (Zustand) - user, tokens, isAuthenticated, loading, error states
@@ -127,7 +131,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
 - **Test mock**: Mock `next/image` filtering out `fill`/`sizes` props; mock `lucide-react` icons as simple SVGs with `data-testid`
-- **Test fixtures**: Shared factories in `frontend/components/product/testing/fixtures.ts`: `createProduct()`, `createProducts()`, `createProductImage()`, `createProductImages()`
+- **Test fixtures**: Shared factories in `frontend/components/product/testing/fixtures.ts`: `createProduct()`, `createProducts()`, `createProductImage()`, `createProductImages()`, `createReview()`, `createReviews()`, `createReviewListResponse()`
 - **Price formatting**: `Intl.NumberFormat('es-ES', { currency: 'EUR' })` — co-located in `ProductCard.tsx` as `formatPrice()`, extract to `lib/utils.ts` when reused
 
 ### Key Technical Constraints

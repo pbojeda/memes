@@ -37,8 +37,8 @@ Ask user to classify complexity with **context-aware options** before starting. 
 ### Workflow: Standard/Complex
 
 1. Setup → Branch + Ticket + **User Review** (+ADR review for Complex)
-2. Plan → Planner agent + **Plan Review**
-3. Implement → Developer agent (TDD)
+2. Plan → Planner agent (`backend-planner` or `frontend-planner`) + **Plan Review**
+3. Implement (`backend-developer` or `frontend-developer`) → Developer agent (TDD)
 4. Finalize → `production-code-validator` + Commit
 5. Review → PR + `code-review-specialist` + Human review
 
