@@ -29,14 +29,15 @@ import type { PaginationMeta } from '../../utils/responseHelpers';
  */
 const MAX_SLUG_RETRIES = 10;
 const MAX_SLUG_LENGTH = 100;
+const MAX_SLUG_BASE_LENGTH = MAX_SLUG_LENGTH - `-${MAX_SLUG_RETRIES}`.length;
 
 export async function createProduct(input: CreateProductInput): Promise<Product> {
   const validated = validateCreateProductInput(input);
 
-  // Reserve space for the longest possible suffix ("-10" = 3 chars)
-  const maxBaseLength = MAX_SLUG_LENGTH - String(MAX_SLUG_RETRIES).length - 1;
-  const rawSlug = validated.slug ?? generateSlug(validated.title.es);
-  const baseSlug = rawSlug.substring(0, maxBaseLength).replace(/-$/, '');
+  // Explicit slug: use as-is (already validated to <= 100 chars)
+  // Auto-generated slug: truncate to leave room for collision suffixes (-1..-10)
+  const baseSlug = validated.slug
+    ?? generateSlug(validated.title.es).substring(0, MAX_SLUG_BASE_LENGTH).replace(/-$/, '');
 
   for (let attempt = 0; attempt <= MAX_SLUG_RETRIES; attempt++) {
     const slug = attempt === 0 ? baseSlug : `${baseSlug}-${attempt}`;

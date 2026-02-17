@@ -159,6 +159,21 @@ describe('productService', () => {
       });
     });
 
+    it('should not truncate explicitly provided slugs near MAX_SLUG_LENGTH', async () => {
+      const longSlug = 'a'.repeat(100);
+      const inputWithLongSlug = { ...validInput, slug: longSlug };
+      (mockPrisma.product.create as jest.Mock).mockResolvedValue({
+        ...mockCreatedProduct,
+        slug: longSlug,
+      });
+
+      await createProduct(inputWithLongSlug);
+
+      expect(mockPrisma.product.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ slug: longSlug }),
+      });
+    });
+
     it('should retry with numeric suffix on slug collision', async () => {
       const p2002Error = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
         code: 'P2002',
