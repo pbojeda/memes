@@ -33,6 +33,11 @@ export function DeleteProductDialog({
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) setError(null);
+    onOpenChange(nextOpen);
+  };
+
   if (!product) return null;
 
   async function handleDelete() {
@@ -58,7 +63,7 @@ export function DeleteProductDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete {getLocalizedName(product.title)}</DialogTitle>

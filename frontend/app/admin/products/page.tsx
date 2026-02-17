@@ -89,7 +89,7 @@ export default function AdminProductsPage() {
     setActionError(null);
     try {
       await adminProductService.activate(product.id);
-      fetchProducts(buildParams());
+      await fetchProducts(buildParams());
     } catch {
       setActionError(`Failed to activate "${getLocalizedName(product.title)}"`);
     } finally {
@@ -103,7 +103,7 @@ export default function AdminProductsPage() {
     setActionError(null);
     try {
       await adminProductService.deactivate(product.id);
-      fetchProducts(buildParams());
+      await fetchProducts(buildParams());
     } catch {
       setActionError(`Failed to deactivate "${getLocalizedName(product.title)}"`);
     } finally {
