@@ -86,6 +86,15 @@ const mockResponse: ProductListResponse = {
   meta: { page: 1, limit: 20, total: 3, totalPages: 1 },
 };
 
+// Mock next/link
+jest.mock('next/link', () => {
+  return ({ href, children, ...props }: Record<string, unknown> & { href: string; children: React.ReactNode }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  );
+});
+
 describe('AdminProductsPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -94,6 +103,18 @@ describe('AdminProductsPage', () => {
 
   afterEach(() => {
     jest.useRealTimers();
+  });
+
+  it('should render a "New Product" link to /admin/products/new', async () => {
+    (adminProductService.list as jest.Mock).mockResolvedValue(mockResponse);
+
+    await act(async () => {
+      render(<AdminProductsPage />);
+    });
+
+    const link = screen.getByRole('link', { name: /new product/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/admin/products/new');
   });
 
   it('should call adminProductService.list on mount', async () => {

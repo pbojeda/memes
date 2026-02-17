@@ -10,11 +10,13 @@ jest.mock('lucide-react', () => ({
 
 describe('ReviewCard', () => {
   beforeEach(() => {
-    // Mock Date.now() to a fixed date for relative date tests
-    jest.spyOn(Date, 'now').mockReturnValue(new Date('2026-02-16T00:00:00Z').getTime());
+    // Mock current date for relative date tests
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2026-02-16T00:00:00Z'));
   });
 
   afterEach(() => {
+    jest.useRealTimers();
     jest.restoreAllMocks();
   });
 
@@ -71,10 +73,11 @@ describe('ReviewCard', () => {
     expect(screen.getByText('Amazing quality!')).toBeInTheDocument();
   });
 
-  it('should render relative date (e.g., "6 days ago")', () => {
-    render(<ReviewCard review={createReview({ createdAt: '2026-02-10T12:00:00Z' })} />);
+  it('should render relative date (e.g., "5 days ago")', () => {
+    // System time is mocked to 2026-02-16T00:00:00Z
+    render(<ReviewCard review={createReview({ createdAt: '2026-02-11T00:00:00Z' })} />);
 
-    expect(screen.getByText(/6 days ago/i)).toBeInTheDocument();
+    expect(screen.getByText(/5 days ago/i)).toBeInTheDocument();
   });
 
   it('should handle undefined createdAt gracefully (show empty string)', () => {

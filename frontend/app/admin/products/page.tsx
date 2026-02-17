@@ -7,6 +7,9 @@ import { getLocalizedName } from '@/lib/utils';
 import { AdminProductsTable } from '@/components/admin/products/AdminProductsTable';
 import { DeleteProductDialog } from '@/components/admin/products/DeleteProductDialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
 
 type Product = components['schemas']['Product'];
 type PaginationMeta = components['schemas']['PaginationMeta'];
@@ -139,7 +142,15 @@ export default function AdminProductsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Products</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Products</h1>
+        <Button asChild>
+          <Link href="/admin/products/new">
+            <Plus className="h-4 w-4 mr-2" />
+            New Product
+          </Link>
+        </Button>
+      </div>
 
       {actionError && (
         <Alert variant="destructive" className="mb-4">
