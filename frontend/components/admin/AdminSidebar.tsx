@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Package } from 'lucide-react';
+import { Package, ShoppingBag } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -11,6 +11,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  {
+    label: 'Products',
+    href: '/admin/products',
+    icon: <ShoppingBag className="h-4 w-4" />,
+  },
   {
     label: 'Product Types',
     href: '/admin/product-types',

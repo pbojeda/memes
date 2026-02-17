@@ -300,7 +300,11 @@ export interface paths {
             };
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Get product by ID (Staff only, includes soft-deleted)
+         * @description Admin endpoint to retrieve a product by UUID. Includes soft-deleted products. The public endpoint uses slug instead (GET /products/{slug}).
+         */
+        get: operations["getProductById"];
         put?: never;
         post?: never;
         /** Delete product (Staff only) */
@@ -1399,6 +1403,8 @@ export interface components {
         Review: {
             /** Format: uuid */
             id?: string;
+            /** Format: uuid */
+            productId?: string;
             authorName?: string;
             rating?: number;
             comment?: string;
@@ -2373,6 +2379,8 @@ export interface operations {
                 maxPrice?: number;
                 /** @description Filter hot/trending products */
                 isHot?: boolean;
+                /** @description Filter by active status (admin/staff only; ignored for unauthenticated requests) */
+                isActive?: boolean;
                 sort?: "price_asc" | "price_desc" | "newest" | "popular";
             };
             header?: {
@@ -2471,6 +2479,31 @@ export interface operations {
                     "application/json": components["schemas"]["ProductDetailResponse"];
                 };
             };
+            404: components["responses"]["NotFound"];
+        };
+    };
+    getProductById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                productId: components["parameters"]["ProductId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Product details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
         };
     };
