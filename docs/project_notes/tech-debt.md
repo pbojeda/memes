@@ -209,4 +209,29 @@ In practice, all product images are uploaded via Cloudinary (B3.7), so URLs are 
 
 ---
 
+### TD-008: memeSourceUrl and memeIsOriginal Not Pre-filled in Edit Mode (Medium Priority)
+
+**Added:** 2026-02-17
+**Location:** `frontend/components/admin/products/ProductForm.tsx` (getInitialFormState)
+**Severity:** Medium
+
+**Issue:**
+The `Product` API response schema does not include `memeSourceUrl` or `memeIsOriginal` fields — these exist only on `CreateProductRequest` and `UpdateProductRequest`. In edit mode, both fields initialize to `''` and `false` respectively. When the admin saves without re-entering the meme source URL, the update payload sends `memeSourceUrl: undefined` and `memeIsOriginal: undefined`, which may silently clear those values on the backend depending on PATCH semantics.
+
+Additionally, `memeIsOriginal || undefined` evaluates to `undefined` when `false`, so `memeIsOriginal: false` can never be explicitly sent.
+
+**Current State:**
+Acceptable for MVP since meme metadata is supplementary. The backend uses PATCH semantics where `undefined` fields are not modified.
+
+**Full Fix (if needed later):**
+1. Add `memeSourceUrl` and `memeIsOriginal` to the `Product` response schema in `api-spec.yaml`
+2. Pre-fill form state from `product.memeSourceUrl` and `product.memeIsOriginal` in edit mode
+3. Always include `memeIsOriginal` in the update payload (not conditionally via `|| undefined`)
+
+**When to prioritize:**
+- When meme metadata becomes important for SEO or attribution
+- When admins report losing meme source URLs after editing products
+
+---
+
 *Last updated: 2026-02-17*

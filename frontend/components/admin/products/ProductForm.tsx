@@ -182,8 +182,10 @@ export function ProductForm({ product, initialImages, onSuccess }: ProductFormPr
           isHot: formState.isHot,
           memeSourceUrl: formState.memeSourceUrl.trim() || undefined,
           memeIsOriginal: formState.memeIsOriginal || undefined,
-          ...(formState.availableSizes.length > 0 ? { availableSizes: formState.availableSizes } : {}),
-          ...(formState.compareAtPrice.trim() ? { compareAtPrice: parseFloat(formState.compareAtPrice) } : {}),
+          availableSizes: formState.availableSizes,
+          ...(formState.compareAtPrice.trim() && !isNaN(parseFloat(formState.compareAtPrice))
+            ? { compareAtPrice: parseFloat(formState.compareAtPrice) }
+            : {}),
           ...(priceChanged && formState.priceChangeReason.trim()
             ? { priceChangeReason: formState.priceChangeReason.trim() }
             : {}),
@@ -205,7 +207,9 @@ export function ProductForm({ product, initialImages, onSuccess }: ProductFormPr
           isActive: formState.isActive,
           isHot: formState.isHot,
           ...(formState.availableSizes.length > 0 ? { availableSizes: formState.availableSizes as Size[] } : {}),
-          ...(formState.compareAtPrice.trim() ? { compareAtPrice: parseFloat(formState.compareAtPrice) } : {}),
+          ...(formState.compareAtPrice.trim() && !isNaN(parseFloat(formState.compareAtPrice))
+            ? { compareAtPrice: parseFloat(formState.compareAtPrice) }
+            : {}),
           ...(formState.memeSourceUrl.trim() ? { memeSourceUrl: formState.memeSourceUrl.trim() } : {}),
           ...(formState.memeIsOriginal ? { memeIsOriginal: true } : {}),
         };
