@@ -138,4 +138,100 @@ return Promise.race([
 
 ---
 
-*Last updated: 2026-02-09*
+### TD-005: English Content Erasure on Product Edit (Medium Priority)
+
+**Added:** 2026-02-17
+**Location:** `frontend/components/admin/products/ProductForm.tsx`
+**Severity:** Medium
+
+**Issue:**
+When editing a product, the form pre-fills `titleEs`/`descriptionEs` from `product.title`/`product.description` (which are already localized to `es` by the API). However, the `en` fields start empty because the API doesn't return the raw `LocalizedString` object — it returns the resolved string for the current locale.
+
+If an admin edits a product that has English translations, the update will overwrite them with empty values unless the admin re-enters the English text.
+
+**Current State:**
+Acceptable for MVP since all content is primarily in Spanish. English translations are optional (ADR-003).
+
+**Full Fix (if needed later):**
+- Backend: Add an admin-specific endpoint or flag that returns raw `LocalizedString` objects (`{ es: "...", en: "..." }`) instead of resolved strings
+- Frontend: Pre-fill both `titleEs` and `titleEn` from the raw object
+
+**When to prioritize:**
+- When English translations become actively used
+- When content editors report losing translations
+
+---
+
+### TD-006: Empty Description May Fail Backend Validation (Low Priority)
+
+**Added:** 2026-02-17
+**Location:** `frontend/components/admin/products/ProductForm.tsx` (submit handler)
+**Severity:** Low
+
+**Issue:**
+The form sends `description: { es: "" }` when the description field is left empty. The backend validator may reject empty strings for `description.es` depending on its validation rules. Currently, description is not required on the frontend form.
+
+**Current State:**
+Works in practice because the backend accepts empty descriptions. If backend validation changes, this would break silently.
+
+**Full Fix (if needed later):**
+- Only include `description` in the payload if at least `es` is non-empty:
+```typescript
+...(formState.descriptionEs.trim() ? { description: { es: formState.descriptionEs.trim(), ... } } : {})
+```
+
+**When to prioritize:**
+- If backend adds strict validation for description
+- If users report errors when submitting without description
+
+---
+
+### TD-007: next/image Domain Restriction for Arbitrary URLs (Low Priority)
+
+**Added:** 2026-02-17
+**Location:** `frontend/next.config.ts` (remotePatterns), `frontend/components/admin/products/ProductImageManager.tsx`
+**Severity:** Low
+
+**Issue:**
+`ProductImageManager` allows adding images by arbitrary URL, but `next/image` only allows domains configured in `remotePatterns` (currently only `res.cloudinary.com`). Images from other domains will fail to render with a Next.js error.
+
+**Current State:**
+In practice, all product images are uploaded via Cloudinary (B3.7), so URLs are always `res.cloudinary.com`. The URL input in the admin form is for MVP convenience, and admins know to use Cloudinary URLs.
+
+**Full Fix (if needed later):**
+- Option A: Use `<img>` instead of `next/image` in the admin image manager (loses optimization but allows any domain)
+- Option B: Add a warning in the UI if the URL doesn't match configured domains
+- Option C: Route image addition through the backend upload endpoint instead of direct URL input
+
+**When to prioritize:**
+- If admins need to add images from non-Cloudinary sources
+- When moving beyond MVP
+
+---
+
+### TD-008: memeSourceUrl and memeIsOriginal Not Pre-filled in Edit Mode (Medium Priority)
+
+**Added:** 2026-02-17
+**Location:** `frontend/components/admin/products/ProductForm.tsx` (getInitialFormState)
+**Severity:** Medium
+
+**Issue:**
+The `Product` API response schema does not include `memeSourceUrl` or `memeIsOriginal` fields — these exist only on `CreateProductRequest` and `UpdateProductRequest`. In edit mode, both fields initialize to `''` and `false` respectively. When the admin saves without re-entering the meme source URL, the update payload sends `memeSourceUrl: undefined` and `memeIsOriginal: undefined`, which may silently clear those values on the backend depending on PATCH semantics.
+
+Additionally, `memeIsOriginal || undefined` evaluates to `undefined` when `false`, so `memeIsOriginal: false` can never be explicitly sent.
+
+**Current State:**
+Acceptable for MVP since meme metadata is supplementary. The backend uses PATCH semantics where `undefined` fields are not modified.
+
+**Full Fix (if needed later):**
+1. Add `memeSourceUrl` and `memeIsOriginal` to the `Product` response schema in `api-spec.yaml`
+2. Pre-fill form state from `product.memeSourceUrl` and `product.memeIsOriginal` in edit mode
+3. Always include `memeIsOriginal` in the update payload (not conditionally via `|| undefined`)
+
+**When to prioritize:**
+- When meme metadata becomes important for SEO or attribution
+- When admins report losing meme source URLs after editing products
+
+---
+
+*Last updated: 2026-02-17*
