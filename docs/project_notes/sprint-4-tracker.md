@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [█                         ] 6%
+Progress: [███                       ] 13%
 
-Completed: 1/16 tasks
+Completed: 2/16 tasks
 In Progress: 0 tasks
-Pending: 15 tasks
+Pending: 14 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B4.2 — Implement address service (CRUD for users) |
-| Branch | feature/sprint4-B4.2-address-service |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B4.2-address-service.md |
+| Task | — (B4.2 complete, merged) |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -36,7 +36,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | B4.1 | Create Address model and migration | High | ✅ | feature/sprint4-B4.1-address-model | Completed 2026-02-18 |
-| B4.2 | Implement address service (CRUD for users) | High | 🔄 | feature/sprint4-B4.2-address-service | Depends on B4.1 |
+| B4.2 | Implement address service (CRUD for users) | High | ✅ | feature/sprint4-B4.2-address-service | Completed 2026-02-18 |
 | B4.3 | Create cart validation endpoint | High | ⏳ | — | — |
 | B4.4 | Implement promo code validation | High | ⏳ | — | Needs PromoCode model in schema |
 | B4.5 | Create order total calculation service | High | ⏳ | — | Depends on B4.4 |
@@ -139,6 +139,7 @@ _Key learnings, issues, or observations:_
 | Date | Task | Commit | Notes |
 |------|------|--------|-------|
 | 2026-02-18 | B4.1 | 28667ef | Address model + migration + domain errors (6 tests), 986 total, PR #71 |
+| 2026-02-18 | B4.2 | 814b458 | Address service CRUD + validator + controller + routes (75 tests), 1061 total, PR #72 |
 
 ---
 
