@@ -70,6 +70,11 @@ describe('productService - listProducts', () => {
     },
   ];
 
+  const expectedInclude = {
+    images: { where: { isPrimary: true }, take: 1 },
+    productType: true,
+  };
+
   describe('pagination', () => {
     it('should return first page with default limit (20)', async () => {
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
@@ -82,6 +87,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(mockPrisma.product.count).toHaveBeenCalledWith({
         where: { deletedAt: null },
@@ -106,6 +112,7 @@ describe('productService - listProducts', () => {
         skip: 20,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(result.pagination.page).toBe(2);
       expect(result.pagination.hasNext).toBe(true);
@@ -123,6 +130,7 @@ describe('productService - listProducts', () => {
         skip: 20,
         take: 10,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -137,6 +145,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 1,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(result.pagination.limit).toBe(1);
       expect(result.pagination.totalPages).toBe(100);
@@ -153,6 +162,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 100,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(result.pagination.limit).toBe(100);
       expect(result.pagination.totalPages).toBe(2);
@@ -187,6 +197,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(mockPrisma.product.count).toHaveBeenCalledWith({
         where: {
@@ -210,6 +221,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -227,6 +239,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -244,6 +257,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -261,6 +275,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -278,6 +293,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -295,6 +311,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -312,6 +329,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -332,6 +350,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -352,6 +371,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -383,6 +403,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
   });
@@ -399,6 +420,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { price: 'asc' },
+        include: expectedInclude,
       });
     });
 
@@ -413,6 +435,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { price: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -427,6 +450,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'asc' },
+        include: expectedInclude,
       });
     });
 
@@ -441,6 +465,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
 
@@ -455,6 +480,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { salesCount: 'asc' },
+        include: expectedInclude,
       });
     });
 
@@ -469,6 +495,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { salesCount: 'desc' },
+        include: expectedInclude,
       });
     });
   });
@@ -485,6 +512,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(mockPrisma.product.count).toHaveBeenCalledWith({
         where: { deletedAt: null },
@@ -511,6 +539,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
       expect(mockPrisma.product.count).toHaveBeenCalledWith({
         where: {},
@@ -535,6 +564,7 @@ describe('productService - listProducts', () => {
         skip: 0,
         take: 20,
         orderBy: { createdAt: 'desc' },
+        include: expectedInclude,
       });
     });
   });
@@ -637,6 +667,42 @@ describe('productService - listProducts', () => {
         InvalidProductDataError
       );
       expect(mockPrisma.product.findMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('primaryImage mapping', () => {
+    it('should map primary image to primaryImage field', async () => {
+      const mockImage = {
+        id: 'img-1',
+        productId: 'prod-1',
+        url: 'https://example.com/image.jpg',
+        altText: null,
+        isPrimary: true,
+        sortOrder: 0,
+        cloudinaryPublicId: null,
+        createdAt: new Date('2026-02-10'),
+        updatedAt: new Date('2026-02-10'),
+      };
+
+      const prismaProduct = { ...mockProducts[0], images: [mockImage] };
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue([prismaProduct]);
+      (mockPrisma.product.count as jest.Mock).mockResolvedValue(1);
+
+      const result = await listProducts({});
+
+      expect(result.data[0]).toMatchObject({ primaryImage: mockImage });
+      expect((result.data[0] as unknown as Record<string, unknown>).images).toBeUndefined();
+    });
+
+    it('should set primaryImage to undefined when no primary image', async () => {
+      const prismaProduct = { ...mockProducts[0], images: [] };
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValue([prismaProduct]);
+      (mockPrisma.product.count as jest.Mock).mockResolvedValue(1);
+
+      const result = await listProducts({});
+
+      expect((result.data[0] as unknown as Record<string, unknown>).primaryImage).toBeUndefined();
+      expect((result.data[0] as unknown as Record<string, unknown>).images).toBeUndefined();
     });
   });
 });

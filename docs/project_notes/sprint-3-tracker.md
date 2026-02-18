@@ -12,9 +12,9 @@
 ```
 Progress: [████████████████████████░] 89%
 
-Completed: 24/25 tasks
-In Progress: 1 task
-Pending: 0 tasks
+Completed: 25/26 tasks
+In Progress: 0 tasks
+Pending: 1 task
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.15 — Fix: Admin product form bugs (object Object, upload, UX) |
-| Branch | feature/sprint3-F3.15-admin-form-bugs |
+| Task | F3.16 — Fix: Edit page product type, list thumbnails, save feedback, button text |
+| Branch | feature/sprint3-F3.16-edit-bugs-thumbnails-feedback |
 | Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.15-admin-form-bugs.md |
+| Ticket | docs/tickets/F3.16-edit-bugs-thumbnails-feedback.md |
 
 ---
 
@@ -67,7 +67,8 @@ Blocked: 0 tasks
 | F3.12 | Fix: Localized name object rendered as React child in ProductForm | High | ✅ | feature/sprint3-F3.12-fix-localized-name-productform | Completed 2026-02-17 |
 | F3.13 | Fix: Backend auto-generate slug from title.es when not provided | High | ✅ | feature/sprint3-F3.13-auto-generate-slug | Completed 2026-02-17 |
 | F3.14 | Fix: Add file upload support to ProductImageManager | High | ✅ | feature/sprint3-F3.14-file-upload-image-manager | Completed 2026-02-17 |
-| F3.15 | Fix: Admin product form bugs (object Object, upload, UX) | High | 🔄 | feature/sprint3-F3.15-admin-form-bugs | Combined: F3.15/16/17 — title/desc object, upload Content-Type, create-mode image hint |
+| F3.15 | Fix: Admin product form bugs (object Object, upload, UX) | High | ✅ | feature/sprint3-F3.15-admin-form-bugs | Completed 2026-02-17 |
+| F3.16 | Fix: Edit page product type, list thumbnails, save feedback, button text | High | 🔄 | feature/sprint3-F3.16-edit-bugs-thumbnails-feedback | Backend include + frontend UX |
 
 ---
 
@@ -192,6 +193,7 @@ _Key learnings, issues, or observations:_
 | 2026-02-17 | F3.12 | 198f114 | Fix localized name in ProductForm Select via getLocalizedName(), fix test mocks to use {es,en} objects (1 new test), 583 frontend total, PR #66 |
 | 2026-02-17 | F3.13 | 449b216 | Auto-generate product slug from title.es with collision retry, new slugify utility, slug optional in validator/api-spec (15 new backend tests), 978 backend total, PR #67 |
 | 2026-02-17 | F3.14 | 5e3dec8 | File upload support in ProductImageManager: uploadImage service method, Upload File button, client-side MIME/size validation, folder param for Cloudinary (9 new tests), 592 frontend total, PR #68 |
+| 2026-02-17 | F3.15 | ace5074 | Fix admin product form bugs: getLocalizedField utility for [object Object], FormData Content-Type interceptor fix, create-mode image guidance Alert (11 new tests), 603 frontend total, PR #69 |
 
 ---
 

@@ -427,10 +427,10 @@ export function ProductForm({ product, initialImages, onSuccess }: ProductFormPr
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? isEditMode
-              ? 'Saving...'
+              ? 'Updating...'
               : 'Creating...'
             : isEditMode
-              ? 'Save'
+              ? 'Update'
               : 'Create'}
         </Button>
       </form>

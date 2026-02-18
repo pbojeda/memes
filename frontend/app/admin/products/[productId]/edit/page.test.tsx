@@ -124,4 +124,49 @@ describe('EditProductPage', () => {
       expect(screen.getByTestId('product-title')).toHaveTextContent('Test Product');
     });
   });
+
+  it('should show success message after onSuccess is called', async () => {
+    const user = userEvent.setup();
+    mockAdminProductService.getById.mockResolvedValueOnce(mockProduct);
+    mockAdminProductService.listImages.mockResolvedValueOnce(mockImages);
+
+    render(<EditProductPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('product-form')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Product updated successfully')).toBeInTheDocument();
+    });
+  });
+
+  it('should auto-dismiss success message after timeout', async () => {
+    jest.useFakeTimers();
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    mockAdminProductService.getById.mockResolvedValueOnce(mockProduct);
+    mockAdminProductService.listImages.mockResolvedValueOnce(mockImages);
+
+    render(<EditProductPage />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('product-form')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Product updated successfully')).toBeInTheDocument();
+    });
+
+    jest.advanceTimersByTime(5000);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Product updated successfully')).not.toBeInTheDocument();
+    });
+
+    jest.useRealTimers();
+  });
 });
