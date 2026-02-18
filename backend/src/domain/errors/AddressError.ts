@@ -32,6 +32,19 @@ export class AddressLimitExceededError extends AddressError {
 }
 
 /**
+ * Thrown when address data is invalid.
+ */
+export class InvalidAddressDataError extends AddressError {
+  constructor(
+    message: string,
+    public readonly field?: string
+  ) {
+    super(message, 'INVALID_ADDRESS_DATA');
+    this.name = 'InvalidAddressDataError';
+  }
+}
+
+/**
  * Thrown when attempting to delete an address that is marked as default.
  */
 export class DefaultAddressCannotBeDeletedError extends AddressError {

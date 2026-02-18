@@ -2,6 +2,7 @@ import {
   AddressError,
   AddressNotFoundError,
   AddressLimitExceededError,
+  InvalidAddressDataError,
   DefaultAddressCannotBeDeletedError,
 } from './AddressError';
 
@@ -38,6 +39,25 @@ describe('AddressError', () => {
       expect(error.name).toBe('AddressLimitExceededError');
       expect(error).toBeInstanceOf(AddressError);
       expect(error).toBeInstanceOf(Error);
+    });
+  });
+
+  describe('InvalidAddressDataError', () => {
+    it('should have correct defaults', () => {
+      const error = new InvalidAddressDataError('Invalid country code');
+
+      expect(error.message).toBe('Invalid country code');
+      expect(error.code).toBe('INVALID_ADDRESS_DATA');
+      expect(error.name).toBe('InvalidAddressDataError');
+      expect(error).toBeInstanceOf(AddressError);
+      expect(error).toBeInstanceOf(Error);
+    });
+
+    it('should accept optional field parameter', () => {
+      const error = new InvalidAddressDataError('Invalid country code', 'countryCode');
+
+      expect(error.message).toBe('Invalid country code');
+      expect(error.field).toBe('countryCode');
     });
   });
 
