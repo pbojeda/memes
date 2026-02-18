@@ -5,6 +5,7 @@ import productTypeRoutes from './productTypeRoutes';
 import productRoutes from './productRoutes';
 import uploadRoutes from './uploadRoutes';
 import reviewRoutes from './reviewRoutes';
+import addressRoutes from './addressRoutes';
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use('/product-types', productTypeRoutes);
 router.use('/products', productRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/reviews', reviewRoutes);
+router.use('/users/me/addresses', addressRoutes);
 
 export default router;

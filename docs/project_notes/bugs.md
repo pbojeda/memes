@@ -105,3 +105,9 @@ Each bug entry should include:
 - **Cause**: Button text ternary in `ProductForm.tsx` used "Save"/"Saving..." for edit mode
 - **Fix**: Changed to "Update"/"Updating..." in edit mode, keeping "Create"/"Creating..." in create mode
 - **Prevention**: Review button labels for contextual correctness when a form has multiple modes.
+
+### 2026-02-18 — Prisma client missing `address` model after migration (B4.2)
+- **Symptom**: TypeScript error `Property 'address' does not exist on type 'PrismaClient'` when writing addressService
+- **Cause**: B4.1 ran `prisma migrate dev` to create the Address table but the generated Prisma client wasn't regenerated in the development environment
+- **Fix**: Run `cd backend && npx prisma generate` to regenerate the client types
+- **Prevention**: After any Prisma migration that adds/modifies models, always run `npx prisma generate` to update the TypeScript client. Consider adding it as a post-migrate script.

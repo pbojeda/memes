@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — (B4.1 complete, awaiting merge) |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B4.2 — Implement address service (CRUD for users) |
+| Branch | feature/sprint4-B4.2-address-service |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/B4.2-address-service.md |
 
 ---
 
@@ -36,7 +36,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | B4.1 | Create Address model and migration | High | ✅ | feature/sprint4-B4.1-address-model | Completed 2026-02-18 |
-| B4.2 | Implement address service (CRUD for users) | High | ⏳ | — | Depends on B4.1 |
+| B4.2 | Implement address service (CRUD for users) | High | 🔄 | feature/sprint4-B4.2-address-service | Depends on B4.1 |
 | B4.3 | Create cart validation endpoint | High | ⏳ | — | — |
 | B4.4 | Implement promo code validation | High | ⏳ | — | Needs PromoCode model in schema |
 | B4.5 | Create order total calculation service | High | ⏳ | — | Depends on B4.4 |
