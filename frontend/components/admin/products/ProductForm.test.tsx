@@ -447,6 +447,16 @@ describe('ProductForm', () => {
       expect(screen.getByLabelText(/price change reason/i)).toBeInTheDocument();
     });
 
+    it('should show "Update" as button text in edit mode', async () => {
+      render(<ProductForm product={mockProduct} initialImages={mockImages} />);
+
+      await waitFor(() => {
+        expect(mockProductTypeService.getAll).toHaveBeenCalled();
+      });
+
+      expect(screen.getByRole('button', { name: /^update$/i })).toBeInTheDocument();
+    });
+
     it('should call adminProductService.update with correct data on submit', async () => {
       const user = userEvent.setup();
       const mockOnSuccess = jest.fn();
@@ -469,7 +479,7 @@ describe('ProductForm', () => {
       // Fill price change reason
       await user.type(screen.getByLabelText(/price change reason/i), 'Inflation adjustment');
 
-      await user.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /^update$/i }));
 
       await waitFor(() => {
         expect(mockAdminProductService.update).toHaveBeenCalledWith(
@@ -484,7 +494,7 @@ describe('ProductForm', () => {
       expect(mockOnSuccess).toHaveBeenCalledWith(updatedProduct);
     });
 
-    it('should show "Saving..." on submit button while submitting', async () => {
+    it('should show "Updating..." on submit button while submitting', async () => {
       const user = userEvent.setup();
       mockAdminProductService.update.mockImplementation(
         () => new Promise(() => {}) // never resolves
@@ -496,10 +506,10 @@ describe('ProductForm', () => {
         expect(mockProductTypeService.getAll).toHaveBeenCalled();
       });
 
-      await user.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /^update$/i }));
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /saving/i })).toBeDisabled();
+        expect(screen.getByRole('button', { name: /updating/i })).toBeDisabled();
       });
     });
 

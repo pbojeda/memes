@@ -299,6 +299,7 @@ describe('productService', () => {
 
       expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
         where: { id: validId, deletedAt: null },
+        include: { productType: true },
       });
       expect(result).toEqual(mockProduct);
     });
@@ -310,6 +311,7 @@ describe('productService', () => {
 
       expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
         where: { id: validId, deletedAt: null },
+        include: { productType: true },
       });
     });
 
@@ -325,6 +327,7 @@ describe('productService', () => {
 
       expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
         where: { id: validId },
+        include: { productType: true },
       });
       expect(result).toEqual(mockSoftDeletedProduct);
     });
@@ -373,6 +376,7 @@ describe('productService', () => {
 
       expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
         where: { slug: 'producto-test', deletedAt: null },
+        include: { productType: true },
       });
       expect(result).toEqual(mockProduct);
     });
@@ -384,6 +388,7 @@ describe('productService', () => {
 
       expect(mockPrisma.product.findFirst).toHaveBeenCalledWith({
         where: { slug: 'producto-test', deletedAt: null },
+        include: { productType: true },
       });
     });
 

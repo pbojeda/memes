@@ -15,7 +15,7 @@ import {
   ProductSlugAlreadyExistsError,
   InvalidProductDataError,
 } from '../../domain/errors/ProductError';
-import type { Product, ProductImage, ProductReview } from '../../generated/prisma/client';
+import type { Product, ProductImage, ProductReview, ProductType } from '../../generated/prisma/client';
 import { Prisma } from '../../generated/prisma/client';
 import type { PaginationMeta } from '../../utils/responseHelpers';
 
@@ -87,7 +87,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
  * @throws {InvalidProductDataError} If ID is invalid
  * @throws {ProductNotFoundError} If product not found
  */
-export async function getProductById(id: string, includeSoftDeleted: boolean = false): Promise<Product> {
+export async function getProductById(id: string, includeSoftDeleted: boolean = false): Promise<ProductWithType> {
   validateProductId(id);
 
   const where: Prisma.ProductWhereInput = {
@@ -97,6 +97,7 @@ export async function getProductById(id: string, includeSoftDeleted: boolean = f
 
   const product = await prisma.product.findFirst({
     where,
+    include: { productType: true },
   });
 
   if (!product) {
@@ -111,7 +112,7 @@ export async function getProductById(id: string, includeSoftDeleted: boolean = f
  * @throws {InvalidProductDataError} If slug is invalid
  * @throws {ProductNotFoundError} If product not found
  */
-export async function getProductBySlug(slug: string): Promise<Product> {
+export async function getProductBySlug(slug: string): Promise<ProductWithType> {
   const validatedSlug = validateSlug(slug, 'slug');
 
   const product = await prisma.product.findFirst({
@@ -119,6 +120,7 @@ export async function getProductBySlug(slug: string): Promise<Product> {
       slug: validatedSlug,
       deletedAt: null,
     },
+    include: { productType: true },
   });
 
   if (!product) {
@@ -250,8 +252,16 @@ export async function restoreProduct(id: string): Promise<Product> {
   return product;
 }
 
+export type ProductWithType = Product & {
+  productType: ProductType;
+};
+
+export type ProductWithPrimaryImage = Product & {
+  primaryImage?: ProductImage;
+};
+
 export interface ListProductsResult {
-  data: Product[];
+  data: ProductWithPrimaryImage[];
   pagination: PaginationMeta;
 }
 
@@ -368,17 +378,27 @@ export async function listProducts(input: ListProductsInput): Promise<ListProduc
   };
 
   // Execute queries
-  const [products, total] = await Promise.all([
+  const [rawProducts, total] = await Promise.all([
     prisma.product.findMany({
       where,
       skip,
       take,
       orderBy,
+      include: {
+        images: { where: { isPrimary: true }, take: 1 },
+        productType: true,
+      },
     }),
     prisma.product.count({
       where,
     }),
   ]);
+
+  // Map raw products: extract primaryImage from images array, remove images field
+  const products: ProductWithPrimaryImage[] = rawProducts.map(({ images, ...product }) => ({
+    ...product,
+    primaryImage: (images ?? [])[0],
+  }));
 
   // Calculate pagination metadata
   const totalPages = Math.ceil(total / validated.limit);
