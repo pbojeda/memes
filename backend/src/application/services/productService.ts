@@ -15,7 +15,7 @@ import {
   ProductSlugAlreadyExistsError,
   InvalidProductDataError,
 } from '../../domain/errors/ProductError';
-import type { Product, ProductImage, ProductReview } from '../../generated/prisma/client';
+import type { Product, ProductImage, ProductReview, ProductType } from '../../generated/prisma/client';
 import { Prisma } from '../../generated/prisma/client';
 import type { PaginationMeta } from '../../utils/responseHelpers';
 
@@ -87,7 +87,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
  * @throws {InvalidProductDataError} If ID is invalid
  * @throws {ProductNotFoundError} If product not found
  */
-export async function getProductById(id: string, includeSoftDeleted: boolean = false): Promise<Product> {
+export async function getProductById(id: string, includeSoftDeleted: boolean = false): Promise<ProductWithType> {
   validateProductId(id);
 
   const where: Prisma.ProductWhereInput = {
@@ -112,7 +112,7 @@ export async function getProductById(id: string, includeSoftDeleted: boolean = f
  * @throws {InvalidProductDataError} If slug is invalid
  * @throws {ProductNotFoundError} If product not found
  */
-export async function getProductBySlug(slug: string): Promise<Product> {
+export async function getProductBySlug(slug: string): Promise<ProductWithType> {
   const validatedSlug = validateSlug(slug, 'slug');
 
   const product = await prisma.product.findFirst({
@@ -251,6 +251,10 @@ export async function restoreProduct(id: string): Promise<Product> {
 
   return product;
 }
+
+export type ProductWithType = Product & {
+  productType: ProductType;
+};
 
 export type ProductWithPrimaryImage = Product & {
   primaryImage?: ProductImage;
