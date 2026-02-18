@@ -91,6 +91,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `ProductImageError` - ProductImageNotFoundError, InvalidProductImageDataError
 - `ProductReviewError` - ProductReviewNotFoundError, InvalidProductReviewDataError
 - `ProductTypeError` - ProductTypeNotFoundError, InvalidProductTypeDataError
+- `AddressError` - AddressNotFoundError, AddressLimitExceededError, InvalidAddressDataError, DefaultAddressCannotBeDeletedError
 
 ### Services (`backend/src/application/services/`)
 - `authService` - register, login, logout, refresh, password reset
@@ -98,6 +99,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `productService` - CRUD, listing with filters/pagination/sorting, soft delete/restore, slug-based detail. `createProduct` auto-generates slug from `title.es` via `generateSlug()` when not provided; retries with `-1..-10` suffix on collision (P2002 scoped to `slug` field); auto-generated slugs truncated to 97 chars (MAX_SLUG_LENGTH=100 minus suffix room). Exports `ProductWithType = Product & { productType: ProductType }` (returned by `getProductById`, `getProductBySlug`) and `ProductWithPrimaryImage = Product & { primaryImage?: ProductImage }` (returned by `listProducts` in `ListProductsResult.data`). `listProducts` includes `{ images: { isPrimary: true, take: 1 }, productType: true }` in query.
 - `productImageService` - CRUD for product images, Cloudinary upload/delete
 - `productReviewService` - CRUD, visibility toggle, analytics (averageRating, ratingDistribution)
+- `addressService` - CRUD for user addresses. Max 10 per user. Atomic default-swap via `$transaction`. Auto-defaults first address. `findFirst({ id, userId })` scoping prevents IDOR. See ADR-009 for "zero default addresses" known limitation.
 
 ### Validators (`backend/src/application/validators/`)
 - `authValidator` - validateRegisterInput, validateLoginInput, validateRefreshInput, etc.
@@ -105,6 +107,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `productImageValidator` - validateAddImageInput, validateUpdateImageInput
 - `productReviewValidator` - validateCreateReviewInput, validateUpdateReviewInput, validateToggleVisibilityInput, validateListReviewsInput
 - `shared` - validateUUID, validateSlug (reusable across validators)
+- `addressValidator` - validateCreateAddressInput, validateUpdateAddressInput, validateAddressId (plain TS, no Zod — matches existing pattern)
 
 ### Utilities (`backend/src/utils/`)
 - `slugify` - `generateSlug(text: string): string` — NFD normalization, accent stripping, lowercase, non-alphanumeric→hyphen, collapse consecutive hyphens, strip leading/trailing hyphens. Falls back to `'product'` on empty result. Output satisfies `/^[a-z0-9]+(?:-[a-z0-9]+)*$/`.
@@ -116,8 +119,9 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `productImageController` - Product image CRUD
 - `productReviewController` - Review CRUD + visibility toggle
 - `uploadController` - Cloudinary image upload
+- `addressController` - Address CRUD, error mapping (400/404/409)
 
-### Middleware (`backend/src/presentation/middleware/`)
+### Middleware (`backend/src/middleware/`)
 - `authMiddleware` - JWT verification, request user injection
 - `optionalAuthMiddleware` - JWT verification without requiring auth (for public + admin endpoints)
 - `requireRole` - Role-based access control
@@ -129,6 +133,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `/product-types` - Product type CRUD
 - `/upload` - File upload
 - `/health` - Health check
+- `/users/me/addresses` - Address CRUD (all routes require `authMiddleware`, no role restriction)
 
 ### External Services
 - **Cloudinary** - Image storage (free tier), credentials in `backend/.env`
@@ -140,8 +145,8 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **Pattern**: supertest + jest mocks, one file per route group
 - **Mock level**: Service layer (not Prisma) — controllers call services, so mock at that boundary
 - **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
-- **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes
-- **Total**: 980 backend tests (as of F3.16)
+- **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes, addressRoutes (mock Prisma)
+- **Total**: 1061 backend tests (as of B4.2)
 
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`

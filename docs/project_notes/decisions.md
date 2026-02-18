@@ -126,6 +126,26 @@ Implement the entire page as a `'use client'` component using `useParams` for sl
 - Consistent pattern across all pages (simpler codebase for MVP)
 - **Post-MVP action:** Convert `/products/[slug]` to Server Component with `fetch` + ISR for SEO. Also consider `/products` catalog page. This is the single highest-impact SEO improvement available.
 
+### ADR-009: Allow zero default addresses via PATCH (2026-02-18)
+
+**Context:**
+- B4.2 address service enforces "cannot delete default address when >1 addresses exist"
+- However, `PATCH { isDefault: false }` on the current default address succeeds without guard
+- This leaves the user with zero default addresses
+- Code review flagged this as a business logic gap
+
+**Decision:**
+Accept this as a known limitation for MVP. The checkout flow (F4.5/F4.6) will require selecting a shipping address regardless, so "no default" is not a blocking state. The frontend can prompt the user to pick an address if none is marked default.
+
+**Alternatives Considered:**
+- Block unsetting the default via PATCH → Adds complexity; the only valid operation would be "set another as default" which auto-unsets the current one. This is the correct long-term fix but over-engineers MVP.
+- Add a guard that auto-promotes another address to default → Complex: which address to pick? Requires a policy (newest? oldest?).
+
+**Consequences:**
+- A user can end up with addresses but none marked as default
+- The checkout flow must handle this case (prompt address selection)
+- Post-MVP: consider adding the guard to `updateAddress` when `isDefault: false` and the address is currently default
+
 ### ADR-008: Auto-generate product slug from title.es on backend (2026-02-17)
 
 **Context:**
