@@ -3,17 +3,17 @@
 **Goal:** Implement full product management (catalog, detail, admin CRUD, images, reviews).
 **Start Date:** 2026-02-11
 **End Date:** 2026-02-17
-**Status:** Complete
+**Status:** In Progress (post-release bug fixes)
 
 ---
 
 ## Progress Overview
 
 ```
-Progress: [█████████████████████████] 100%
+Progress: [████████████████████████░] 89%
 
-Completed: 24/24 tasks
-In Progress: 0 tasks
+Completed: 24/25 tasks
+In Progress: 1 task
 Pending: 0 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F3.15 — Fix: Admin product form bugs (object Object, upload, UX) |
+| Branch | feature/sprint3-F3.15-admin-form-bugs |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F3.15-admin-form-bugs.md |
 
 ---
 
@@ -67,6 +67,7 @@ Blocked: 0 tasks
 | F3.12 | Fix: Localized name object rendered as React child in ProductForm | High | ✅ | feature/sprint3-F3.12-fix-localized-name-productform | Completed 2026-02-17 |
 | F3.13 | Fix: Backend auto-generate slug from title.es when not provided | High | ✅ | feature/sprint3-F3.13-auto-generate-slug | Completed 2026-02-17 |
 | F3.14 | Fix: Add file upload support to ProductImageManager | High | ✅ | feature/sprint3-F3.14-file-upload-image-manager | Completed 2026-02-17 |
+| F3.15 | Fix: Admin product form bugs (object Object, upload, UX) | High | 🔄 | feature/sprint3-F3.15-admin-form-bugs | Combined: F3.15/16/17 — title/desc object, upload Content-Type, create-mode image hint |
 
 ---
 

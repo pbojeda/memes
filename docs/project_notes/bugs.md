@@ -63,3 +63,21 @@ Each bug entry should include:
 - **Cause**: Frontend `CreateProductRequest` never included a `slug` field. Backend `validateCreateProductInput` required it. No auto-generation logic existed.
 - **Fix**: Made slug optional in validator; backend auto-generates from `title.es` via new `generateSlug()` utility; collision retry with `-1..-10` suffixes; truncation to 100 chars for auto-generated slugs
 - **Prevention**: When adding required fields to the backend, verify the frontend form sends them. API-spec and frontend types must stay in sync.
+
+### 2026-02-17 — [object Object] in title/description on product edit form (F3.15)
+- **Symptom**: After creating a product and being redirected to the edit page, title and description fields display `[object Object]` instead of actual text
+- **Cause**: Backend `getProductById` returns the raw Prisma model where `title`/`description` are JSONB `{es: "...", en: "..."}`. `getInitialFormState()` in `ProductForm.tsx` assigns `product.title ?? ''` directly to `titleEs`, treating the object as a string. The API spec types `Product.title` as `string` (for public localized responses), masking the type mismatch at compile time.
+- **Fix**: (pending)
+- **Prevention**: Admin endpoints that return raw Prisma models with JSONB fields must have frontend handlers that parse the localized object. Test mocks must use `{es, en}` format.
+
+### 2026-02-17 — "No file provided" error on image upload (F3.16)
+- **Symptom**: Selecting a file and clicking "Upload File" in ProductImageManager fails with "No file provided"
+- **Cause**: `client.ts` creates axios with default header `'Content-Type': 'application/json'`. When `uploadImage()` sends FormData, this default overrides axios auto-detection of `multipart/form-data` boundary. Multer receives the request as JSON, doesn't parse it, so `req.file` is `undefined`.
+- **Fix**: (pending)
+- **Prevention**: When an API client sets default `Content-Type`, ensure FormData requests override or remove the header so axios can auto-detect `multipart/form-data`.
+
+### 2026-02-17 — Image manager not visible during product creation (F3.17)
+- **Symptom**: On `/admin/products/new`, the "Upload File" and "Add Image" buttons don't appear. User expects to add images during product creation.
+- **Cause**: `ProductForm.tsx` only renders `ProductImageManager` when `isEditMode && product?.id`. This is by design (images need a `productId`), but there is no UX guidance telling the user.
+- **Fix**: (pending)
+- **Prevention**: When a feature is unavailable in a particular mode, show a clear message explaining why and when it becomes available.

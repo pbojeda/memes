@@ -72,6 +72,31 @@ describe('API Client', () => {
 
       expect(config.headers.Authorization).toBeUndefined();
     });
+
+    it('removes Content-Type header when request data is FormData', async () => {
+      mockAuthStoreState.accessToken = 'test-token';
+      const formData = new FormData();
+      formData.append('file', new Blob(['test']), 'test.jpg');
+
+      const config = await apiClient.interceptors.request.handlers[0].fulfilled({
+        headers: { 'Content-Type': 'application/json' },
+        data: formData,
+      } as any);
+
+      expect(config.headers['Content-Type']).toBeUndefined();
+      expect(config.headers.Authorization).toBe('Bearer test-token');
+    });
+
+    it('keeps Content-Type header for non-FormData requests', async () => {
+      mockAuthStoreState.accessToken = null;
+
+      const config = await apiClient.interceptors.request.handlers[0].fulfilled({
+        headers: { 'Content-Type': 'application/json' },
+        data: { name: 'test' },
+      } as any);
+
+      expect(config.headers['Content-Type']).toBe('application/json');
+    });
   });
 
   describe('Response Interceptor - Success', () => {

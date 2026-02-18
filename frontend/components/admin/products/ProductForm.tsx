@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ProductImageManager } from './ProductImageManager';
-import { getLocalizedName } from '@/lib/utils';
+import { getLocalizedName, getLocalizedField } from '@/lib/utils';
 
 type Product = components['schemas']['Product'];
 type ProductImage = components['schemas']['ProductImage'];
@@ -61,10 +61,10 @@ interface FormErrors {
 function getInitialFormState(product?: Product): FormState {
   if (product) {
     return {
-      titleEs: product.title ?? '',
-      titleEn: '',
-      descriptionEs: product.description ?? '',
-      descriptionEn: '',
+      titleEs: getLocalizedField(product.title as string | Record<string, string> | undefined, 'es'),
+      titleEn: getLocalizedField(product.title as string | Record<string, string> | undefined, 'en'),
+      descriptionEs: getLocalizedField(product.description as string | Record<string, string> | undefined, 'es'),
+      descriptionEn: getLocalizedField(product.description as string | Record<string, string> | undefined, 'en'),
       productTypeId: product.productType?.id ?? '',
       price: product.price?.toString() ?? '',
       compareAtPrice: product.compareAtPrice?.toString() ?? '',
@@ -435,17 +435,21 @@ export function ProductForm({ product, initialImages, onSuccess }: ProductFormPr
         </Button>
       </form>
 
-      {/* Image manager (edit mode only) */}
-      {isEditMode && product?.id && (
-        <div className="mt-8">
-          <h2 className="mb-4 text-xl font-semibold">Images</h2>
+      {/* Images section */}
+      <div className="mt-8">
+        <h2 className="mb-4 text-xl font-semibold">Images</h2>
+        {isEditMode && product?.id ? (
           <ProductImageManager
             productId={product.id}
             images={images}
             onImagesChange={setImages}
           />
-        </div>
-      )}
+        ) : (
+          <Alert>
+            <AlertDescription>Images can be added after the product is created.</AlertDescription>
+          </Alert>
+        )}
+      </div>
     </div>
   );
 }
