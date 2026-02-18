@@ -67,17 +67,41 @@ Each bug entry should include:
 ### 2026-02-17 — [object Object] in title/description on product edit form (F3.15)
 - **Symptom**: After creating a product and being redirected to the edit page, title and description fields display `[object Object]` instead of actual text
 - **Cause**: Backend `getProductById` returns the raw Prisma model where `title`/`description` are JSONB `{es: "...", en: "..."}`. `getInitialFormState()` in `ProductForm.tsx` assigns `product.title ?? ''` directly to `titleEs`, treating the object as a string. The API spec types `Product.title` as `string` (for public localized responses), masking the type mismatch at compile time.
-- **Fix**: (pending)
+- **Fix**: Created `getLocalizedField()` utility in `lib/utils.ts` that extracts the `es` key from JSONB objects; applied in `getInitialFormState()` for title and description fields
 - **Prevention**: Admin endpoints that return raw Prisma models with JSONB fields must have frontend handlers that parse the localized object. Test mocks must use `{es, en}` format.
 
-### 2026-02-17 — "No file provided" error on image upload (F3.16)
+### 2026-02-17 — "No file provided" error on image upload (F3.15)
 - **Symptom**: Selecting a file and clicking "Upload File" in ProductImageManager fails with "No file provided"
 - **Cause**: `client.ts` creates axios with default header `'Content-Type': 'application/json'`. When `uploadImage()` sends FormData, this default overrides axios auto-detection of `multipart/form-data` boundary. Multer receives the request as JSON, doesn't parse it, so `req.file` is `undefined`.
-- **Fix**: (pending)
+- **Fix**: Added axios request interceptor in `client.ts` that deletes `Content-Type` header when request data is `FormData`, allowing axios to auto-detect `multipart/form-data` with boundary
 - **Prevention**: When an API client sets default `Content-Type`, ensure FormData requests override or remove the header so axios can auto-detect `multipart/form-data`.
 
-### 2026-02-17 — Image manager not visible during product creation (F3.17)
+### 2026-02-17 — Image manager not visible during product creation (F3.15)
 - **Symptom**: On `/admin/products/new`, the "Upload File" and "Add Image" buttons don't appear. User expects to add images during product creation.
 - **Cause**: `ProductForm.tsx` only renders `ProductImageManager` when `isEditMode && product?.id`. This is by design (images need a `productId`), but there is no UX guidance telling the user.
-- **Fix**: (pending)
+- **Fix**: Added informational Alert in create mode explaining "Images can be added after creating the product" with a link to edit page
 - **Prevention**: When a feature is unavailable in a particular mode, show a clear message explaining why and when it becomes available.
+
+### 2026-02-18 — Product type dropdown shows "Select a product type" on edit page (F3.16)
+- **Symptom**: When editing a product, the product type dropdown doesn't show the current type — it shows the placeholder instead
+- **Cause**: `getProductById()` in `productService.ts` called `prisma.product.findFirst({ where })` without `include: { productType: true }`. The `productType` relation was `undefined` in the response, so `ProductForm` couldn't match `product.productType?.id` to a dropdown option.
+- **Fix**: Added `include: { productType: true }` to `getProductById()` and `getProductBySlug()`. Added `ProductWithType` return type.
+- **Prevention**: When a Prisma query result is sent to the frontend and the frontend reads a relation field, the query must explicitly `include` that relation.
+
+### 2026-02-18 — Image thumbnail missing in admin products list (F3.16)
+- **Symptom**: Admin products table shows a grey placeholder instead of product thumbnails
+- **Cause**: `listProducts()` in `productService.ts` called `prisma.product.findMany()` without including images. `product.primaryImage` was always `undefined` in the response.
+- **Fix**: Added `include: { images: { where: { isPrimary: true }, take: 1 }, productType: true }` to `findMany()`. Map `images[0]` to `primaryImage` field via `ProductWithPrimaryImage` type.
+- **Prevention**: When the frontend relies on a relation field (like `primaryImage`), the backend query must include it. Check the API spec and frontend rendering to verify which fields are consumed.
+
+### 2026-02-18 — No success feedback after saving product edits (F3.16)
+- **Symptom**: Clicking save on product edit page succeeds silently — no confirmation to the user
+- **Cause**: `onSuccess` callback in edit page only called `setProduct()` to update local state, with no visual feedback
+- **Fix**: Added `successMessage` state with `handleSuccess` callback that shows "Product updated successfully" Alert with 5s auto-dismiss via `setTimeout` + `useRef` cleanup
+- **Prevention**: All mutating actions should provide visual feedback (success or error) to the user.
+
+### 2026-02-18 — Button text "Save" instead of "Update" in product edit form (F3.16)
+- **Symptom**: In edit mode, the submit button says "Save" / "Saving..." instead of "Update" / "Updating..."
+- **Cause**: Button text ternary in `ProductForm.tsx` used "Save"/"Saving..." for edit mode
+- **Fix**: Changed to "Update"/"Updating..." in edit mode, keeping "Create"/"Creating..." in create mode
+- **Prevention**: Review button labels for contextual correctness when a form has multiple modes.

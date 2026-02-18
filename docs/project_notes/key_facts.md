@@ -69,7 +69,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `/admin/product-types` - Product types CRUD page (Client Component): ProductTypesTable + create/edit/delete dialogs. Uses `productTypeService`.
 - `/admin/products` - Admin products list page (Client Component): AdminProductsTable with search (debounced 300ms), status filter (All/Active/Inactive via `isActive` param), pagination (limit: 20), and action buttons (Edit link, Activate/Deactivate toggle, Delete with confirmation dialog). Uses `adminProductService`. `actionLoadingId` pattern disables row buttons during async actions.
 - `/admin/products/new` - Create product page (Client Component): thin wrapper rendering `ProductForm` in create mode. On success, redirects to `/admin/products/{id}/edit` for image management.
-- `/admin/products/[productId]/edit` - Edit product page (Client Component): fetches product + images via `Promise.all([getById, listImages])`, renders `ProductForm` in edit mode with `ProductImageManager`. Loading/error/retry states. `onSuccess={setProduct}` keeps local state updated.
+- `/admin/products/[productId]/edit` - Edit product page (Client Component): fetches product + images via `Promise.all([getById, listImages])`, renders `ProductForm` in edit mode with `ProductImageManager`. Loading/error/retry states. `handleSuccess` callback updates product state + shows "Product updated successfully" Alert with 5s auto-dismiss.
 
 ### Services (`frontend/lib/services/`)
 - `authService` - login, register, logout, refresh, forgotPassword, resetPassword
@@ -95,7 +95,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Services (`backend/src/application/services/`)
 - `authService` - register, login, logout, refresh, password reset
 - `tokenService` - JWT generation, verification, refresh token rotation
-- `productService` - CRUD, listing with filters/pagination/sorting, soft delete/restore, slug-based detail. `createProduct` auto-generates slug from `title.es` via `generateSlug()` when not provided; retries with `-1..-10` suffix on collision (P2002 scoped to `slug` field); auto-generated slugs truncated to 97 chars (MAX_SLUG_LENGTH=100 minus suffix room)
+- `productService` - CRUD, listing with filters/pagination/sorting, soft delete/restore, slug-based detail. `createProduct` auto-generates slug from `title.es` via `generateSlug()` when not provided; retries with `-1..-10` suffix on collision (P2002 scoped to `slug` field); auto-generated slugs truncated to 97 chars (MAX_SLUG_LENGTH=100 minus suffix room). Exports `ProductWithType = Product & { productType: ProductType }` (returned by `getProductById`, `getProductBySlug`) and `ProductWithPrimaryImage = Product & { primaryImage?: ProductImage }` (returned by `listProducts` in `ListProductsResult.data`). `listProducts` includes `{ images: { isPrimary: true, take: 1 }, productType: true }` in query.
 - `productImageService` - CRUD for product images, Cloudinary upload/delete
 - `productReviewService` - CRUD, visibility toggle, analytics (averageRating, ratingDistribution)
 
@@ -141,7 +141,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **Mock level**: Service layer (not Prisma) — controllers call services, so mock at that boundary
 - **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
 - **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes
-- **Total**: 978 backend tests (as of F3.13)
+- **Total**: 980 backend tests (as of F3.16)
 
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
