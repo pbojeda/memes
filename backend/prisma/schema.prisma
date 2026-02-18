@@ -47,11 +47,36 @@ model User {
   // Relations
   createdProducts Product[]      @relation("ProductCreator")
   priceChanges    PriceHistory[]
+  addresses       Address[]
 
   @@index([email])
   @@index([role])
   @@index([stripeCustomerId])
   @@map("users")
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  label       String?  @db.VarChar(50)
+  firstName   String   @map("first_name") @db.VarChar(100)
+  lastName    String   @map("last_name") @db.VarChar(100)
+  streetLine1 String   @map("street_line_1") @db.VarChar(255)
+  streetLine2 String?  @map("street_line_2") @db.VarChar(255)
+  city        String   @db.VarChar(100)
+  state       String?  @db.VarChar(100)
+  postalCode  String   @map("postal_code") @db.VarChar(20)
+  countryCode String   @map("country_code") @db.VarChar(2)
+  phone       String?  @db.VarChar(20)
+  isDefault   Boolean  @default(false) @map("is_default")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("addresses")
 }
 
 model ProductType {
