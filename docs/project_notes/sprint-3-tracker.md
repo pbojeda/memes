@@ -10,11 +10,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████████████████░] 89%
+Progress: [█████████████████████████] 100%
 
-Completed: 25/26 tasks
+Completed: 26/26 tasks
 In Progress: 0 tasks
-Pending: 1 task
+Pending: 0 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -25,10 +25,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F3.16 — Fix: Edit page product type, list thumbnails, save feedback, button text |
-| Branch | feature/sprint3-F3.16-edit-bugs-thumbnails-feedback |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F3.16-edit-bugs-thumbnails-feedback.md |
+| Task | — (Sprint 3 complete) |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -68,7 +68,7 @@ Blocked: 0 tasks
 | F3.13 | Fix: Backend auto-generate slug from title.es when not provided | High | ✅ | feature/sprint3-F3.13-auto-generate-slug | Completed 2026-02-17 |
 | F3.14 | Fix: Add file upload support to ProductImageManager | High | ✅ | feature/sprint3-F3.14-file-upload-image-manager | Completed 2026-02-17 |
 | F3.15 | Fix: Admin product form bugs (object Object, upload, UX) | High | ✅ | feature/sprint3-F3.15-admin-form-bugs | Completed 2026-02-17 |
-| F3.16 | Fix: Edit page product type, list thumbnails, save feedback, button text | High | 🔄 | feature/sprint3-F3.16-edit-bugs-thumbnails-feedback | Backend include + frontend UX |
+| F3.16 | Fix: Edit page product type, list thumbnails, save feedback, button text | High | ✅ | feature/sprint3-F3.16-edit-bugs-thumbnails-feedback | Completed 2026-02-18 |
 
 ---
 
@@ -135,6 +135,7 @@ F3.10 (TDD throughout F3.1–F3.9)
 | 2026-02-17 | F3.12 — `pt.name` (localized object) rendered directly in ProductForm Select | Applied `getLocalizedName(pt.name)`, fixed test mocks to use `{es, en}` format |
 | 2026-02-17 | F3.13 — "Slug is required" error on product creation | Auto-generate slug from `title.es` via `generateSlug()`, collision retry with suffixes, slug made optional in validator |
 | 2026-02-17 | F3.14 — ProductImageManager only supports URL input, no file upload | Added uploadImage service + Upload File button + client-side MIME/size validation |
+| 2026-02-18 | F3.16 — Product type lost on edit, thumbnails missing, no save feedback, wrong button text | Prisma includes (productType, primaryImage mapping), success Alert with 5s auto-dismiss, button "Update"/"Updating..." |
 
 ---
 
@@ -194,8 +195,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-17 | F3.13 | 449b216 | Auto-generate product slug from title.es with collision retry, new slugify utility, slug optional in validator/api-spec (15 new backend tests), 978 backend total, PR #67 |
 | 2026-02-17 | F3.14 | 5e3dec8 | File upload support in ProductImageManager: uploadImage service method, Upload File button, client-side MIME/size validation, folder param for Cloudinary (9 new tests), 592 frontend total, PR #68 |
 | 2026-02-17 | F3.15 | ace5074 | Fix admin product form bugs: getLocalizedField utility for [object Object], FormData Content-Type interceptor fix, create-mode image guidance Alert (11 new tests), 603 frontend total, PR #69 |
+| 2026-02-18 | F3.16 | 4d4ded0 | Fix edit page bugs: productType include in getProductById/getProductBySlug, primaryImage include+mapping in listProducts, success Alert on edit page, button text "Update"/"Updating..." (5 new tests: 2 backend, 3 frontend), 980 backend / 606 frontend total, PR #70 |
 
 ---
 
 *Created: 2026-02-11*
-*Last Updated: 2026-02-17 (F3.14 completed — Sprint 3 100% complete, 24/24 tasks)*
+*Last Updated: 2026-02-18 (F3.16 completed — Sprint 3 100% complete, 26/26 tasks)*
