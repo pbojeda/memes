@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.4 — Create cart page |
+| Branch | feature/sprint4-F4.4-cart-page |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/F4.4-cart-page.md |
 
 ---
 
@@ -51,7 +51,7 @@ Blocked: 0 tasks
 | F4.1 | Create cartStore (Zustand with persistence) | High | ✅ | feature/sprint4-F4.1-cart-store | Completed 2026-02-19 |
 | F4.2 | Implement CartDrawer component | High | ✅ | feature/sprint4-F4.2-cart-drawer | Completed 2026-02-19 |
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
-| F4.4 | Create cart page | High | ⏳ | — | Depends on F4.1, F4.3 |
+| F4.4 | Create cart page | High | 🔄 | feature/sprint4-F4.4-cart-page | Depends on F4.1, F4.3 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ⏳ | — | Depends on B4.2 |
 | F4.7 | Implement promo code input | High | ⏳ | — | Depends on B4.4 |
@@ -141,6 +141,13 @@ _Key learnings, issues, or observations:_
 4. **CartDrawer mock design is fragile for multi-item** — `mockOnUpdateQuantity.mockImplementation(onUpdateQuantity)` always points to the last-rendered CartItem's props. Add a comment if Group D tests are extended to multiple items.
 5. **No test for open/close state** — Sheet is mocked as a plain div, so toggling is invisible to the test suite. Accepted trade-off of the JSDOM portal mocking strategy.
 6. **`data-slot` on `DialogPortal` in `dialog.tsx`** — Same issue as the one fixed in `sheet.tsx` (Portal doesn't render DOM, attribute silently dropped). Fix when touching `dialog.tsx` next.
+
+### Tech debt from F4.4 code review (non-blocking)
+
+7. **metadata.description missing on all pages** — `app/cart/page.tsx` has `title` but no `description`. No other page has it either. Important for SEO/positioning — address as a project-wide pass across all page routes.
+8. **Store wiring tests use mock-capture pattern (codebase-wide)** — CartPageContent Group D (same as CartDrawer Group D) calls captured callback directly rather than simulating user interaction. Known trade-off; if addressed, do it for all cart tests at once.
+9. **Duplicate h1 test across Groups B and F** — Group F "page has an h1 heading" is a subset of Group B "renders page heading Shopping Cart". Harmless but redundant. Remove if cleaning up tests.
+10. **No test for same-productId-different-size edge case** — Component uses correct composite key but no test covers two items with same productId and different sizes rendering independently.
 
 ---
 
