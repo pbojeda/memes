@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.1 — Create cartStore (Zustand with persistence) |
+| Branch | feature/sprint4-F4.1-cart-store |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F4.1-cart-store.md |
 
 ---
 
@@ -48,7 +48,7 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F4.1 | Create cartStore (Zustand with persistence) | High | ⏳ | — | — |
+| F4.1 | Create cartStore (Zustand with persistence) | High | 🔄 | feature/sprint4-F4.1-cart-store | — |
 | F4.2 | Implement CartDrawer component | High | ⏳ | — | Depends on F4.1, F4.3 |
 | F4.3 | Implement CartItem component | High | ⏳ | — | Depends on F4.1 |
 | F4.4 | Create cart page | High | ⏳ | — | Depends on F4.1, F4.3 |
