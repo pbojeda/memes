@@ -79,6 +79,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 
 ### Stores (`frontend/stores/`)
 - `authStore` (Zustand) - user, tokens, isAuthenticated, loading, error states
+- `cartStore` (Zustand) - client-side cart with localStorage persistence. `CartItemLocal` items identified by productId+size. Actions: addItem (upsert, qty capped at 99), removeItem, updateQuantity (removes if <=0), clearCart. Computed: itemCount, subtotal (rounded 2dp). Persist config: partialize (items only), skipHydration: true, onRehydrateStorage recomputes derived. Storage key: `cart-storage`. Exports: `CartItemLocal`, `CartState`, `CartActions`, `CartStore`, `MAX_ITEM_QUANTITY`
 
 ## Backend Reusable Components
 
