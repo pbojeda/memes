@@ -146,6 +146,45 @@ Accept this as a known limitation for MVP. The checkout flow (F4.5/F4.6) will re
 - The checkout flow must handle this case (prompt address selection)
 - Post-MVP: consider adding the guard to `updateAddress` when `isDefault: false` and the address is currently default
 
+### ADR-010: Validation endpoints return HTTP 200 for business failures (2026-02-18)
+
+**Context:**
+- `POST /cart/validate` (B4.3) and `POST /promo-codes/validate` (B4.4) are public validation endpoints
+- Business failures include: product not found, product inactive, invalid size, promo code expired, usage limit reached, etc.
+- Need to distinguish "malformed request" from "valid request with business-level invalid items"
+
+**Decision:**
+Return HTTP 200 with `valid: false` + error details in the response body for all business logic failures. Only return HTTP 400 for malformed input (missing required fields, invalid types, bad UUIDs). The service layer returns structured result objects (never throws for business failures); only input validation errors (`InvalidCartDataError`, `InvalidPromoCodeDataError`) propagate as thrown exceptions → 400.
+
+**Alternatives Considered:**
+- 422 for business failures → Rejected: 422 implies the request is syntactically correct but semantically wrong; our endpoints are validation endpoints where "invalid item" is a valid outcome, not an error
+- 400 for all failures → Rejected: conflates client mistakes (bad JSON) with expected outcomes (expired code)
+
+**Consequences:**
+- Frontend must check `response.data.valid` to determine success, not HTTP status
+- Consistent pattern across all validation endpoints
+- Cart endpoint returns partial results (valid items + error items in the same response)
+- Promo code endpoint returns `valid: false` with message for each failure reason
+
+### ADR-011: Defer maxUsesPerUser enforcement to order placement (2026-02-19)
+
+**Context:**
+- PromoCode model has `maxUsesPerUser` field for limiting promo code usage per user
+- `POST /promo-codes/validate` is a public endpoint (no auth required) — no user context available
+- Both guest and authenticated users can validate promo codes
+
+**Decision:**
+Skip `maxUsesPerUser` check in the validation endpoint. Enforce it during order placement (future sprint) where user identity is known. Added explicit comment in service code: `// maxUsesPerUser enforcement deferred to order placement — requires user context`.
+
+**Alternatives Considered:**
+- Accept optional `userId` in validation request → Rejected: leaks user IDs to a public endpoint, adds complexity
+- Require auth for validation → Rejected: breaks guest checkout flow
+
+**Consequences:**
+- A user who has exhausted their per-user limit will see the code as "valid" during validation but will be rejected at checkout
+- The frontend should handle this checkout-time rejection gracefully
+- Order placement service (B4.5 or future) must implement the `maxUsesPerUser` check
+
 ### ADR-008: Auto-generate product slug from title.es on backend (2026-02-17)
 
 **Context:**
