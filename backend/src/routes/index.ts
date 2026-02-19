@@ -7,6 +7,7 @@ import uploadRoutes from './uploadRoutes';
 import reviewRoutes from './reviewRoutes';
 import addressRoutes from './addressRoutes';
 import cartRoutes from './cartRoutes';
+import promoCodeRoutes from './promoCodeRoutes';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/upload', uploadRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/users/me/addresses', addressRoutes);
 router.use('/cart', cartRoutes);
+router.use('/promo-codes', promoCodeRoutes);
 
 export default router;

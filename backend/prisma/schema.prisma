@@ -21,6 +21,11 @@ enum UserRole {
   MARKETING
 }
 
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
 // ============================================
 // MODELS
 // ============================================
@@ -45,9 +50,10 @@ model User {
   deletedAt            DateTime? @map("deleted_at")
 
   // Relations
-  createdProducts Product[]      @relation("ProductCreator")
-  priceChanges    PriceHistory[]
-  addresses       Address[]
+  createdProducts   Product[]      @relation("ProductCreator")
+  priceChanges      PriceHistory[]
+  addresses         Address[]
+  createdPromoCodes PromoCode[]    @relation("PromoCodeCreator")
 
   @@index([email])
   @@index([role])
@@ -185,4 +191,30 @@ model PriceHistory {
   @@index([productId])
   @@index([createdAt])
   @@map("price_history")
+}
+
+model PromoCode {
+  id                String       @id @default(uuid())
+  code              String       @unique @db.VarChar(50)
+  description       String?
+  discountType      DiscountType @map("discount_type")
+  discountValue     Decimal      @map("discount_value") @db.Decimal(10, 2)
+  minOrderAmount    Decimal?     @map("min_order_amount") @db.Decimal(10, 2)
+  maxDiscountAmount Decimal?     @map("max_discount_amount") @db.Decimal(10, 2)
+  maxUses           Int?         @map("max_uses")
+  maxUsesPerUser    Int?         @map("max_uses_per_user")
+  currentUses       Int          @default(0) @map("current_uses")
+  validFrom         DateTime     @map("valid_from")
+  validUntil        DateTime?    @map("valid_until")
+  isActive          Boolean      @default(true) @map("is_active")
+  createdByUserId   String       @map("created_by_user_id")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  createdBy User @relation("PromoCodeCreator", fields: [createdByUserId], references: [id])
+
+  @@index([isActive])
+  @@index([validUntil])
+  @@map("promo_codes")
 }
