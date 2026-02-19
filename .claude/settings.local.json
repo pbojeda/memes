@@ -6,7 +6,78 @@
       "Bash(npm run test:coverage:*)",
       "Bash(git pull:*)",
       "Bash(npm run lint)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx jest --testPathPatterns=\"ProtectedRoute|LoginForm\" --no-coverage)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npx jest:*)",
+      "Bash(npx next lint:*)",
+      "Bash(node -e:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(NODE_ENV=development ts-node:*)",
+      "Bash(test:*)",
+      "Bash(npx prettier:*)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes status)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes log --oneline -3)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(git status:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(/Users/pb/Developer/FiveGuays/memes/frontend/components/admin/product-types/_dialog-smoke.test.tsx << 'ENDOFTEST'\nimport { render, screen, act } from '@testing-library/react';\nimport {\n  Dialog,\n  DialogContent,\n  DialogHeader,\n  DialogTitle,\n} from '../../../components/ui/dialog';\n\ndescribe\\('Radix Dialog smoke test', \\(\\) => {\n  it\\('should render dialog content', async \\(\\) => {\n    await act\\(async \\(\\) => {\n      render\\(\n        <Dialog open={true} onOpenChange={\\(\\) => {}}>\n          <DialogContent>\n            <DialogHeader>\n              <DialogTitle>Test Dialog</DialogTitle>\n            </DialogHeader>\n            <p>Hello World</p>\n          </DialogContent>\n        </Dialog>\n      \\);\n    }\\);\n\n    expect\\(screen.getByText\\('Test Dialog'\\)\\).toBeInTheDocument\\(\\);\n  }\\);\n}\\);\nENDOFTEST)",
+      "Bash(/Users/pb/Developer/FiveGuays/memes/frontend/components/admin/product-types/_dialog-smoke.test.tsx << 'ENDOFTEST'\nimport { render, screen, act } from '@testing-library/react';\nimport { ProductTypeFormDialog } from './ProductTypeFormDialog';\n\njest.mock\\('../../../lib/services/productTypeService', \\(\\) => \\({\n  productTypeService: {\n    create: jest.fn\\(\\),\n    update: jest.fn\\(\\),\n  },\n}\\)\\);\n\ndescribe\\('ProductTypeFormDialog smoke', \\(\\) => {\n  it\\('should render when open', async \\(\\) => {\n    await act\\(async \\(\\) => {\n      render\\(\n        <ProductTypeFormDialog\n          open={true}\n          onOpenChange={\\(\\) => {}}\n          onSuccess={\\(\\) => {}}\n        />\n      \\);\n    }\\);\n    expect\\(screen.getByText\\('Create Product Type'\\)\\).toBeInTheDocument\\(\\);\n  }\\);\n}\\);\nENDOFTEST)",
+      "Bash(/Users/pb/Developer/FiveGuays/memes/frontend/components/admin/product-types/_dialog-smoke.test.tsx << 'ENDOFTEST'\nimport { render, screen, act } from '@testing-library/react';\nimport { ProductTypeFormDialog } from './ProductTypeFormDialog';\n\njest.mock\\('../../../lib/services/productTypeService', \\(\\) => \\({\n  productTypeService: {\n    create: jest.fn\\(\\),\n    update: jest.fn\\(\\),\n  },\n}\\)\\);\n\ndescribe\\('ProductTypeFormDialog smoke', \\(\\) => {\n  it\\('should render when open', async \\(\\) => {\n    try {\n      await act\\(async \\(\\) => {\n        render\\(\n          <ProductTypeFormDialog\n            open={true}\n            onOpenChange={\\(\\) => {}}\n            onSuccess={\\(\\) => {}}\n          />\n        \\);\n      }\\);\n    } catch \\(e: unknown\\) {\n      if \\(e instanceof AggregateError\\) {\n        console.log\\('AggregateError errors count:', \\(e as AggregateError\\).errors?.length\\);\n        \\(e as AggregateError\\).errors?.forEach\\(\\(err: Error, i: number\\) => {\n          console.log\\(`Error ${i}:`, err.constructor.name, err.message, err.stack?.split\\('\\\\n'\\).slice\\(0, 5\\).join\\('\\\\n'\\)\\);\n        }\\);\n      }\n      throw e;\n    }\n    expect\\(screen.getByText\\('Create Product Type'\\)\\).toBeInTheDocument\\(\\);\n  }\\);\n}\\);\nENDOFTEST)",
+      "Bash(curl:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(psql:*)",
+      "Bash(gh pr view 46 --json url,title,body,state,isDraft)",
+      "Bash(npx prisma generate:*)",
+      "Bash(git push -u origin feature/*)",
+      "Bash(git push origin feature/*)",
+      "Bash(gh pr view:*)",
+      "Bash(npx prisma format:*)",
+      "Bash(npm run generate:api:*)",
+      "Bash(docker exec:*)",
+      "Bash(lsof:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx eslint:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes status -u)",
+      "Bash(gh pr diff:*)",
+      "Bash(1)",
+      "Bash(grep:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes add frontend/components/admin/products/ProductImageManager.tsx frontend/components/admin/products/ProductImageManager.test.tsx frontend/lib/services/adminProductService.ts)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes commit --amend -m \"$\\(cat <<''EOF''\nfix\\(frontend\\): add file upload support to ProductImageManager \\(#F3.14\\)\n\nAdd \"Upload File\" button alongside existing URL-based image adding.\nFiles are uploaded to Cloudinary via POST /upload/image, then associated\nwith the product via addImage. Includes loading state, error handling,\nclient-side file type/size validation, and defense-in-depth URL checks.\n\n- Add uploadImage\\(file\\) method to adminProductService \\(FormData + multipart\\)\n- Add hidden file input + Upload File button to ProductImageManager\n- Client-side validation: JPEG/PNG/WebP only, max 5 MB\n- Folder parameter ''products'' sent with upload for Cloudinary organization\n- 9 new tests \\(18 total\\): upload flow, loading, error states, validation\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git diff:*)",
+      "Bash(git stash)",
+      "Bash(sed -n)",
+      "Bash(echo:*)",
+      "Bash(cat:*)",
+      "Bash(git diff)",
+      "Bash(git mv:*)",
+      "Bash(npx prisma validate:*)",
+      "Bash(npx prisma db execute:*)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes diff HEAD -- backend/src/*)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes status --short backend/src/*)",
+      "Bash(git -C /Users/pb/Developer/FiveGuays/memes diff)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Tarea completada\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
     ]
   }
 }

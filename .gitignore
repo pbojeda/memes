@@ -174,3 +174,6 @@ temp/
 
 # Turbo
 .turbo/
+
+# settings claude
+settings.local.json
