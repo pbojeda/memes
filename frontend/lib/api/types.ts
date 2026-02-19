@@ -621,6 +621,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cart/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Calculate order total */
+        post: operations["calculateOrderTotal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/orders": {
         parameters: {
             query?: never;
@@ -1553,6 +1570,61 @@ export interface components {
             /** @enum {string} */
             code: "PRODUCT_NOT_FOUND" | "PRODUCT_INACTIVE" | "INVALID_SIZE" | "SIZE_REQUIRED" | "SIZE_NOT_ALLOWED";
             message: string;
+        };
+        OrderTotalRequest: {
+            items: {
+                /** Format: uuid */
+                productId: string;
+                quantity: number;
+                size?: string;
+            }[];
+            /** @description Optional promo code to apply */
+            promoCode?: string;
+        };
+        OrderTotalResponse: {
+            /** @description false if any cart items are invalid */
+            valid: boolean;
+            /**
+             * Format: float
+             * @description Sum of valid item subtotals
+             */
+            subtotal: number;
+            /**
+             * Format: float
+             * @description Discount from applied promo code (0 if none)
+             */
+            discountAmount: number;
+            /**
+             * Format: float
+             * @description Flat shipping cost (0 for MVP)
+             */
+            shippingCost: number;
+            /**
+             * Format: float
+             * @description Tax amount (0 for MVP)
+             */
+            taxAmount: number;
+            /**
+             * Format: float
+             * @description subtotal - discountAmount + shippingCost + taxAmount, floored at 0
+             */
+            total: number;
+            /** @example MXN */
+            currency: string;
+            itemCount: number;
+            validatedItems: components["schemas"]["CartValidatedItem"][];
+            appliedPromoCode: (null | components["schemas"]["AppliedPromoCodeDetail"]) | null;
+            /** @description Error message when promo code is invalid (only present if promoCode was provided but invalid) */
+            promoCodeMessage?: string;
+            cartErrors: components["schemas"]["CartValidationError"][];
+        };
+        AppliedPromoCodeDetail: {
+            code: string;
+            /** @enum {string} */
+            discountType: "PERCENTAGE" | "FIXED_AMOUNT";
+            discountValue: number;
+            /** Format: float */
+            calculatedDiscount: number;
         };
         /** @enum {string} */
         OrderStatus: "PENDING" | "PAID" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUNDED";
@@ -3298,6 +3370,34 @@ export interface operations {
                     "application/json": {
                         success?: boolean;
                         data?: components["schemas"]["CartValidationResult"];
+                    };
+                };
+            };
+            400: components["responses"]["ValidationError"];
+        };
+    };
+    calculateOrderTotal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderTotalRequest"];
+            };
+        };
+        responses: {
+            /** @description Order total calculation result (appliedPromoCode=null if promo code invalid) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success?: boolean;
+                        data?: components["schemas"]["OrderTotalResponse"];
                     };
                 };
             };

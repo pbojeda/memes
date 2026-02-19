@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B4.5 — Create order total calculation service |
+| Branch | feature/sprint4-B4.5-order-total-calculation |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/B4.5-order-total-calculation.md |
 
 ---
 
@@ -39,7 +39,7 @@ Blocked: 0 tasks
 | B4.2 | Implement address service (CRUD for users) | High | ✅ | feature/sprint4-B4.2-address-service | Completed 2026-02-18 |
 | B4.3 | Create cart validation endpoint | High | ✅ | feature/sprint4-B4.3-cart-validation | Completed 2026-02-18 |
 | B4.4 | Implement promo code validation | High | ✅ | feature/sprint4-B4.4-promo-code-validation | Completed 2026-02-19 |
-| B4.5 | Create order total calculation service | High | ⏳ | — | Depends on B4.4 |
+| B4.5 | Create order total calculation service | High | 🔄 | feature/sprint4-B4.5-order-total-calculation | Depends on B4.4 ✅ |
 | B4.6 | Write cart/checkout integration tests | High | ⏳ | — | Depends on B4.1-B4.5 |
 
 ---
