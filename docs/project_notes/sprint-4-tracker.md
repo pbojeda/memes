@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████                  ] 31%
+Progress: [██████████                ] 38%
 
-Completed: 5/16 tasks
+Completed: 6/16 tasks
 In Progress: 0 tasks
-Pending: 11 tasks
+Pending: 10 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B4.6 — Write cart/checkout integration tests |
-| Branch | feature/sprint4-B4.6-cart-checkout-integration-tests |
-| Step | 2b/5 (Implement) |
-| Ticket | docs/tickets/B4.6-cart-checkout-integration-tests.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -40,7 +40,7 @@ Blocked: 0 tasks
 | B4.3 | Create cart validation endpoint | High | ✅ | feature/sprint4-B4.3-cart-validation | Completed 2026-02-18 |
 | B4.4 | Implement promo code validation | High | ✅ | feature/sprint4-B4.4-promo-code-validation | Completed 2026-02-19 |
 | B4.5 | Create order total calculation service | High | ✅ | feature/sprint4-B4.5-order-total-calculation | Completed 2026-02-19 |
-| B4.6 | Write cart/checkout integration tests | High | 🔄 | feature/sprint4-B4.6-cart-checkout-integration-tests | Depends on B4.1-B4.5 |
+| B4.6 | Write cart/checkout integration tests | High | ✅ | feature/sprint4-B4.6-cart-checkout-integration-tests | Completed 2026-02-19 |
 
 ---
 
@@ -144,8 +144,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-18 | B4.3 | 5e48783 | Cart validation endpoint + validator + service + controller + routes (76 tests), 1137 total, PR #73 |
 | 2026-02-19 | B4.4 | 71362af | Promo code validation endpoint + DiscountType enum + PromoCode model + migration (108 tests), 1245 total, PR #74 |
 | 2026-02-19 | B4.5 | 0c9ea64 | Order total calculation service + validator + controller + route (78 tests), 1323 total, PR #75 |
+| 2026-02-19 | B4.6 | dc48914 | Cart/checkout cross-module integration tests (8 tests), 1331 total, PR #76 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-19 (B4.5 completed)*
+*Last Updated: 2026-02-19 (B4.6 completed)*
