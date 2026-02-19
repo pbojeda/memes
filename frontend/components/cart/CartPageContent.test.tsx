@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { CartPageContent } from './CartPageContent';
 import type { CartItemLocal } from '@/stores/cartStore';
 import { createCartItem } from './testing/fixtures';
+import type { OrderSummaryProps } from '../checkout/OrderSummary';
 
 // ---- Mock next/link ------------------------------------------------------------
 jest.mock('next/link', () => {
@@ -66,6 +67,32 @@ jest.mock('./CartItem', () => ({
   },
 }));
 
+// ---- Mock ../checkout/OrderSummary ---------------------------------------------
+// Renders as a div with data attributes so tests can verify props wiring.
+// Must use relative path — jest.mock() doesn't resolve @/ aliases.
+jest.mock('../checkout/OrderSummary', () => ({
+  OrderSummary: ({
+    subtotal,
+    itemCount,
+    isLoading,
+    discountAmount,
+    shippingCost,
+    taxAmount,
+    total,
+  }: OrderSummaryProps) => (
+    <div
+      data-testid="order-summary"
+      data-subtotal={subtotal}
+      data-item-count={itemCount}
+      data-is-loading={isLoading}
+      data-discount-amount={discountAmount}
+      data-shipping-cost={shippingCost}
+      data-tax-amount={taxAmount}
+      data-total={total}
+    />
+  ),
+}));
+
 // ---- Mock ../../stores/cartStore -----------------------------------------------
 const mockRehydrate = jest.fn();
 
@@ -124,7 +151,7 @@ describe('CartPageContent - Empty Cart State', () => {
   it('does not render order summary when cart is empty', () => {
     mockItems = [];
     render(<CartPageContent />);
-    expect(screen.queryByText(/order summary/i)).not.toBeInTheDocument();
+    expect(screen.queryByTestId('order-summary')).not.toBeInTheDocument();
   });
 
   it('does not render any CartItem when cart is empty', () => {
@@ -159,15 +186,22 @@ describe('CartPageContent - Cart With Items', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/shopping cart/i);
   });
 
-  it('displays formatted subtotal', () => {
+  it('passes subtotal from store to OrderSummary', () => {
     render(<CartPageContent />);
-    // formatPrice(99.96) → "99,96 €"
-    expect(screen.getByText(/99,96\s€/)).toBeInTheDocument();
+    const summary = screen.getByTestId('order-summary');
+    expect(summary).toHaveAttribute('data-subtotal', '99.96');
   });
 
-  it('displays item count in summary', () => {
+  it('passes item count from store to OrderSummary', () => {
     render(<CartPageContent />);
-    expect(screen.getByText(/4/)).toBeInTheDocument();
+    const summary = screen.getByTestId('order-summary');
+    expect(summary).toHaveAttribute('data-item-count', '4');
+  });
+
+  it('passes isLoading=false to OrderSummary', () => {
+    render(<CartPageContent />);
+    const summary = screen.getByTestId('order-summary');
+    expect(summary).toHaveAttribute('data-is-loading', 'false');
   });
 
   it('does not render empty state message when items exist', () => {

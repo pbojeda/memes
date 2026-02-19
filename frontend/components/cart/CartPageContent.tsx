@@ -4,16 +4,9 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { CartItem } from '@/components/cart/CartItem';
+import { OrderSummary } from '@/components/checkout/OrderSummary';
 import { useCartStore } from '@/stores/cartStore';
-import { formatPrice } from '@/lib/utils';
 
 /**
  * CartPageContent renders the full-page cart view.
@@ -73,35 +66,29 @@ export function CartPageContent() {
           </div>
 
           {/* Order summary column */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-24">
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-              </CardHeader>
-
-              <CardContent>
-                <div className="flex items-center justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Items</span>
-                  <span>{itemCount}</span>
-                </div>
-                <div className="flex items-center justify-between font-medium border-t pt-4 mt-4">
-                  <span>Subtotal</span>
-                  <span className="font-semibold">{formatPrice(subtotal)}</span>
-                </div>
-              </CardContent>
-
-              <CardFooter className="flex-col gap-3">
-                <Button asChild className="w-full">
-                  <Link href="/checkout">Proceed to Checkout</Link>
-                </Button>
-                <Link
-                  href="/products"
-                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-                >
-                  Continue Shopping
-                </Link>
-              </CardFooter>
-            </Card>
+          <div className="lg:col-span-1 sticky top-24">
+            <OrderSummary
+              subtotal={subtotal}
+              discountAmount={0}
+              shippingCost={0}
+              taxAmount={0}
+              total={subtotal}
+              itemCount={itemCount}
+              appliedPromoCode={null}
+              cartErrors={[]}
+              isLoading={false}
+            />
+            <div className="mt-4 flex flex-col gap-3">
+              <Button asChild className="w-full">
+                <Link href="/checkout">Proceed to Checkout</Link>
+              </Button>
+              <Link
+                href="/products"
+                className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground text-center"
+              >
+                Continue Shopping
+              </Link>
+            </div>
           </div>
         </div>
       )}

@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.8 — Create order summary component |
+| Branch | feature/sprint4-F4.8-order-summary-component |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F4.8-order-summary-component.md |
 
 ---
 
@@ -55,7 +55,7 @@ Blocked: 0 tasks
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
-| F4.8 | Create order summary component | High | ⏳ | — | Depends on F4.1 |
+| F4.8 | Create order summary component | High | 🔄 | feature/sprint4-F4.8-order-summary-component | Depends on F4.1 ✅ |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
 | F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
 
