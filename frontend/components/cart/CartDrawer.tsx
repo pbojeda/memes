@@ -56,7 +56,7 @@ export function CartDrawer() {
               data-testid="cart-badge"
               className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground"
             >
-              {itemCount}
+              {itemCount > 99 ? '99+' : itemCount}
             </span>
           )}
         </Button>

@@ -177,6 +177,13 @@ describe('CartDrawer - Trigger Button', () => {
     expect(badge).toBeInTheDocument();
     expect(badge).toHaveTextContent('3');
   });
+
+  it('caps badge display at "99+" when itemCount exceeds 99', () => {
+    mockItemCount = 150;
+    render(<CartDrawer />);
+    const badge = screen.getByTestId('cart-badge');
+    expect(badge).toHaveTextContent('99+');
+  });
 });
 
 // ================================================================================
