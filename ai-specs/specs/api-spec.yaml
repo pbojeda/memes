@@ -1385,6 +1385,33 @@ paths:
         '400':
           $ref: '#/components/responses/ValidationError'
 
+  /cart/calculate:
+    post:
+      tags: [Cart]
+      summary: Calculate order total
+      operationId: calculateOrderTotal
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderTotalRequest'
+      responses:
+        '200':
+          description: Order total calculation result (appliedPromoCode=null if promo code invalid)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/OrderTotalResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
   # ============================================
   # ORDER ENDPOINTS
   # ============================================
@@ -3541,6 +3568,99 @@ components:
             - SIZE_NOT_ALLOWED
         message:
           type: string
+
+    OrderTotalRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: object
+            required: [productId, quantity]
+            properties:
+              productId:
+                type: string
+                format: uuid
+              quantity:
+                type: integer
+                minimum: 1
+                maximum: 99
+              size:
+                type: string
+                minLength: 1
+                maxLength: 20
+        promoCode:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Optional promo code to apply
+
+    OrderTotalResponse:
+      type: object
+      required: [valid, subtotal, discountAmount, shippingCost, taxAmount, total, currency, itemCount, validatedItems, appliedPromoCode, cartErrors]
+      properties:
+        valid:
+          type: boolean
+          description: false if any cart items are invalid
+        subtotal:
+          type: number
+          format: float
+          description: Sum of valid item subtotals
+        discountAmount:
+          type: number
+          format: float
+          description: Discount from applied promo code (0 if none)
+        shippingCost:
+          type: number
+          format: float
+          description: Flat shipping cost (0 for MVP)
+        taxAmount:
+          type: number
+          format: float
+          description: Tax amount (0 for MVP)
+        total:
+          type: number
+          format: float
+          description: subtotal - discountAmount + shippingCost + taxAmount, floored at 0
+        currency:
+          type: string
+          example: MXN
+        itemCount:
+          type: integer
+        validatedItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartValidatedItem'
+        appliedPromoCode:
+          nullable: true
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/AppliedPromoCodeDetail'
+        promoCodeMessage:
+          type: string
+          description: Error message when promo code is invalid (only present if promoCode was provided but invalid)
+        cartErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartValidationError'
+
+    AppliedPromoCodeDetail:
+      type: object
+      required: [code, discountType, discountValue, calculatedDiscount]
+      properties:
+        code:
+          type: string
+        discountType:
+          type: string
+          enum: [PERCENTAGE, FIXED_AMOUNT]
+        discountValue:
+          type: number
+        calculatedDiscount:
+          type: number
+          format: float
 
     # ============================================
     # ORDER SCHEMAS

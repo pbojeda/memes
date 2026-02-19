@@ -94,6 +94,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `AddressError` - AddressNotFoundError, AddressLimitExceededError, InvalidAddressDataError, DefaultAddressCannotBeDeletedError
 - `CartError` - InvalidCartDataError
 - `PromoCodeError` - InvalidPromoCodeDataError, PromoCodeNotFoundError, PromoCodeExpiredError, PromoCodeInactiveError, PromoCodeUsageLimitError, MinOrderAmountNotMetError, PromoCodeNotYetValidError
+- `OrderTotalError` - InvalidOrderTotalDataError
 
 ### Services (`backend/src/application/services/`)
 - `authService` - register, login, logout, refresh, password reset
@@ -104,6 +105,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `addressService` - CRUD for user addresses. Max 10 per user. Atomic default-swap via `$transaction`. Auto-defaults first address. `findFirst({ id, userId })` scoping prevents IDOR. See ADR-009 for "zero default addresses" known limitation.
 - `cartService` - `validateCart(input)` — validates client-side cart items against DB. Batch loads products via `findMany({ id: { in: ids } })`. Returns `{ valid, items, summary, errors }`. Per-item error codes: PRODUCT_NOT_FOUND, PRODUCT_INACTIVE, SIZE_REQUIRED, SIZE_NOT_ALLOWED, INVALID_SIZE. Returns structured result (never throws for business failures). See ADR-010.
 - `promoCodeService` - `validatePromoCode(input)` — validates promo code and calculates discount. Lookup via `findUnique({ code })`. 6 validation rules (exists, active, date range, usage limit, min order amount). PERCENTAGE: capped by maxDiscountAmount and orderTotal. FIXED_AMOUNT: capped at orderTotal. Returns structured result (never throws for business failures). `maxUsesPerUser` deferred to order placement (ADR-011). See ADR-010.
+- `orderTotalService` - `calculateOrderTotal(input)` — orchestrates `validateCart` + `validatePromoCode`. Returns `OrderTotalResult` with full financial breakdown (subtotal, discountAmount, shippingCost, taxAmount, total, currency, itemCount, validatedItems, appliedPromoCode, cartErrors). Never throws for business failures. Invalid promo code returns `valid: true` with `appliedPromoCode: null` and `promoCodeMessage`. MVP: shippingCost=0, taxAmount=0, currency='MXN'.
 
 ### Validators (`backend/src/application/validators/`)
 - `authValidator` - validateRegisterInput, validateLoginInput, validateRefreshInput, etc.
@@ -114,6 +116,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `addressValidator` - validateCreateAddressInput, validateUpdateAddressInput, validateAddressId (plain TS, no Zod — matches existing pattern)
 - `cartValidator` - validateCartInput — validates cart items array (max 50 items, valid UUIDs, quantity 1-99, optional size max 20 chars)
 - `promoCodeValidator` - validatePromoCodeInput — trims + uppercases code (max 50 chars), validates optional orderTotal >= 0
+- `orderTotalValidator` - validateOrderTotalInput — validates items array (same rules as cartValidator: max 50, UUID, quantity 1-99, optional size max 20 chars) + optional promoCode string (max 50 chars, trimmed and uppercased)
 
 ### Utilities (`backend/src/utils/`)
 - `slugify` - `generateSlug(text: string): string` — NFD normalization, accent stripping, lowercase, non-alphanumeric→hyphen, collapse consecutive hyphens, strip leading/trailing hyphens. Falls back to `'product'` on empty result. Output satisfies `/^[a-z0-9]+(?:-[a-z0-9]+)*$/`.
@@ -128,6 +131,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `addressController` - Address CRUD, error mapping (400/404/409)
 - `cartController` - Cart validation handler, maps InvalidCartDataError → 400
 - `promoCodeController` - Promo code validation handler, maps InvalidPromoCodeDataError → 400
+- `orderTotalController` - Order total calculation handler, maps InvalidOrderTotalDataError → 400
 
 ### Middleware (`backend/src/middleware/`)
 - `authMiddleware` - JWT verification, request user injection
@@ -142,7 +146,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `/upload` - File upload
 - `/health` - Health check
 - `/users/me/addresses` - Address CRUD (all routes require `authMiddleware`, no role restriction)
-- `/cart` - Cart validation (`POST /validate`, public — no auth)
+- `/cart` - Cart validation (`POST /validate`, public — no auth) + Order total calculation (`POST /calculate`, public — no auth)
 - `/promo-codes` - Promo code validation (`POST /validate`, public — no auth)
 
 ### External Services
@@ -156,7 +160,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **Mock level**: Service layer (not Prisma) — controllers call services, so mock at that boundary
 - **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
 - **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes, addressRoutes (mock Prisma), cartRoutes (mock Prisma), promoCodeRoutes (mock Prisma)
-- **Total**: 1245 backend tests (as of B4.4)
+- **Total**: ~1323 backend tests (as of B4.5; +78 from B4.5)
 
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
