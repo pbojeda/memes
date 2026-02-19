@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CartItem } from './CartItem';
-import type { CartItemLocal } from '@/stores/cartStore';
 import { MAX_ITEM_QUANTITY } from '@/stores/cartStore';
+import { createCartItem } from './testing/fixtures';
 
 // Mock next/link
 jest.mock('next/link', () => {
@@ -50,25 +50,7 @@ jest.mock('lucide-react', () => ({
   ),
 }));
 
-// Fixture factory
-function createCartItem(overrides: Partial<CartItemLocal> = {}): CartItemLocal {
-  return {
-    productId: 'prod-1',
-    slug: 'funny-cat-meme-tshirt',
-    title: 'Funny Cat Meme T-Shirt',
-    price: 24.99,
-    size: 'M',
-    quantity: 2,
-    primaryImage: {
-      id: 'img-1',
-      url: 'https://res.cloudinary.com/test/image/upload/v1/products/cat-meme.jpg',
-      altText: 'Funny cat meme on a white t-shirt',
-      isPrimary: true,
-      sortOrder: 0,
-    },
-    ...overrides,
-  };
-}
+// Fixture factory — centralized in ./testing/fixtures.ts
 
 describe('CartItem - Product Image Display', () => {
   it('renders product image with correct src, alt, width=80, height=80', () => {

@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.2 — Implement CartDrawer component |
+| Branch | feature/sprint4-F4.2-cart-drawer |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/F4.2-cart-drawer.md |
 
 ---
 
@@ -49,7 +49,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F4.1 | Create cartStore (Zustand with persistence) | High | ✅ | feature/sprint4-F4.1-cart-store | Completed 2026-02-19 |
-| F4.2 | Implement CartDrawer component | High | ⏳ | — | Depends on F4.1, F4.3 |
+| F4.2 | Implement CartDrawer component | High | 🔄 | feature/sprint4-F4.2-cart-drawer | Depends on F4.1, F4.3 |
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
 | F4.4 | Create cart page | High | ⏳ | — | Depends on F4.1, F4.3 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
@@ -132,6 +132,15 @@ From PLAN_DESARROLLO.md:
 ## Sprint Notes
 
 _Key learnings, issues, or observations:_
+
+### Tech debt from F4.2 code review (non-blocking)
+
+1. **Store wiring tests use mock internals** — CartDrawer Group D tests call the spy directly instead of simulating user interaction through the mock CartItem. Works but gives weaker confidence about actual prop wiring.
+2. **UI primitives don't forward refs** — `sheet.tsx` and `dialog.tsx` don't use `forwardRef`. Would matter if a consumer needs programmatic focus or measurement. Project-wide concern.
+3. **SheetFooter vs DialogFooter layout inconsistency** — Sheet uses `flex-col`, Dialog uses `flex-col-reverse`. Button order on mobile differs. Should be a deliberate decision.
+4. **CartDrawer mock design is fragile for multi-item** — `mockOnUpdateQuantity.mockImplementation(onUpdateQuantity)` always points to the last-rendered CartItem's props. Add a comment if Group D tests are extended to multiple items.
+5. **No test for open/close state** — Sheet is mocked as a plain div, so toggling is invisible to the test suite. Accepted trade-off of the JSDOM portal mocking strategy.
+6. **`data-slot` on `DialogPortal` in `dialog.tsx`** — Same issue as the one fixed in `sheet.tsx` (Portal doesn't render DOM, attribute silently dropped). Fix when touching `dialog.tsx` next.
 
 ---
 

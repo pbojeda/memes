@@ -53,7 +53,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `ReviewList` - Client component (`'use client'`): fetches reviews via `reviewService.list(productId, { page, limit: 5 })`, manages loading/error/empty/populated states. Composes ReviewSummary + ReviewCard list + Pagination. Props: `productId: string`, `className?`. Resets page to 1 on productId change.
 
 ### UI Primitives (`frontend/components/ui/`)
-- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `DropdownMenu`, `Table`, `Select`, `Pagination` (shadcn/ui + Radix)
+- `Button`, `Input`, `Label`, `Card`, `Alert`, `Badge`, `Checkbox`, `Dialog`, `Sheet`, `DropdownMenu`, `Table`, `Select`, `Pagination` (shadcn/ui + Radix)
 - `Pagination` - Reusable pagination: prev/next buttons, page numbers with ellipsis truncation (<=7 shows all, >7 shows first/last/current±1). Props: `currentPage`, `totalPages`, `onPageChange`, `className?`. Returns null when totalPages <= 1. Accessible: `<nav aria-label="Pagination">`, `aria-current="page"` on current.
 - **Radix Select testing**: Radix portals don't work in JSDOM — mock `radix-ui` Select with native `<select>` elements in tests. See `ProductFilters.test.tsx` for the pattern.
 
@@ -79,6 +79,8 @@ This file stores project configuration, constants, and frequently-needed **non-s
 
 ### Cart Components (`frontend/components/cart/`)
 - `CartItem` - Presentational component: product image (80x80 next/image + ImageOff fallback), title link to `/products/{slug}`, size label (conditional), formatted unit price + line total via `formatPrice()`, quantity stepper (+/- buttons, bounds 1–99), remove button. Props: `item: CartItemLocal`, `onUpdateQuantity(productId, size, newQty)`, `onRemove(productId, size)`, `className?`. No store coupling — parent wires callbacks to cartStore. Uses `type="button"` on all buttons, `role="group"` on quantity stepper.
+- `CartDrawer` - Slide-out side panel for quick cart access. `'use client'`, no props — reads from cartStore. Trigger button: ShoppingCart icon + badge (itemCount, capped at "99+"). Sheet content: SheetTitle "Shopping Cart", scrollable CartItem list (or "Your cart is empty"), subtotal bar with `formatPrice()`, "View Cart" link to `/cart`, "Continue Shopping" close button. Hydrates store on mount via `useCartStore.persist.rehydrate()`. Key: `${productId}-${size ?? 'no-size'}`.
+- **Test fixtures**: `createCartItem` in `components/cart/testing/fixtures.ts` — centralized factory for both CartItem and CartDrawer tests.
 
 ### Stores (`frontend/stores/`)
 - `authStore` (Zustand) - user, tokens, isAuthenticated, loading, error states
