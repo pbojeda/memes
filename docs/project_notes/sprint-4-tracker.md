@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.3 — Implement CartItem component |
+| Branch | feature/sprint4-F4.3-cart-item-component |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F4.3-cart-item-component.md |
 
 ---
 
@@ -50,7 +50,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | F4.1 | Create cartStore (Zustand with persistence) | High | ✅ | feature/sprint4-F4.1-cart-store | Completed 2026-02-19 |
 | F4.2 | Implement CartDrawer component | High | ⏳ | — | Depends on F4.1, F4.3 |
-| F4.3 | Implement CartItem component | High | ⏳ | — | Depends on F4.1 |
+| F4.3 | Implement CartItem component | High | 🔄 | feature/sprint4-F4.3-cart-item-component | Depends on F4.1 |
 | F4.4 | Create cart page | High | ⏳ | — | Depends on F4.1, F4.3 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ⏳ | — | Depends on B4.2 |
