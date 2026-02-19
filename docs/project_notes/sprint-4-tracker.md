@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████                    ] 25%
+Progress: [████████                  ] 31%
 
-Completed: 4/16 tasks
+Completed: 5/16 tasks
 In Progress: 0 tasks
-Pending: 12 tasks
+Pending: 11 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B4.5 — Create order total calculation service |
-| Branch | feature/sprint4-B4.5-order-total-calculation |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B4.5-order-total-calculation.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -39,7 +39,7 @@ Blocked: 0 tasks
 | B4.2 | Implement address service (CRUD for users) | High | ✅ | feature/sprint4-B4.2-address-service | Completed 2026-02-18 |
 | B4.3 | Create cart validation endpoint | High | ✅ | feature/sprint4-B4.3-cart-validation | Completed 2026-02-18 |
 | B4.4 | Implement promo code validation | High | ✅ | feature/sprint4-B4.4-promo-code-validation | Completed 2026-02-19 |
-| B4.5 | Create order total calculation service | High | 🔄 | feature/sprint4-B4.5-order-total-calculation | Depends on B4.4 ✅ |
+| B4.5 | Create order total calculation service | High | ✅ | feature/sprint4-B4.5-order-total-calculation | Completed 2026-02-19 |
 | B4.6 | Write cart/checkout integration tests | High | ⏳ | — | Depends on B4.1-B4.5 |
 
 ---
@@ -143,8 +143,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-18 | B4.2 | 814b458 | Address service CRUD + validator + controller + routes (75 tests), 1061 total, PR #72 |
 | 2026-02-18 | B4.3 | 5e48783 | Cart validation endpoint + validator + service + controller + routes (76 tests), 1137 total, PR #73 |
 | 2026-02-19 | B4.4 | 71362af | Promo code validation endpoint + DiscountType enum + PromoCode model + migration (108 tests), 1245 total, PR #74 |
+| 2026-02-19 | B4.5 | 0c9ea64 | Order total calculation service + validator + controller + route (78 tests), 1323 total, PR #75 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-19 (B4.4 completed)*
+*Last Updated: 2026-02-19 (B4.5 completed)*
