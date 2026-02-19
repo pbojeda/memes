@@ -166,21 +166,23 @@ describe('Checkout Flow Integration', () => {
 
       expect(cartValidateResponse.status).toBe(200);
       expect(cartValidateResponse.body.data.valid).toBe(true);
-      expect(cartValidateResponse.body.data.summary.subtotal).toBe(200);
+      const cartSubtotal = cartValidateResponse.body.data.summary.subtotal;
+      expect(cartSubtotal).toBe(200);
       expect(cartValidateResponse.body.data.items).toHaveLength(1);
 
-      // Step 2: validate promo code
+      // Step 2: validate promo code using subtotal from cart validation
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(makePromoCode());
 
       const promoValidateResponse = await request(testApp)
         .post('/promo-codes/validate')
-        .send({ code: 'SUMMER20', orderTotal: 200 });
+        .send({ code: 'SUMMER20', orderTotal: cartSubtotal });
 
       expect(promoValidateResponse.status).toBe(200);
       expect(promoValidateResponse.body.data.valid).toBe(true);
-      expect(promoValidateResponse.body.data.calculatedDiscount).toBe(40);
+      const promoDiscount = promoValidateResponse.body.data.calculatedDiscount;
+      expect(promoDiscount).toBe(40);
 
-      // Step 3: calculate order total with promo
+      // Step 3: calculate order total — must match cart + promo results
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValue([makeProduct()]);
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(makePromoCode());
 
@@ -192,9 +194,9 @@ describe('Checkout Flow Integration', () => {
         });
 
       expect(calculateResponse.status).toBe(200);
-      expect(calculateResponse.body.data.subtotal).toBe(200);
-      expect(calculateResponse.body.data.discountAmount).toBe(40);
-      expect(calculateResponse.body.data.total).toBe(160);
+      expect(calculateResponse.body.data.subtotal).toBe(cartSubtotal);
+      expect(calculateResponse.body.data.discountAmount).toBe(promoDiscount);
+      expect(calculateResponse.body.data.total).toBe(cartSubtotal - promoDiscount);
       expect(calculateResponse.body.data.appliedPromoCode.code).toBe('SUMMER20');
 
       // Step 4: get addresses (authenticated)
@@ -259,9 +261,10 @@ describe('Checkout Flow Integration', () => {
         .send({ code: 'SUMMER20', orderTotal: 150 });
 
       expect(promoValidateResponse.status).toBe(200);
-      expect(promoValidateResponse.body.data.calculatedDiscount).toBe(30);
+      const standaloneDiscount = promoValidateResponse.body.data.calculatedDiscount;
+      expect(standaloneDiscount).toBe(30);
 
-      // Step 2: calculate order total with same promo
+      // Step 2: calculate order total with same promo — discount must match standalone
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValue([makeProduct({ price: 150 })]);
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(makePromoCode());
 
@@ -273,8 +276,8 @@ describe('Checkout Flow Integration', () => {
         });
 
       expect(calculateResponse.status).toBe(200);
-      expect(calculateResponse.body.data.discountAmount).toBe(30);
-      expect(calculateResponse.body.data.total).toBe(120);
+      expect(calculateResponse.body.data.discountAmount).toBe(standaloneDiscount);
+      expect(calculateResponse.body.data.total).toBe(150 - standaloneDiscount);
       expect(calculateResponse.body.data.appliedPromoCode.discountType).toBe('PERCENTAGE');
     });
   });
@@ -325,9 +328,10 @@ describe('Checkout Flow Integration', () => {
       expect(cartValidateResponse.body.data.valid).toBe(false);
       expect(cartValidateResponse.body.data.items).toHaveLength(1);
       expect(cartValidateResponse.body.data.errors).toHaveLength(1);
-      expect(cartValidateResponse.body.data.summary.subtotal).toBe(100);
+      const validSubtotal = cartValidateResponse.body.data.summary.subtotal;
+      expect(validSubtotal).toBe(100);
 
-      // Step 2: calculate with same items + expired promo
+      // Step 2: calculate with same items + expired promo — subtotal must match cart
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValue([makeProduct()]);
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(
         makePromoCode({ validUntil: new Date(Date.now() - 86400000) })
@@ -345,11 +349,11 @@ describe('Checkout Flow Integration', () => {
 
       expect(calculateResponse.status).toBe(200);
       expect(calculateResponse.body.data.valid).toBe(false);
-      expect(calculateResponse.body.data.subtotal).toBe(100);
+      expect(calculateResponse.body.data.subtotal).toBe(validSubtotal);
       expect(calculateResponse.body.data.discountAmount).toBe(0);
       expect(calculateResponse.body.data.appliedPromoCode).toBeNull();
       expect(calculateResponse.body.data.promoCodeMessage).toBe('Promo code has expired');
-      expect(calculateResponse.body.data.total).toBe(100);
+      expect(calculateResponse.body.data.total).toBe(validSubtotal);
       expect(calculateResponse.body.data.cartErrors).toHaveLength(1);
     });
   });
@@ -413,9 +417,10 @@ describe('Checkout Flow Integration', () => {
       expect(promoValidateResponse.status).toBe(200);
       expect(promoValidateResponse.body.data.valid).toBe(true);
       expect(promoValidateResponse.body.data.discountType).toBe('FIXED_AMOUNT');
-      expect(promoValidateResponse.body.data.calculatedDiscount).toBe(15);
+      const fixedDiscount = promoValidateResponse.body.data.calculatedDiscount;
+      expect(fixedDiscount).toBe(15);
 
-      // Step 2: calculate with same promo applied
+      // Step 2: calculate with same promo — discount must match standalone
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValue([makeProduct()]);
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(
         makePromoCode({ code: 'SAVE15', discountType: 'FIXED_AMOUNT', discountValue: 15 })
@@ -429,8 +434,8 @@ describe('Checkout Flow Integration', () => {
         });
 
       expect(calculateResponse.status).toBe(200);
-      expect(calculateResponse.body.data.discountAmount).toBe(15);
-      expect(calculateResponse.body.data.total).toBe(85);
+      expect(calculateResponse.body.data.discountAmount).toBe(fixedDiscount);
+      expect(calculateResponse.body.data.total).toBe(100 - fixedDiscount);
       expect(calculateResponse.body.data.appliedPromoCode.discountType).toBe('FIXED_AMOUNT');
     });
   });
@@ -460,21 +465,24 @@ describe('Checkout Flow Integration', () => {
       expect(cartValidateResponse.status).toBe(200);
       expect(cartValidateResponse.body.data.valid).toBe(true);
       expect(cartValidateResponse.body.data.items).toHaveLength(3);
-      expect(cartValidateResponse.body.data.summary.subtotal).toBe(295);
-      expect(cartValidateResponse.body.data.summary.itemCount).toBe(4);
+      const cartSubtotal = cartValidateResponse.body.data.summary.subtotal;
+      const cartItemCount = cartValidateResponse.body.data.summary.itemCount;
+      expect(cartSubtotal).toBe(295);
+      expect(cartItemCount).toBe(4);
 
-      // Step 2: validate promo code against subtotal
+      // Step 2: validate promo code against the subtotal from cart validation
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(makePromoCode());
 
       const promoValidateResponse = await request(testApp)
         .post('/promo-codes/validate')
-        .send({ code: 'SUMMER20', orderTotal: 295 });
+        .send({ code: 'SUMMER20', orderTotal: cartSubtotal });
 
       // 20% of 295 = 59
       expect(promoValidateResponse.status).toBe(200);
-      expect(promoValidateResponse.body.data.calculatedDiscount).toBe(59);
+      const promoDiscount = promoValidateResponse.body.data.calculatedDiscount;
+      expect(promoDiscount).toBe(59);
 
-      // Step 3: calculate full order total
+      // Step 3: calculate full order total — must match cart + promo results
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(products);
       (mockPrisma.promoCode.findUnique as jest.Mock).mockResolvedValue(makePromoCode());
 
@@ -489,12 +497,11 @@ describe('Checkout Flow Integration', () => {
           promoCode: 'SUMMER20',
         });
 
-      // total: 295 - 59 = 236
       expect(calculateResponse.status).toBe(200);
-      expect(calculateResponse.body.data.subtotal).toBe(295);
-      expect(calculateResponse.body.data.discountAmount).toBe(59);
-      expect(calculateResponse.body.data.total).toBe(236);
-      expect(calculateResponse.body.data.itemCount).toBe(4);
+      expect(calculateResponse.body.data.subtotal).toBe(cartSubtotal);
+      expect(calculateResponse.body.data.discountAmount).toBe(promoDiscount);
+      expect(calculateResponse.body.data.total).toBe(cartSubtotal - promoDiscount);
+      expect(calculateResponse.body.data.itemCount).toBe(cartItemCount);
       expect(calculateResponse.body.data.validatedItems).toHaveLength(3);
     });
   });
