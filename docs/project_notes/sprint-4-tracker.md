@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.8 — Create order summary component |
+| Branch | feature/sprint4-F4.8-order-summary-component |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F4.8-order-summary-component.md |
 
 ---
 
@@ -55,7 +55,7 @@ Blocked: 0 tasks
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
-| F4.8 | Create order summary component | High | ⏳ | — | Depends on F4.1 |
+| F4.8 | Create order summary component | High | 🔄 | feature/sprint4-F4.8-order-summary-component | Depends on F4.1 ✅ |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
 | F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
 
@@ -162,6 +162,12 @@ _Key learnings, issues, or observations:_
 16. **Loading state tests leave dangling unresolved promise** — `PromoCodeInput.test.tsx` loading tests call `resolveValidate!()` at the end but don't `await` the resulting state update. Tests pass but component's async handler settles after test ends.
 17. **`isApplied && appliedResult` double-guard is unreachable** — `state === 'applied'` and `appliedResult !== null` are always set together. The `&& appliedResult` check is dead code. Could model as discriminated union.
 18. **`discountValue!` non-null assertion** — In the FIXED_AMOUNT branch at line 92, `discountValue!` is used despite the parent condition already narrowing it. TypeScript doesn't narrow the generated API type across the conditional; harmless but imprecise.
+
+### Tech debt from F4.8 code review (non-blocking)
+
+19. **`text-green-700` hardcoded color on discount line** — `OrderSummary.tsx` line 120 uses a fixed Tailwind shade instead of a semantic design token. Won't adapt to dark mode. Use `dark:text-green-400` or a CSS variable when dark mode is implemented.
+20. **Test fixtures use plain string IDs instead of UUIDs** — `checkoutService.test.ts` sample items use `'prod-1'`/`'prod-2'` and `fixtures.ts` uses `'prod-invalid'`. The API spec requires UUID format for `productId`. Tests pass because the API is mocked, but hides format mismatches.
+21. **`promoCodeService` missing from barrel export** — `frontend/lib/services/index.ts` exports all services except `promoCodeService`. Pre-existing issue discovered during F4.8 review. Not blocking since consumers import directly.
 
 ---
 
