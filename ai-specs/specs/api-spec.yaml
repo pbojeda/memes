@@ -3460,8 +3460,10 @@ components:
               quantity:
                 type: integer
                 minimum: 1
+                maximum: 99
               size:
                 type: string
+                maxLength: 20
 
     CartValidationResult:
       type: object

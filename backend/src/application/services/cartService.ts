@@ -86,7 +86,11 @@ export async function validateCart(input: CartValidationInput): Promise<CartVali
     }
 
     const hasSizes = product.productType.hasSizes;
-    const availableSizes = product.availableSizes as string[] | null;
+    const rawSizes = product.availableSizes;
+    const availableSizes: string[] | null =
+      Array.isArray(rawSizes) && rawSizes.every((s) => typeof s === 'string')
+        ? (rawSizes as string[])
+        : null;
 
     if (hasSizes && !item.size) {
       errors.push({

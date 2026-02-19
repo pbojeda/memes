@@ -133,7 +133,7 @@ describe('cartController', () => {
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should return 400 with field=undefined when InvalidCartDataError has no field', async () => {
+    it('should return 400 with no field when InvalidCartDataError has no field', async () => {
       const cartError = new InvalidCartDataError('invalid input');
       (mockCartService.validateCart as jest.Mock).mockRejectedValue(cartError);
 
@@ -144,14 +144,11 @@ describe('cartController', () => {
       );
 
       expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          message: 'invalid input',
-          code: 'INVALID_CART_DATA',
-          field: undefined,
-        },
-      });
+      const responseBody = jsonMock.mock.calls[0][0];
+      expect(responseBody.success).toBe(false);
+      expect(responseBody.error.message).toBe('invalid input');
+      expect(responseBody.error.code).toBe('INVALID_CART_DATA');
+      expect(responseBody.error.field).toBeUndefined();
     });
 
     it('should call next(error) for unexpected errors', async () => {
