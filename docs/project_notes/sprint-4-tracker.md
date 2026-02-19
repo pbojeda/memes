@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [███████████████████       ] 75%
+Progress: [████████████████████      ] 81%
 
-Completed: 12/16 tasks
+Completed: 13/16 tasks
 In Progress: 0 tasks
-Pending: 4 tasks
+Pending: 3 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F4.8 — Create order summary component |
-| Branch | feature/sprint4-F4.8-order-summary-component |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F4.8-order-summary-component.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -55,7 +55,7 @@ Blocked: 0 tasks
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
-| F4.8 | Create order summary component | High | 🔄 | feature/sprint4-F4.8-order-summary-component | Depends on F4.1 ✅ |
+| F4.8 | Create order summary component | High | ✅ | feature/sprint4-F4.8-order-summary-component | Completed 2026-02-19 |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
 | F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
 
@@ -187,8 +187,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-19 | F4.4 | 3d72be8 | Cart page + CartPageContent + a11y improvements (17 tests), 694 frontend total, PR #80 |
 | 2026-02-19 | F4.6 | 5b64698 | AddressForm + addressService + address validations (90 tests), 784 frontend total, PR #81 |
 | 2026-02-19 | F4.7 | 3d26e86 | PromoCodeInput + promoCodeService (31 tests), 815 frontend total, PR #82 |
+| 2026-02-19 | F4.8 | 567d4b4 | OrderSummary + checkoutService + CartPageContent integration (22 tests), 837 frontend total, PR #83 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-19 (F4.7 completed)*
+*Last Updated: 2026-02-19 (F4.8 completed)*
