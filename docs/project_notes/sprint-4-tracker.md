@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.7 — Implement promo code input |
+| Branch | feature/sprint4-F4.7-promo-code-input |
+| Step | 2a/5 (Plan) |
+| Ticket | docs/tickets/F4.7-promo-code-input.md |
 
 ---
 
@@ -54,7 +54,7 @@ Blocked: 0 tasks
 | F4.4 | Create cart page | High | ✅ | feature/sprint4-F4.4-cart-page | Completed 2026-02-19 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
-| F4.7 | Implement promo code input | High | ⏳ | — | Depends on B4.4 |
+| F4.7 | Implement promo code input | High | 🔄 | feature/sprint4-F4.7-promo-code-input | Depends on B4.4 ✅ |
 | F4.8 | Create order summary component | High | ⏳ | — | Depends on F4.1 |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
 | F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
@@ -156,6 +156,12 @@ _Key learnings, issues, or observations:_
 13. **Missing `label` field from edit mode pre-population test** — `mockAddress` has `label: 'Home'` but test doesn't assert it's pre-filled.
 14. **No test for `onCancel` callback firing** — Tests verify cancel button renders/hides but don't test clicking it calls `onCancel`.
 15. **Service test `try/catch` with `fail()` pattern** — Two tests in `addressService.test.ts` use verbose try/catch+fail instead of `.rejects` chain. Could use `.catch(e => e)` pattern instead.
+
+### Tech debt from F4.7 code review (non-blocking)
+
+16. **Loading state tests leave dangling unresolved promise** — `PromoCodeInput.test.tsx` loading tests call `resolveValidate!()` at the end but don't `await` the resulting state update. Tests pass but component's async handler settles after test ends.
+17. **`isApplied && appliedResult` double-guard is unreachable** — `state === 'applied'` and `appliedResult !== null` are always set together. The `&& appliedResult` check is dead code. Could model as discriminated union.
+18. **`discountValue!` non-null assertion** — In the FIXED_AMOUNT branch at line 92, `discountValue!` is used despite the parent condition already narrowing it. TypeScript doesn't narrow the generated API type across the conditional; harmless but imprecise.
 
 ---
 
