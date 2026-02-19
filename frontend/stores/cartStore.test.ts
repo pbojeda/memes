@@ -55,7 +55,8 @@ describe('cartStore', () => {
 
       const state = useCartStore.getState();
       expect(state.items).toHaveLength(1);
-      expect(state.items[0].quantity).toBe(1);
+      expect(state.items[0]).toEqual({ ...itemTShirtM, quantity: 1 });
+      expect(state.itemCount).toBe(1);
       expect(state.subtotal).toBe(24.99);
     });
 
@@ -119,6 +120,22 @@ describe('cartStore', () => {
       });
 
       expect(useCartStore.getState().items[0].quantity).toBe(MAX_ITEM_QUANTITY);
+    });
+
+    it('should be a no-op when adding with quantity 0', () => {
+      act(() => {
+        useCartStore.getState().addItem(itemTShirtM, 0);
+      });
+
+      expect(useCartStore.getState().items).toHaveLength(0);
+    });
+
+    it('should be a no-op when adding with negative quantity', () => {
+      act(() => {
+        useCartStore.getState().addItem(itemTShirtM, -1);
+      });
+
+      expect(useCartStore.getState().items).toHaveLength(0);
     });
 
     it('should cap accumulated quantity at MAX_ITEM_QUANTITY when adding duplicates', () => {

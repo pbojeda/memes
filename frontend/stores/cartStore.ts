@@ -56,6 +56,8 @@ export const useCartStore = create<CartStore>()(
 
       addItem: (itemData: Omit<CartItemLocal, 'quantity'>, quantity = 1) =>
         set((state) => {
+          if (quantity <= 0) return state;
+
           const existing = state.items.find((item) =>
             itemMatches(item, itemData.productId, itemData.size)
           );
@@ -109,8 +111,7 @@ export const useCartStore = create<CartStore>()(
       onRehydrateStorage: () => (state) => {
         if (state) {
           const derived = computeDerived(state.items);
-          state.itemCount = derived.itemCount;
-          state.subtotal = derived.subtotal;
+          useCartStore.setState(derived);
         }
       },
     }
