@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B4.6 — Write cart/checkout integration tests |
+| Branch | feature/sprint4-B4.6-cart-checkout-integration-tests |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/B4.6-cart-checkout-integration-tests.md |
 
 ---
 
@@ -40,7 +40,7 @@ Blocked: 0 tasks
 | B4.3 | Create cart validation endpoint | High | ✅ | feature/sprint4-B4.3-cart-validation | Completed 2026-02-18 |
 | B4.4 | Implement promo code validation | High | ✅ | feature/sprint4-B4.4-promo-code-validation | Completed 2026-02-19 |
 | B4.5 | Create order total calculation service | High | ✅ | feature/sprint4-B4.5-order-total-calculation | Completed 2026-02-19 |
-| B4.6 | Write cart/checkout integration tests | High | ⏳ | — | Depends on B4.1-B4.5 |
+| B4.6 | Write cart/checkout integration tests | High | 🔄 | feature/sprint4-B4.6-cart-checkout-integration-tests | Depends on B4.1-B4.5 |
 
 ---
 

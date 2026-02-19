@@ -159,8 +159,8 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - **Pattern**: supertest + jest mocks, one file per route group
 - **Mock level**: Service layer (not Prisma) — controllers call services, so mock at that boundary
 - **Auth helpers**: `setupAdminAuth()` and `setupRoleAuth(role)` per file (Jest mock scope is per-file)
-- **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes, addressRoutes (mock Prisma), cartRoutes (mock Prisma), promoCodeRoutes (mock Prisma)
-- **Total**: ~1323 backend tests (as of B4.5; +78 from B4.5)
+- **Files**: authRoutes, productTypeRoutes (mock Prisma — legacy), productRoutes, productImageRoutes, uploadRoutes, reviewRoutes, addressRoutes (mock Prisma), cartRoutes (mock Prisma), promoCodeRoutes (mock Prisma), orderTotalRoutes (mock Prisma), checkoutFlow (mock Prisma — cross-module flow tests)
+- **Total**: ~1331 backend tests (as of B4.6; +8 from B4.6)
 
 ### Frontend Image Config
 - **next/image** configured for Cloudinary: `remotePatterns` in `frontend/next.config.ts` allows `https://res.cloudinary.com/**`
