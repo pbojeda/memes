@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — (B4.2 complete, merged) |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | B4.3 — Create cart validation endpoint |
+| Branch | feature/sprint4-B4.3-cart-validation |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/B4.3-cart-validation-endpoint.md |
 
 ---
 
@@ -37,7 +37,7 @@ Blocked: 0 tasks
 |----|------|----------|--------|--------|-------|
 | B4.1 | Create Address model and migration | High | ✅ | feature/sprint4-B4.1-address-model | Completed 2026-02-18 |
 | B4.2 | Implement address service (CRUD for users) | High | ✅ | feature/sprint4-B4.2-address-service | Completed 2026-02-18 |
-| B4.3 | Create cart validation endpoint | High | ⏳ | — | — |
+| B4.3 | Create cart validation endpoint | High | 🔄 | feature/sprint4-B4.3-cart-validation | In progress |
 | B4.4 | Implement promo code validation | High | ⏳ | — | Needs PromoCode model in schema |
 | B4.5 | Create order total calculation service | High | ⏳ | — | Depends on B4.4 |
 | B4.6 | Write cart/checkout integration tests | High | ⏳ | — | Depends on B4.1-B4.5 |

@@ -1358,6 +1358,33 @@ paths:
         '400':
           $ref: '#/components/responses/ValidationError'
 
+  /cart/validate:
+    post:
+      tags: [Cart]
+      summary: Validate cart items
+      operationId: validateCart
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartValidationRequest'
+      responses:
+        '200':
+          description: Cart validation result (valid=false if any items have issues)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/CartValidationResult'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
   # ============================================
   # ORDER ENDPOINTS
   # ============================================
@@ -3414,6 +3441,106 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ShippingOption'
+
+    CartValidationRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: object
+            required: [productId, quantity]
+            properties:
+              productId:
+                type: string
+                format: uuid
+              quantity:
+                type: integer
+                minimum: 1
+                maximum: 99
+              size:
+                type: string
+                maxLength: 20
+
+    CartValidationResult:
+      type: object
+      required: [valid, items, summary, errors]
+      properties:
+        valid:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartValidatedItem'
+        summary:
+          type: object
+          required: [subtotal, itemCount]
+          properties:
+            subtotal:
+              type: number
+              format: float
+            itemCount:
+              type: integer
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartValidationError'
+
+    CartValidatedItem:
+      type: object
+      required: [productId, quantity, size, unitPrice, subtotal, product, status]
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        size:
+          type: string
+          nullable: true
+        unitPrice:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+        product:
+          type: object
+          required: [title, slug]
+          properties:
+            title:
+              type: object
+              additionalProperties: true
+            slug:
+              type: string
+            primaryImage:
+              nullable: true
+              allOf:
+                - $ref: '#/components/schemas/ProductImage'
+        status:
+          type: string
+          enum: [valid]
+
+    CartValidationError:
+      type: object
+      required: [productId, code, message]
+      properties:
+        productId:
+          type: string
+          format: uuid
+        code:
+          type: string
+          enum:
+            - PRODUCT_NOT_FOUND
+            - PRODUCT_INACTIVE
+            - INVALID_SIZE
+            - SIZE_REQUIRED
+            - SIZE_NOT_ALLOWED
+        message:
+          type: string
 
     # ============================================
     # ORDER SCHEMAS

@@ -604,6 +604,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cart/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate cart items */
+        post: operations["validateCart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/orders": {
         parameters: {
             query?: never;
@@ -1492,6 +1509,50 @@ export interface components {
         };
         ShippingOptionsResponse: {
             data?: components["schemas"]["ShippingOption"][];
+        };
+        CartValidationRequest: {
+            items: {
+                /** Format: uuid */
+                productId: string;
+                quantity: number;
+                size?: string;
+            }[];
+        };
+        CartValidationResult: {
+            valid: boolean;
+            items: components["schemas"]["CartValidatedItem"][];
+            summary: {
+                /** Format: float */
+                subtotal: number;
+                itemCount: number;
+            };
+            errors: components["schemas"]["CartValidationError"][];
+        };
+        CartValidatedItem: {
+            /** Format: uuid */
+            productId: string;
+            quantity: number;
+            size: string | null;
+            /** Format: float */
+            unitPrice: number;
+            /** Format: float */
+            subtotal: number;
+            product: {
+                title: {
+                    [key: string]: unknown;
+                };
+                slug: string;
+                primaryImage?: components["schemas"]["ProductImage"] | null;
+            };
+            /** @enum {string} */
+            status: "valid";
+        };
+        CartValidationError: {
+            /** Format: uuid */
+            productId: string;
+            /** @enum {string} */
+            code: "PRODUCT_NOT_FOUND" | "PRODUCT_INACTIVE" | "INVALID_SIZE" | "SIZE_REQUIRED" | "SIZE_NOT_ALLOWED";
+            message: string;
         };
         /** @enum {string} */
         OrderStatus: "PENDING" | "PAID" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUNDED";
@@ -3210,6 +3271,34 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShippingOptionsResponse"];
+                };
+            };
+            400: components["responses"]["ValidationError"];
+        };
+    };
+    validateCart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CartValidationRequest"];
+            };
+        };
+        responses: {
+            /** @description Cart validation result (valid=false if any items have issues) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success?: boolean;
+                        data?: components["schemas"]["CartValidationResult"];
+                    };
                 };
             };
             400: components["responses"]["ValidationError"];
