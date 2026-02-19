@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.7 — Implement promo code input |
+| Branch | feature/sprint4-F4.7-promo-code-input |
+| Step | 2a/5 (Plan) |
+| Ticket | docs/tickets/F4.7-promo-code-input.md |
 
 ---
 
@@ -54,7 +54,7 @@ Blocked: 0 tasks
 | F4.4 | Create cart page | High | ✅ | feature/sprint4-F4.4-cart-page | Completed 2026-02-19 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
-| F4.7 | Implement promo code input | High | ⏳ | — | Depends on B4.4 |
+| F4.7 | Implement promo code input | High | 🔄 | feature/sprint4-F4.7-promo-code-input | Depends on B4.4 ✅ |
 | F4.8 | Create order summary component | High | ⏳ | — | Depends on F4.1 |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
 | F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
