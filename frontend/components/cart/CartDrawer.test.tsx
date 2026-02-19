@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { CartDrawer } from './CartDrawer';
 import type { CartItemLocal } from '@/stores/cartStore';
+import { createCartItem } from './testing/fixtures';
 
 // ---- Mock ../ui/sheet ----------------------------------------------------------
 // Render sub-components as plain HTML elements to avoid portal/JSDOM issues.
@@ -140,19 +141,7 @@ beforeAll(() => {
   cartStoreModule.useCartStore.persist = { rehydrate: mockRehydrate };
 });
 
-// ---- Fixture factory -----------------------------------------------------------
-function createCartItem(overrides: Partial<CartItemLocal> = {}): CartItemLocal {
-  return {
-    productId: 'prod-1',
-    slug: 'funny-cat-meme-tshirt',
-    title: 'Funny Cat Meme T-Shirt',
-    price: 24.99,
-    size: 'M',
-    quantity: 2,
-    primaryImage: null,
-    ...overrides,
-  };
-}
+// Fixture factory — centralized in ./testing/fixtures.ts
 
 // ================================================================================
 // A: Trigger button

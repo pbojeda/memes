@@ -133,6 +133,15 @@ From PLAN_DESARROLLO.md:
 
 _Key learnings, issues, or observations:_
 
+### Tech debt from F4.2 code review (non-blocking)
+
+1. **Store wiring tests use mock internals** — CartDrawer Group D tests call the spy directly instead of simulating user interaction through the mock CartItem. Works but gives weaker confidence about actual prop wiring.
+2. **UI primitives don't forward refs** — `sheet.tsx` and `dialog.tsx` don't use `forwardRef`. Would matter if a consumer needs programmatic focus or measurement. Project-wide concern.
+3. **SheetFooter vs DialogFooter layout inconsistency** — Sheet uses `flex-col`, Dialog uses `flex-col-reverse`. Button order on mobile differs. Should be a deliberate decision.
+4. **CartDrawer mock design is fragile for multi-item** — `mockOnUpdateQuantity.mockImplementation(onUpdateQuantity)` always points to the last-rendered CartItem's props. Add a comment if Group D tests are extended to multiple items.
+5. **No test for open/close state** — Sheet is mocked as a plain div, so toggling is invisible to the test suite. Accepted trade-off of the JSDOM portal mocking strategy.
+6. **`data-slot` on `DialogPortal` in `dialog.tsx`** — Same issue as the one fixed in `sheet.tsx` (Portal doesn't render DOM, attribute silently dropped). Fix when touching `dialog.tsx` next.
+
 ---
 
 ## Completion Log
