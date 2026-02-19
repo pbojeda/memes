@@ -101,6 +101,20 @@ describe('OrderSummary', () => {
     });
   });
 
+  describe('Promo Code Message', () => {
+    it('does not render promo code message when not provided', () => {
+      render(<OrderSummary {...baseProps} />);
+      expect(screen.queryByText(/expired/i)).not.toBeInTheDocument();
+    });
+
+    it('renders promo code message when provided', () => {
+      render(
+        <OrderSummary {...baseProps} promoCodeMessage="Promo code has expired" />
+      );
+      expect(screen.getByText('Promo code has expired')).toBeInTheDocument();
+    });
+  });
+
   describe('Cart Errors', () => {
     it('renders alert for each cart validation error', () => {
       const errors = [

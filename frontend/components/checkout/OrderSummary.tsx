@@ -20,6 +20,7 @@ export interface OrderSummaryProps {
   total: number;
   itemCount: number;
   appliedPromoCode: AppliedPromoCodeDetail | null;
+  promoCodeMessage?: string;
   cartErrors: CartValidationError[];
   isLoading: boolean;
 }
@@ -51,6 +52,7 @@ export function OrderSummary({
   total,
   itemCount,
   appliedPromoCode,
+  promoCodeMessage,
   cartErrors,
   isLoading,
 }: OrderSummaryProps) {
@@ -90,6 +92,13 @@ export function OrderSummary({
               </Alert>
             ))}
           </div>
+        )}
+
+        {/* Promo code error message (e.g., expired, minimum not met) */}
+        {promoCodeMessage && (
+          <Alert>
+            <AlertDescription>{promoCodeMessage}</AlertDescription>
+          </Alert>
         )}
 
         {/* Applied promo code badge */}

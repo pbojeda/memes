@@ -1,4 +1,5 @@
 import { apiClient } from '../api/client';
+import { ApiException } from '../api/exceptions';
 import type { components } from '../api/types';
 
 export type OrderTotalResponse = components['schemas']['OrderTotalResponse'];
@@ -17,6 +18,9 @@ export const checkoutService = {
     items: OrderTotalRequest['items'],
     promoCode?: string
   ): Promise<OrderTotalResponse> {
+    if (items.length === 0) {
+      throw new ApiException('EMPTY_CART', 'Cart must contain at least one item', 400);
+    }
     const body: OrderTotalRequest = { items };
     if (promoCode !== undefined) {
       body.promoCode = promoCode;

@@ -77,11 +77,22 @@ describe('checkoutService', () => {
       expect(result.total).toBe(63.99);
     });
 
+    it('should throw ApiException locally when items array is empty', async () => {
+      const caught = await checkoutService.calculateTotals([]).catch((e: unknown) => e);
+
+      expect(caught).toBeInstanceOf(ApiException);
+      expect(caught).toMatchObject({
+        status: 400,
+        code: 'EMPTY_CART',
+      });
+      expect(mockApiClient.post).not.toHaveBeenCalled();
+    });
+
     it('should throw ApiException for HTTP 400 (input validation error)', async () => {
       const error = new ApiException('INVALID_CART_DATA', 'items is required', 400);
       mockApiClient.post.mockRejectedValueOnce(error);
 
-      const caught = await checkoutService.calculateTotals([]).catch((e: unknown) => e);
+      const caught = await checkoutService.calculateTotals(sampleItems).catch((e: unknown) => e);
 
       expect(caught).toBeInstanceOf(ApiException);
       expect(caught).toMatchObject({
