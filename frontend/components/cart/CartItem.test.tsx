@@ -311,6 +311,33 @@ describe('CartItem - Accessibility', () => {
     ).toBeInTheDocument();
   });
 
+  it('quantity stepper has role="group" with aria-label', () => {
+    const item = createCartItem({ title: 'Funny Cat Meme T-Shirt' });
+    render(
+      <CartItem item={item} onUpdateQuantity={jest.fn()} onRemove={jest.fn()} />
+    );
+    expect(
+      screen.getByRole('group', { name: /Quantity for Funny Cat Meme T-Shirt/i })
+    ).toBeInTheDocument();
+  });
+
+  it('image falls back to title when altText is undefined', () => {
+    const item = createCartItem({
+      title: 'Cool Meme Hoodie',
+      primaryImage: {
+        id: 'img-1',
+        url: 'https://example.com/img.jpg',
+        altText: undefined,
+        isPrimary: true,
+        sortOrder: 0,
+      },
+    });
+    render(
+      <CartItem item={item} onUpdateQuantity={jest.fn()} onRemove={jest.fn()} />
+    );
+    expect(screen.getByAltText('Cool Meme Hoodie')).toBeInTheDocument();
+  });
+
   it('image renders alt text from primaryImage', () => {
     const item = createCartItem({
       primaryImage: {

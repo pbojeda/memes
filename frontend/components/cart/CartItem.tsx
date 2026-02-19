@@ -83,8 +83,9 @@ export function CartItem({
       </div>
 
       {/* Quantity controls */}
-      <div className="flex items-center gap-1 shrink-0">
+      <div className="flex items-center gap-1 shrink-0" role="group" aria-label={`Quantity for ${title}`}>
         <Button
+          type="button"
           variant="ghost"
           size="icon-sm"
           aria-label="Decrease quantity"
@@ -97,6 +98,7 @@ export function CartItem({
         <span className="w-8 text-center text-sm select-none">{quantity}</span>
 
         <Button
+          type="button"
           variant="ghost"
           size="icon-sm"
           aria-label="Increase quantity"
@@ -112,6 +114,7 @@ export function CartItem({
         <span className="font-semibold text-sm">{formatPrice(lineTotal)}</span>
 
         <Button
+          type="button"
           variant="ghost"
           size="icon-sm"
           aria-label="Remove item"
