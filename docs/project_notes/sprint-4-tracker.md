@@ -157,6 +157,12 @@ _Key learnings, issues, or observations:_
 14. **No test for `onCancel` callback firing** — Tests verify cancel button renders/hides but don't test clicking it calls `onCancel`.
 15. **Service test `try/catch` with `fail()` pattern** — Two tests in `addressService.test.ts` use verbose try/catch+fail instead of `.rejects` chain. Could use `.catch(e => e)` pattern instead.
 
+### Tech debt from F4.7 code review (non-blocking)
+
+16. **Loading state tests leave dangling unresolved promise** — `PromoCodeInput.test.tsx` loading tests call `resolveValidate!()` at the end but don't `await` the resulting state update. Tests pass but component's async handler settles after test ends.
+17. **`isApplied && appliedResult` double-guard is unreachable** — `state === 'applied'` and `appliedResult !== null` are always set together. The `&& appliedResult` check is dead code. Could model as discriminated union.
+18. **`discountValue!` non-null assertion** — In the FIXED_AMOUNT branch at line 92, `discountValue!` is used despite the parent condition already narrowing it. TypeScript doesn't narrow the generated API type across the conditional; harmless but imprecise.
+
 ---
 
 ## Completion Log

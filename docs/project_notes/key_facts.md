@@ -60,6 +60,10 @@ This file stores project configuration, constants, and frequently-needed **non-s
 ### Address Components (`frontend/components/address/`)
 - `AddressForm` - Reusable create/edit form. Props: `initialData?: Address` (edit mode), `onSuccess: (address: Address) => void`, `onCancel?: () => void`. 10 fields with blur-triggered validation, auto-uppercase countryCode (2-char ISO), isDefault checkbox, API error handling (409 ADDRESS_LIMIT_EXCEEDED). Uses `addressService` for CRUD. Mirrors RegisterForm pattern.
 
+### Promo Code Components (`frontend/components/promo-code/`)
+- `PromoCodeInput` - Self-contained promo code validation component. Props: `orderTotal?: number`, `onApply?: (result: PromoCodeResult) => void`, `onRemove?: () => void`. 5 states: idle (empty input, Apply disabled), input (Apply enabled), loading (Applying..., disabled), applied (success card with Badge code + discount details + Remove button), error (Alert with message, input remains editable). Auto-uppercases input. Uses `promoCodeService.validate()`. Error handling: backend message for `valid=false`, "Invalid promo code..." for ApiException, "Could not apply..." for generic errors. Clears error on input change. Uses `formatPrice()` for currency display.
+- **Test fixtures**: `createValidPromoResult`, `createInvalidPromoResult` in `components/promo-code/testing/fixtures.ts`
+
 ### Validations (`frontend/lib/validations/auth.ts`)
 - `validateEmail(email)` - Email format validation
 - `validatePassword(password)` - Password policy check (12+ chars, uppercase, lowercase, number)
@@ -87,6 +91,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `adminProductService` - Admin product management. `list(params?)` → `ProductListResponse`. `getById(productId)` → `Product`. `create(data: CreateProductRequest)` → `Product`. `update(productId, data: UpdateProductRequest)` → `Product`. `activate(productId)` → `Product`. `deactivate(productId)` → `Product`. `delete(productId)` → `void`. `listImages(productId)` → `ProductImage[]`. `addImage(productId, data)` → `ProductImage`. `updateImage(productId, imageId, data)` → `ProductImage`. `deleteImage(productId, imageId)` → `void`. Separate from `productService` — admin-only operations.
 - `reviewService` - `list(productId, params?)` → `ReviewListResponse` (data: Review[] + meta with pagination + averageRating + ratingDistribution). Strips undefined params. Same pattern as productService.
 - `addressService` - User address CRUD (auth required). `list()` → `Address[]`. `create(data: CreateAddressRequest)` → `Address`. `update(addressId, data: UpdateAddressRequest)` → `Address`. `delete(addressId)` → `void`. Base path: `/users/me/addresses`.
+- `promoCodeService` - Promo code validation (public, no auth). `validate(code, orderTotal?)` → `PromoCodeValidationData`. Calls `POST /promo-codes/validate`. Returns result for both valid and invalid codes without throwing. Exports `PromoCodeValidationData` type (single source of truth). Only throws `ApiException` for HTTP 400.
 
 ### Cart Components (`frontend/components/cart/`)
 - `CartItem` - Presentational component: product image (80x80 next/image + ImageOff fallback), title link to `/products/{slug}`, size label (conditional), formatted unit price + line total via `formatPrice()`, quantity stepper (+/- buttons, bounds 1–99), remove button. Props: `item: CartItemLocal`, `onUpdateQuantity(productId, size, newQty)`, `onRemove(productId, size)`, `className?`. No store coupling — parent wires callbacks to cartStore. Uses `type="button"` on all buttons, `role="group"` on quantity stepper.
