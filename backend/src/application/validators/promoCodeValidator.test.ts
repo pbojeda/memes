@@ -96,6 +96,12 @@ describe('promoCodeValidator', () => {
         );
       });
 
+      it('throws when orderTotal is Infinity', () => {
+        expect(() => validatePromoCodeInput({ code: 'SAVE10', orderTotal: Infinity })).toThrow(
+          InvalidPromoCodeDataError
+        );
+      });
+
       it('throws with field=orderTotal', () => {
         try {
           validatePromoCodeInput({ code: 'SAVE10', orderTotal: -5 });

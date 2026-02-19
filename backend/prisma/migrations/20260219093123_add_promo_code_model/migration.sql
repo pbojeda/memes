@@ -27,9 +27,6 @@ CREATE TABLE "promo_codes" (
 CREATE UNIQUE INDEX "promo_codes_code_key" ON "promo_codes"("code");
 
 -- CreateIndex
-CREATE INDEX "promo_codes_code_idx" ON "promo_codes"("code");
-
--- CreateIndex
 CREATE INDEX "promo_codes_is_active_idx" ON "promo_codes"("is_active");
 
 -- CreateIndex
