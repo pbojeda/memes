@@ -57,10 +57,19 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `Pagination` - Reusable pagination: prev/next buttons, page numbers with ellipsis truncation (<=7 shows all, >7 shows first/last/current±1). Props: `currentPage`, `totalPages`, `onPageChange`, `className?`. Returns null when totalPages <= 1. Accessible: `<nav aria-label="Pagination">`, `aria-current="page"` on current.
 - **Radix Select testing**: Radix portals don't work in JSDOM — mock `radix-ui` Select with native `<select>` elements in tests. See `ProductFilters.test.tsx` for the pattern.
 
+### Address Components (`frontend/components/address/`)
+- `AddressForm` - Reusable create/edit form. Props: `initialData?: Address` (edit mode), `onSuccess: (address: Address) => void`, `onCancel?: () => void`. 10 fields with blur-triggered validation, auto-uppercase countryCode (2-char ISO), isDefault checkbox, API error handling (409 ADDRESS_LIMIT_EXCEEDED). Uses `addressService` for CRUD. Mirrors RegisterForm pattern.
+
 ### Validations (`frontend/lib/validations/auth.ts`)
 - `validateEmail(email)` - Email format validation
 - `validatePassword(password)` - Password policy check (12+ chars, uppercase, lowercase, number)
 - `validatePasswordMatch(password, confirm)` - Confirm password match
+
+### Validations (`frontend/lib/validations/address.ts`)
+- 10 individual validators: `validateFirstName`, `validateLastName`, `validateStreetLine1`, `validateStreetLine2`, `validateCity`, `validateState`, `validatePostalCode`, `validateCountryCode`, `validatePhone`, `validateLabel`
+- `validateAddressForm(fields)` - Runs all validators, returns `{ isValid, errors }`
+- `ADDRESS_FIELD_LIMITS` - Constants matching backend limits
+- Pattern: `{ isValid: boolean; error?: string }` return type, trim before validate
 
 ### Pages (`frontend/app/`)
 - `/products` - Catalog page (Client Component): assembles ProductFilters + ProductGrid + Pagination with bidirectional URL state sync. Reads/writes searchParams (search, typeSlug, minPrice, maxPrice, isHot, sort, page). Filter changes reset page to 1. Error state with retry. Suspense wrapper for useSearchParams.
@@ -77,6 +86,7 @@ This file stores project configuration, constants, and frequently-needed **non-s
 - `productService` - Public product access. `list(params?)` → `ProductListResponse` (data + meta with pagination). `getBySlug(slug)` → `ProductDetailResponse` (data: ProductDetail with images + reviews). Strips undefined params. Uses `NonNullable<operations['listProducts']['parameters']['query']>` for typed params.
 - `adminProductService` - Admin product management. `list(params?)` → `ProductListResponse`. `getById(productId)` → `Product`. `create(data: CreateProductRequest)` → `Product`. `update(productId, data: UpdateProductRequest)` → `Product`. `activate(productId)` → `Product`. `deactivate(productId)` → `Product`. `delete(productId)` → `void`. `listImages(productId)` → `ProductImage[]`. `addImage(productId, data)` → `ProductImage`. `updateImage(productId, imageId, data)` → `ProductImage`. `deleteImage(productId, imageId)` → `void`. Separate from `productService` — admin-only operations.
 - `reviewService` - `list(productId, params?)` → `ReviewListResponse` (data: Review[] + meta with pagination + averageRating + ratingDistribution). Strips undefined params. Same pattern as productService.
+- `addressService` - User address CRUD (auth required). `list()` → `Address[]`. `create(data: CreateAddressRequest)` → `Address`. `update(addressId, data: UpdateAddressRequest)` → `Address`. `delete(addressId)` → `void`. Base path: `/users/me/addresses`.
 
 ### Cart Components (`frontend/components/cart/`)
 - `CartItem` - Presentational component: product image (80x80 next/image + ImageOff fallback), title link to `/products/{slug}`, size label (conditional), formatted unit price + line total via `formatPrice()`, quantity stepper (+/- buttons, bounds 1–99), remove button. Props: `item: CartItemLocal`, `onUpdateQuantity(productId, size, newQty)`, `onRemove(productId, size)`, `className?`. No store coupling — parent wires callbacks to cartStore. Uses `type="button"` on all buttons, `role="group"` on quantity stepper.

@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.6 — Create shipping address form |
+| Branch | feature/sprint4-F4.6-shipping-address-form |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F4.6-shipping-address-form.md |
 
 ---
 
@@ -53,7 +53,7 @@ Blocked: 0 tasks
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
 | F4.4 | Create cart page | High | ✅ | feature/sprint4-F4.4-cart-page | Completed 2026-02-19 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
-| F4.6 | Create shipping address form | High | ⏳ | — | Depends on B4.2 |
+| F4.6 | Create shipping address form | High | 🔄 | feature/sprint4-F4.6-shipping-address-form | Depends on B4.2 ✅ |
 | F4.7 | Implement promo code input | High | ⏳ | — | Depends on B4.4 |
 | F4.8 | Create order summary component | High | ⏳ | — | Depends on F4.1 |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
