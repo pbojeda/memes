@@ -54,6 +54,15 @@ const mockAddress: Address = {
   isDefault: true,
 };
 
+const fillValidForm = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.type(screen.getByLabelText(/first name/i), 'John');
+  await user.type(screen.getByLabelText(/last name/i), 'Doe');
+  await user.type(screen.getByLabelText(/street address/i), '123 Main St');
+  await user.type(screen.getByLabelText(/city/i), 'New York');
+  await user.type(screen.getByLabelText(/postal code/i), '10001');
+  await user.type(screen.getByLabelText(/country code/i), 'US');
+};
+
 describe('AddressForm', () => {
   const mockOnSuccess = jest.fn();
   const mockOnCancel = jest.fn();
@@ -297,15 +306,6 @@ describe('AddressForm', () => {
   });
 
   describe('submission - create mode', () => {
-    const fillValidForm = async (user: ReturnType<typeof userEvent.setup>) => {
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
-      await user.type(screen.getByLabelText(/street address/i), '123 Main St');
-      await user.type(screen.getByLabelText(/city/i), 'New York');
-      await user.type(screen.getByLabelText(/postal code/i), '10001');
-      await user.type(screen.getByLabelText(/country code/i), 'US');
-    };
-
     it('should call addressService.create with form data', async () => {
       const user = userEvent.setup();
       mockAddressService.create.mockResolvedValueOnce(mockAddress);
@@ -425,15 +425,6 @@ describe('AddressForm', () => {
   });
 
   describe('error handling', () => {
-    const fillValidForm = async (user: ReturnType<typeof userEvent.setup>) => {
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
-      await user.type(screen.getByLabelText(/street address/i), '123 Main St');
-      await user.type(screen.getByLabelText(/city/i), 'New York');
-      await user.type(screen.getByLabelText(/postal code/i), '10001');
-      await user.type(screen.getByLabelText(/country code/i), 'US');
-    };
-
     it('should display 409 ADDRESS_LIMIT_EXCEEDED message', async () => {
       const user = userEvent.setup();
       const error = new ApiException('ADDRESS_LIMIT_EXCEEDED', 'Address limit exceeded', 409);

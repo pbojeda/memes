@@ -89,7 +89,7 @@ export function AddressForm({ initialData, onSuccess, onCancel }: AddressFormPro
 
   const handleBlur = (field: keyof AddressFormErrors) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
-    const value = formData[field] as string;
+    const value = String(formData[field] ?? '');
     const error = validateFieldByName(field, value);
     setErrors((prev) => ({ ...prev, [field]: error }));
   };
