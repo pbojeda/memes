@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [██████████                ] 38%
+Progress: [███████████               ] 44%
 
-Completed: 6/16 tasks
+Completed: 7/16 tasks
 In Progress: 0 tasks
-Pending: 10 tasks
+Pending: 9 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F4.1 — Create cartStore (Zustand with persistence) |
-| Branch | feature/sprint4-F4.1-cart-store |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F4.1-cart-store.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -48,7 +48,7 @@ Blocked: 0 tasks
 
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
-| F4.1 | Create cartStore (Zustand with persistence) | High | 🔄 | feature/sprint4-F4.1-cart-store | — |
+| F4.1 | Create cartStore (Zustand with persistence) | High | ✅ | feature/sprint4-F4.1-cart-store | Completed 2026-02-19 |
 | F4.2 | Implement CartDrawer component | High | ⏳ | — | Depends on F4.1, F4.3 |
 | F4.3 | Implement CartItem component | High | ⏳ | — | Depends on F4.1 |
 | F4.4 | Create cart page | High | ⏳ | — | Depends on F4.1, F4.3 |
@@ -145,8 +145,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-19 | B4.4 | 71362af | Promo code validation endpoint + DiscountType enum + PromoCode model + migration (108 tests), 1245 total, PR #74 |
 | 2026-02-19 | B4.5 | 0c9ea64 | Order total calculation service + validator + controller + route (78 tests), 1323 total, PR #75 |
 | 2026-02-19 | B4.6 | dc48914 | Cart/checkout cross-module integration tests (8 tests), 1331 total, PR #76 |
+| 2026-02-19 | F4.1 | 4d82d25 | cartStore Zustand + localStorage persistence (26 tests), 632 frontend total, PR #77 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-19 (B4.6 completed)*
+*Last Updated: 2026-02-19 (F4.1 completed)*
