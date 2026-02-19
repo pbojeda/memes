@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [███████████████           ] 63%
+Progress: [█████████████████         ] 69%
 
-Completed: 10/16 tasks
+Completed: 11/16 tasks
 In Progress: 0 tasks
-Pending: 6 tasks
+Pending: 5 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F4.6 — Create shipping address form |
-| Branch | feature/sprint4-F4.6-shipping-address-form |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/F4.6-shipping-address-form.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -53,7 +53,7 @@ Blocked: 0 tasks
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
 | F4.4 | Create cart page | High | ✅ | feature/sprint4-F4.4-cart-page | Completed 2026-02-19 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
-| F4.6 | Create shipping address form | High | 🔄 | feature/sprint4-F4.6-shipping-address-form | Depends on B4.2 ✅ |
+| F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ⏳ | — | Depends on B4.4 |
 | F4.8 | Create order summary component | High | ⏳ | — | Depends on F4.1 |
 | F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
@@ -149,6 +149,14 @@ _Key learnings, issues, or observations:_
 9. **Duplicate h1 test across Groups B and F** — Group F "page has an h1 heading" is a subset of Group B "renders page heading Shopping Cart". Harmless but redundant. Remove if cleaning up tests.
 10. **No test for same-productId-different-size edge case** — Component uses correct composite key but no test covers two items with same productId and different sizes rendering independently.
 
+### Tech debt from F4.6 code review (non-blocking)
+
+11. **`isFormValid()` runs full validation on every render** — AddressForm calls `validateAddressForm(formData)` in the disabled prop check on every keystroke. Fine for 10 fields, could `useMemo` if form grows.
+12. **Missing `required` HTML attribute on required inputs** — Form uses `aria-invalid` + inline errors but no native `required` attribute. Would improve assistive technology announcements.
+13. **Missing `label` field from edit mode pre-population test** — `mockAddress` has `label: 'Home'` but test doesn't assert it's pre-filled.
+14. **No test for `onCancel` callback firing** — Tests verify cancel button renders/hides but don't test clicking it calls `onCancel`.
+15. **Service test `try/catch` with `fail()` pattern** — Two tests in `addressService.test.ts` use verbose try/catch+fail instead of `.rejects` chain. Could use `.catch(e => e)` pattern instead.
+
 ---
 
 ## Completion Log
@@ -165,8 +173,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-19 | F4.3 | 75527f0 | CartItem presentational component (27 tests), 659 frontend total, PR #78 |
 | 2026-02-19 | F4.2 | 12c08d5 | CartDrawer slide-out + Sheet primitive (18 tests), 677 frontend total, PR #79 |
 | 2026-02-19 | F4.4 | 3d72be8 | Cart page + CartPageContent + a11y improvements (17 tests), 694 frontend total, PR #80 |
+| 2026-02-19 | F4.6 | 5b64698 | AddressForm + addressService + address validations (90 tests), 784 frontend total, PR #81 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-19 (F4.4 completed)*
+*Last Updated: 2026-02-19 (F4.6 completed)*
