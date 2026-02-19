@@ -9,10 +9,10 @@
 ## Progress Overview
 
 ```
-Progress: [█████                     ] 19%
+Progress: [██████                    ] 25%
 
-Completed: 3/16 tasks
-In Progress: 1 tasks
+Completed: 4/16 tasks
+In Progress: 0 tasks
 Pending: 12 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | B4.4 — Implement promo code validation |
-| Branch | feature/sprint4-B4.4-promo-code-validation |
-| Step | 3/5 (Finalize) |
-| Ticket | docs/tickets/B4.4-promo-code-validation.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -38,7 +38,7 @@ Blocked: 0 tasks
 | B4.1 | Create Address model and migration | High | ✅ | feature/sprint4-B4.1-address-model | Completed 2026-02-18 |
 | B4.2 | Implement address service (CRUD for users) | High | ✅ | feature/sprint4-B4.2-address-service | Completed 2026-02-18 |
 | B4.3 | Create cart validation endpoint | High | ✅ | feature/sprint4-B4.3-cart-validation | Completed 2026-02-18 |
-| B4.4 | Implement promo code validation | High | 🔄 | feature/sprint4-B4.4-promo-code-validation | In progress |
+| B4.4 | Implement promo code validation | High | ✅ | feature/sprint4-B4.4-promo-code-validation | Completed 2026-02-19 |
 | B4.5 | Create order total calculation service | High | ⏳ | — | Depends on B4.4 |
 | B4.6 | Write cart/checkout integration tests | High | ⏳ | — | Depends on B4.1-B4.5 |
 
@@ -105,7 +105,8 @@ F4.10 (TDD throughout F4.1–F4.9)
 
 | ADR | Title | Date |
 |-----|-------|------|
-| - | - | - |
+| ADR-010 | Validation endpoints return HTTP 200 for business failures | 2026-02-18 |
+| ADR-011 | Defer maxUsesPerUser enforcement to order placement | 2026-02-19 |
 
 ---
 
@@ -141,8 +142,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-18 | B4.1 | 28667ef | Address model + migration + domain errors (6 tests), 986 total, PR #71 |
 | 2026-02-18 | B4.2 | 814b458 | Address service CRUD + validator + controller + routes (75 tests), 1061 total, PR #72 |
 | 2026-02-18 | B4.3 | 5e48783 | Cart validation endpoint + validator + service + controller + routes (76 tests), 1137 total, PR #73 |
+| 2026-02-19 | B4.4 | 71362af | Promo code validation endpoint + DiscountType enum + PromoCode model + migration (108 tests), 1245 total, PR #74 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-18 (B4.3 completed)*
+*Last Updated: 2026-02-19 (B4.4 completed)*
