@@ -9,11 +9,11 @@
 ## Progress Overview
 
 ```
-Progress: [████████████              ] 50%
+Progress: [██████████████            ] 56%
 
-Completed: 8/16 tasks
+Completed: 9/16 tasks
 In Progress: 0 tasks
-Pending: 8 tasks
+Pending: 7 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F4.2 — Implement CartDrawer component |
-| Branch | feature/sprint4-F4.2-cart-drawer |
-| Step | 2b/5 (Implement) |
-| Ticket | docs/tickets/F4.2-cart-drawer.md |
+| Task | — |
+| Branch | — |
+| Step | — |
+| Ticket | — |
 
 ---
 
@@ -49,7 +49,7 @@ Blocked: 0 tasks
 | ID | Task | Priority | Status | Branch | Notes |
 |----|------|----------|--------|--------|-------|
 | F4.1 | Create cartStore (Zustand with persistence) | High | ✅ | feature/sprint4-F4.1-cart-store | Completed 2026-02-19 |
-| F4.2 | Implement CartDrawer component | High | 🔄 | feature/sprint4-F4.2-cart-drawer | Depends on F4.1, F4.3 |
+| F4.2 | Implement CartDrawer component | High | ✅ | feature/sprint4-F4.2-cart-drawer | Completed 2026-02-19 |
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
 | F4.4 | Create cart page | High | ⏳ | — | Depends on F4.1, F4.3 |
 | F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
@@ -156,8 +156,9 @@ _Key learnings, issues, or observations:_
 | 2026-02-19 | B4.6 | dc48914 | Cart/checkout cross-module integration tests (8 tests), 1331 total, PR #76 |
 | 2026-02-19 | F4.1 | 4d82d25 | cartStore Zustand + localStorage persistence (26 tests), 632 frontend total, PR #77 |
 | 2026-02-19 | F4.3 | 75527f0 | CartItem presentational component (27 tests), 659 frontend total, PR #78 |
+| 2026-02-19 | F4.2 | 12c08d5 | CartDrawer slide-out + Sheet primitive (18 tests), 677 frontend total, PR #79 |
 
 ---
 
 *Created: 2026-02-18*
-*Last Updated: 2026-02-19 (F4.3 completed)*
+*Last Updated: 2026-02-19 (F4.2 completed)*
