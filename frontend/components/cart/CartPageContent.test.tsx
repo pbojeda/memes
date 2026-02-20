@@ -170,6 +170,25 @@ describe('CartPageContent - Empty Cart State', () => {
 });
 
 // ================================================================================
+// Tech Debt Tests
+// ================================================================================
+
+describe('CartPageContent - Tech Debt', () => {
+  it('renders items with same productId but different sizes as separate items', () => {
+    mockItems = [
+      createCartItem({ productId: 'prod-1', title: 'T-Shirt Size M', size: 'M' }),
+      createCartItem({ productId: 'prod-1', title: 'T-Shirt Size L', size: 'L' }),
+    ];
+    mockItemCount = 2;
+
+    render(<CartPageContent />);
+
+    expect(screen.getByTestId('cart-item-prod-1-M')).toBeInTheDocument();
+    expect(screen.getByTestId('cart-item-prod-1-L')).toBeInTheDocument();
+  });
+});
+
+// ================================================================================
 // B: Cart With Items
 // ================================================================================
 

@@ -146,6 +146,16 @@ describe('cartStore', () => {
 
       expect(useCartStore.getState().items[0].quantity).toBe(MAX_ITEM_QUANTITY);
     });
+
+    it('should cap accumulated quantity at MAX_ITEM_QUANTITY boundary (98 + 2)', () => {
+      act(() => {
+        useCartStore.getState().addItem(itemTShirtM, 98);
+        useCartStore.getState().addItem(itemTShirtM, 2);
+      });
+
+      const state = useCartStore.getState();
+      expect(state.items[0].quantity).toBe(MAX_ITEM_QUANTITY); // 99
+    });
   });
 
   describe('removeItem', () => {
@@ -311,6 +321,19 @@ describe('cartStore', () => {
 
       expect(state.itemCount).toBe(0);
       expect(state.subtotal).toBe(0);
+    });
+
+    it('should handle decimal rounding correctly for subtotal', () => {
+      act(() => {
+        useCartStore.getState().addItem(
+          { ...itemTShirtM, price: 19.99 },
+          3
+        );
+      });
+
+      const state = useCartStore.getState();
+      // 19.99 * 3 = 59.97 (exact, no floating-point issues)
+      expect(state.subtotal).toBe(59.97);
     });
   });
 });

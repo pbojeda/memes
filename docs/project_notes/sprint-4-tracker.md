@@ -12,8 +12,8 @@
 Progress: [████████████████████████  ] 94%
 
 Completed: 15/16 tasks
-In Progress: 0 tasks
-Pending: 1 tasks
+In Progress: 1 tasks
+Pending: 0 tasks
 Deferred: 0 tasks
 Blocked: 0 tasks
 ```
@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | F4.9 — Implement cross-sell component |
-| Branch | feature/sprint4-F4.9-cross-sell-component |
-| Step | 5/5 (Complete) |
-| Ticket | docs/tickets/F4.9-cross-sell-component.md |
+| Task | F4.10 — Write cart/checkout tests (gap analysis) |
+| Branch | feature/sprint4-F4.10-cart-checkout-tests |
+| Step | 2b/5 (Implement) |
+| Ticket | Simple — no ticket |
 
 ---
 
@@ -57,7 +57,7 @@ Blocked: 0 tasks
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
 | F4.8 | Create order summary component | High | ✅ | feature/sprint4-F4.8-order-summary-component | Completed 2026-02-19 |
 | F4.9 | Implement cross-sell component | Medium | ✅ | feature/sprint4-F4.9-cross-sell-component | Completed 2026-02-20 |
-| F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
+| F4.10 | Write cart/checkout tests | High | 🔄 | feature/sprint4-F4.10-cart-checkout-tests | Gap analysis + fill |
 
 ---
 

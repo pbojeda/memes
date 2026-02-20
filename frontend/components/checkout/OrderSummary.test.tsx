@@ -67,6 +67,12 @@ describe('OrderSummary', () => {
       expect(screen.getByText(/free/i)).toBeInTheDocument();
     });
 
+    it('displays formatted shipping cost when > 0', () => {
+      render(<OrderSummary {...baseProps} shippingCost={9.99} />);
+      // formatPrice(9.99) → "9,99 €"
+      expect(screen.getByText(/9,99\s*€/)).toBeInTheDocument();
+    });
+
     it('displays formatted tax amount', () => {
       render(<OrderSummary {...baseProps} taxAmount={5.50} />);
       // formatPrice(5.50) → "5,50 €"
@@ -98,6 +104,41 @@ describe('OrderSummary', () => {
         />
       );
       expect(screen.getByText('SUMMER20')).toBeInTheDocument();
+    });
+
+    it('displays percentage discount description', () => {
+      const appliedPromoCode = createAppliedPromoCode({
+        code: 'SAVE20',
+        discountType: 'PERCENTAGE',
+        discountValue: 20,
+      });
+      render(
+        <OrderSummary
+          {...baseProps}
+          discountAmount={15.99}
+          total={63.99}
+          appliedPromoCode={appliedPromoCode}
+        />
+      );
+      expect(screen.getByText('20% off')).toBeInTheDocument();
+    });
+
+    it('displays fixed amount discount description', () => {
+      const appliedPromoCode = createAppliedPromoCode({
+        code: 'SAVE15',
+        discountType: 'FIXED_AMOUNT',
+        discountValue: 15.99,
+      });
+      render(
+        <OrderSummary
+          {...baseProps}
+          discountAmount={15.99}
+          total={63.99}
+          appliedPromoCode={appliedPromoCode}
+        />
+      );
+      // formatPrice(15.99) → "15,99 €"
+      expect(screen.getByText(/15,99\s*€\s+off/i)).toBeInTheDocument();
     });
   });
 
