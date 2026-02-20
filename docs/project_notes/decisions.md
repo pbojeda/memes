@@ -185,6 +185,25 @@ Skip `maxUsesPerUser` check in the validation endpoint. Enforce it during order 
 - The frontend should handle this checkout-time rejection gracefully
 - Order placement service (B4.5 or future) must implement the `maxUsesPerUser` check
 
+### ADR-012: Guest checkout uses inline address form, not AddressForm component (2026-02-19)
+
+**Context:**
+- F4.5 implements the checkout page with both guest and registered user flows
+- The existing `AddressForm` component calls `addressService.create()` in its `handleSubmit`, which requires authentication
+- Guest users don't have an auth session, so `addressService.create()` would fail with 401
+
+**Decision:**
+Guest checkout uses lightweight inline form fields in `CheckoutPageContent` that collect address data locally (stored in component state). The data is sent directly in the `CreateOrderRequest` payload when placing the order. The existing `AddressForm` component is only used inside `AddressSelector` for registered users adding new addresses.
+
+**Alternatives Considered:**
+- Add `mode="local"` prop to AddressForm that bypasses `addressService` call → Rejected: modifies existing component's API, adds complexity to a component that works well for its purpose
+- Make `addressService.create()` optionally skip auth → Rejected: security risk, addresses should always be persisted with user context
+
+**Consequences:**
+- Guest address fields are duplicated (inline form vs AddressForm), but the validation logic (`validateAddressForm()`) is shared
+- When a backend order endpoint stores guest addresses, it will handle persistence server-side
+- If guest checkout later needs the full AddressForm UX (field-level blur validation, etc.), the inline form can be extracted into a `GuestAddressForm` component
+
 ### ADR-008: Auto-generate product slug from title.es on backend (2026-02-17)
 
 **Context:**

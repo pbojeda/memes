@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.5 — Implement checkout page (multi-step) |
+| Branch | feature/sprint4-F4.5-checkout-page |
+| Step | 4/5 (Review — PR #84) |
+| Ticket | docs/tickets/F4.5-checkout-page.md |
 
 ---
 
@@ -52,7 +52,7 @@ Blocked: 0 tasks
 | F4.2 | Implement CartDrawer component | High | ✅ | feature/sprint4-F4.2-cart-drawer | Completed 2026-02-19 |
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
 | F4.4 | Create cart page | High | ✅ | feature/sprint4-F4.4-cart-page | Completed 2026-02-19 |
-| F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
+| F4.5 | Implement checkout page (multi-step) | High | 🔄 | feature/sprint4-F4.5-checkout-page | Depends on F4.1, F4.6, F4.7, F4.8 (all ✅) |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
 | F4.8 | Create order summary component | High | ✅ | feature/sprint4-F4.8-order-summary-component | Completed 2026-02-19 |
@@ -107,6 +107,7 @@ F4.10 (TDD throughout F4.1–F4.9)
 |-----|-------|------|
 | ADR-010 | Validation endpoints return HTTP 200 for business failures | 2026-02-18 |
 | ADR-011 | Defer maxUsesPerUser enforcement to order placement | 2026-02-19 |
+| ADR-012 | Guest checkout uses inline address form, not AddressForm component | 2026-02-19 |
 
 ---
 
@@ -168,6 +169,13 @@ _Key learnings, issues, or observations:_
 19. **`text-green-700` hardcoded color on discount line** — `OrderSummary.tsx` line 120 uses a fixed Tailwind shade instead of a semantic design token. Won't adapt to dark mode. Use `dark:text-green-400` or a CSS variable when dark mode is implemented.
 20. **Test fixtures use plain string IDs instead of UUIDs** — `checkoutService.test.ts` sample items use `'prod-1'`/`'prod-2'` and `fixtures.ts` uses `'prod-invalid'`. The API spec requires UUID format for `productId`. Tests pass because the API is mocked, but hides format mismatches.
 21. **`promoCodeService` missing from barrel export** — `frontend/lib/services/index.ts` exports all services except `promoCodeService`. Pre-existing issue discovered during F4.8 review. Not blocking since consumers import directly.
+
+### Tech debt from F4.5 code review (non-blocking)
+
+22. **Guest email/phone lack format validation** — `CheckoutPageContent.tsx` only checks for empty strings, not email format or phone format. Backend will validate on submission, but frontend should give immediate feedback. Add blur validation using `validateEmail()` and phone regex.
+23. **Non-null assertion in orderService** — `response.data.data!` in `orderService.ts:28` assumes API always returns the expected structure. Add null guard for robustness (same as `checkoutService.ts` pattern).
+24. **Guest checkout form missing `<form>` element** — The inline address/contact fields in `CheckoutPageContent.tsx` use `<div>` instead of `<form>`. Adding `<form>` would enable Enter-to-submit, better screen reader experience, and browser autofill.
+25. **`cartId` spec mismatch** — API spec says `cartId` is "required for guest checkout" but the app uses client-side cart (localStorage). When backend order endpoint is implemented (Sprint 5+), reconcile the spec with the implementation.
 
 ---
 
