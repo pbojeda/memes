@@ -93,6 +93,14 @@ jest.mock('../checkout/OrderSummary', () => ({
   ),
 }));
 
+// ---- Mock ../product/CrossSellSection ------------------------------------------
+// Renders as a div to verify productId wiring.
+jest.mock('../product/CrossSellSection', () => ({
+  CrossSellSection: ({ productId }: { productId: string }) => (
+    <div data-testid="cross-sell-section" data-product-id={productId} />
+  ),
+}));
+
 // ---- Mock ../../stores/cartStore -----------------------------------------------
 const mockRehydrate = jest.fn();
 
@@ -296,5 +304,48 @@ describe('CartPageContent - Accessibility', () => {
     mockItemCount = 2;
     render(<CartPageContent />);
     expect(screen.getAllByRole('listitem').length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+// ================================================================================
+// G: Cross-Sell Integration
+// ================================================================================
+
+describe('CartPageContent - Cross-Sell Integration', () => {
+  it('renders CrossSellSection with first item productId when cart has items', () => {
+    mockItems = [
+      createCartItem({ productId: 'prod-123', size: 'M' }),
+      createCartItem({ productId: 'prod-456', size: 'L' }),
+    ];
+    mockItemCount = 2;
+
+    render(<CartPageContent />);
+
+    const crossSell = screen.getByTestId('cross-sell-section');
+    expect(crossSell).toBeInTheDocument();
+    expect(crossSell).toHaveAttribute('data-product-id', 'prod-123');
+  });
+
+  it('does not render CrossSellSection when cart is empty', () => {
+    mockItems = [];
+    mockItemCount = 0;
+
+    render(<CartPageContent />);
+
+    expect(screen.queryByTestId('cross-sell-section')).not.toBeInTheDocument();
+  });
+
+  it('uses first cart item productId, not others', () => {
+    mockItems = [
+      createCartItem({ productId: 'first-product', size: 'S' }),
+      createCartItem({ productId: 'second-product', size: 'M' }),
+      createCartItem({ productId: 'third-product', size: 'L' }),
+    ];
+    mockItemCount = 3;
+
+    render(<CartPageContent />);
+
+    const crossSell = screen.getByTestId('cross-sell-section');
+    expect(crossSell).toHaveAttribute('data-product-id', 'first-product');
   });
 });

@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.9 — Implement cross-sell component |
+| Branch | feature/sprint4-F4.9-cross-sell-component |
+| Step | 2b/5 (Implement) |
+| Ticket | docs/tickets/F4.9-cross-sell-component.md |
 
 ---
 
@@ -56,7 +56,7 @@ Blocked: 0 tasks
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
 | F4.8 | Create order summary component | High | ✅ | feature/sprint4-F4.8-order-summary-component | Completed 2026-02-19 |
-| F4.9 | Implement cross-sell component | Medium | ⏳ | — | — |
+| F4.9 | Implement cross-sell component | Medium | 🔄 | feature/sprint4-F4.9-cross-sell-component | In progress |
 | F4.10 | Write cart/checkout tests | High | ⏳ | — | TDD throughout |
 
 ---

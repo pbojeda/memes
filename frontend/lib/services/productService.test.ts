@@ -192,4 +192,59 @@ describe('productService', () => {
       });
     });
   });
+
+  describe('getRelated', () => {
+    it('should call GET /products/{productId}/related with limit param', async () => {
+      mockApiClient.get.mockResolvedValueOnce({
+        data: {
+          data: [mockProduct, mockProduct2],
+          meta: mockPaginationMeta,
+        },
+      });
+
+      await productService.getRelated('prod-123', 4);
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/products/prod-123/related', {
+        params: { limit: 4 },
+      });
+    });
+
+    it('should use default limit when not provided', async () => {
+      mockApiClient.get.mockResolvedValueOnce({
+        data: {
+          data: [mockProduct],
+          meta: mockPaginationMeta,
+        },
+      });
+
+      await productService.getRelated('prod-123');
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/products/prod-123/related', {
+        params: { limit: 4 },
+      });
+    });
+
+    it('should return ProductListResponse data', async () => {
+      const mockResponse = {
+        data: [mockProduct, mockProduct2],
+        meta: mockPaginationMeta,
+      };
+
+      mockApiClient.get.mockResolvedValueOnce({
+        data: mockResponse,
+      });
+
+      const result = await productService.getRelated('prod-123', 4);
+
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should propagate errors from apiClient', async () => {
+      mockApiClient.get.mockRejectedValueOnce(
+        new ApiException('NOT_FOUND', 'Product not found', 404)
+      );
+
+      await expect(productService.getRelated('non-existent')).rejects.toThrow(ApiException);
+    });
+  });
 });
