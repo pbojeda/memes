@@ -24,10 +24,10 @@ Blocked: 0 tasks
 
 | Field | Value |
 |-------|-------|
-| Task | — |
-| Branch | — |
-| Step | — |
-| Ticket | — |
+| Task | F4.5 — Implement checkout page (multi-step) |
+| Branch | feature/sprint4-F4.5-checkout-page |
+| Step | 3/5 (Finalize) |
+| Ticket | docs/tickets/F4.5-checkout-page.md |
 
 ---
 
@@ -52,7 +52,7 @@ Blocked: 0 tasks
 | F4.2 | Implement CartDrawer component | High | ✅ | feature/sprint4-F4.2-cart-drawer | Completed 2026-02-19 |
 | F4.3 | Implement CartItem component | High | ✅ | feature/sprint4-F4.3-cart-item-component | Completed 2026-02-19 |
 | F4.4 | Create cart page | High | ✅ | feature/sprint4-F4.4-cart-page | Completed 2026-02-19 |
-| F4.5 | Implement checkout page (multi-step) | High | ⏳ | — | Depends on F4.1, F4.6, F4.7, F4.8 |
+| F4.5 | Implement checkout page (multi-step) | High | 🔄 | feature/sprint4-F4.5-checkout-page | Depends on F4.1, F4.6, F4.7, F4.8 (all ✅) |
 | F4.6 | Create shipping address form | High | ✅ | feature/sprint4-F4.6-shipping-address-form | Completed 2026-02-19 |
 | F4.7 | Implement promo code input | High | ✅ | feature/sprint4-F4.7-promo-code-input | Completed 2026-02-19 |
 | F4.8 | Create order summary component | High | ✅ | feature/sprint4-F4.8-order-summary-component | Completed 2026-02-19 |
