@@ -138,6 +138,12 @@ describe('AddressForm', () => {
       expect(screen.getByLabelText(/phone/i)).toHaveValue('+1-555-555-5555');
     });
 
+    it('should pre-populate label field from initialData', () => {
+      render(<AddressForm initialData={mockAddress} onSuccess={mockOnSuccess} />);
+
+      expect(screen.getByLabelText(/label/i)).toHaveValue('Home');
+    });
+
     it('should have submit button enabled when initialData is valid', () => {
       render(<AddressForm initialData={mockAddress} onSuccess={mockOnSuccess} />);
 
@@ -492,6 +498,18 @@ describe('AddressForm', () => {
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /save address/i })).toBeEnabled();
       });
+    });
+  });
+
+  describe('Cancel button behavior', () => {
+    it('should call onCancel when cancel button is clicked', async () => {
+      const user = userEvent.setup();
+      render(<AddressForm onSuccess={mockOnSuccess} onCancel={mockOnCancel} />);
+
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      await user.click(cancelButton);
+
+      expect(mockOnCancel).toHaveBeenCalledTimes(1);
     });
   });
 });

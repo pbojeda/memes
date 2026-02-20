@@ -11,6 +11,7 @@ import {
   createAddress,
 } from './testing/fixtures';
 import type { components } from '@/lib/api/types';
+import { ApiException } from '@/lib/api/exceptions';
 
 type Address = components['schemas']['Address'];
 type OrderTotalResponse = components['schemas']['OrderTotalResponse'];
@@ -820,6 +821,20 @@ describe('CheckoutPageContent', () => {
       });
     });
 
+    it('should display ApiException message when calculateTotals fails with ApiException', async () => {
+      mockCartItems = [createCartItem()];
+      mockCartItemCount = 1;
+      mockCalculateTotals.mockRejectedValue(
+        new ApiException(400, 'Cart validation failed', 'CART_ERROR')
+      );
+
+      render(<CheckoutPageContent />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Cart validation failed')).toBeInTheDocument();
+      });
+    });
+
     it('should display error alert when orderService.create rejects', async () => {
       const user = userEvent.setup();
       mockIsAuthenticated = true;
@@ -846,6 +861,37 @@ describe('CheckoutPageContent', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/failed to create order/i)).toBeInTheDocument();
+      });
+    });
+
+    it('should display ApiException message when orderService.create fails with ApiException', async () => {
+      const user = userEvent.setup();
+      mockIsAuthenticated = true;
+      mockCartItems = [createCartItem()];
+      mockCartItemCount = 1;
+      mockCalculateTotals.mockResolvedValue(createOrderTotalResponse());
+      mockOrderCreate.mockRejectedValue(
+        new ApiException(400, 'Order items invalid', 'ORDER_INVALID')
+      );
+
+      render(<CheckoutPageContent />);
+
+      await waitFor(() => {
+        expect(capturedAddressSelectorOnSelect).not.toBeNull();
+      });
+
+      // Select address
+      capturedAddressSelectorOnSelect!(createAddress());
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /place order/i })).not.toBeDisabled();
+      });
+
+      // Click Place Order
+      await user.click(screen.getByRole('button', { name: /place order/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Order items invalid')).toBeInTheDocument();
       });
     });
   });
