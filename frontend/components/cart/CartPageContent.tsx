@@ -6,6 +6,7 @@ import { ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CartItem } from '@/components/cart/CartItem';
 import { OrderSummary } from '@/components/checkout/OrderSummary';
+import { CrossSellSection } from '@/components/product/CrossSellSection';
 import { useCartStore } from '@/stores/cartStore';
 
 /**
@@ -48,49 +49,54 @@ export function CartPageContent() {
           </Link>
         </div>
       ) : (
-        /* Populated cart — responsive two-column grid */
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Items column */}
-          <div className="lg:col-span-2">
-            <ul className="divide-y" aria-label="Cart items">
-              {items.map((item) => (
-                <li key={`${item.productId}-${item.size ?? 'no-size'}`}>
-                  <CartItem
-                    item={item}
-                    onUpdateQuantity={updateQuantity}
-                    onRemove={removeItem}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+        <>
+          {/* Populated cart — responsive two-column grid */}
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Items column */}
+            <div className="lg:col-span-2">
+              <ul className="divide-y" aria-label="Cart items">
+                {items.map((item) => (
+                  <li key={`${item.productId}-${item.size ?? 'no-size'}`}>
+                    <CartItem
+                      item={item}
+                      onUpdateQuantity={updateQuantity}
+                      onRemove={removeItem}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Order summary column */}
-          <div className="lg:col-span-1 sticky top-24">
-            <OrderSummary
-              subtotal={subtotal}
-              discountAmount={0}
-              shippingCost={0}
-              taxAmount={0}
-              total={subtotal}
-              itemCount={itemCount}
-              appliedPromoCode={null}
-              cartErrors={[]}
-              isLoading={false}
-            />
-            <div className="mt-4 flex flex-col gap-3">
-              <Button asChild className="w-full">
-                <Link href="/checkout">Proceed to Checkout</Link>
-              </Button>
-              <Link
-                href="/products"
-                className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground text-center"
-              >
-                Continue Shopping
-              </Link>
+            {/* Order summary column */}
+            <div className="lg:col-span-1 sticky top-24">
+              <OrderSummary
+                subtotal={subtotal}
+                discountAmount={0}
+                shippingCost={0}
+                taxAmount={0}
+                total={subtotal}
+                itemCount={itemCount}
+                appliedPromoCode={null}
+                cartErrors={[]}
+                isLoading={false}
+              />
+              <div className="mt-4 flex flex-col gap-3">
+                <Button asChild className="w-full">
+                  <Link href="/checkout">Proceed to Checkout</Link>
+                </Button>
+                <Link
+                  href="/products"
+                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground text-center"
+                >
+                  Continue Shopping
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* Cross-sell section */}
+          <CrossSellSection productId={items[0].productId} className="mt-12" />
+        </>
       )}
     </main>
   );

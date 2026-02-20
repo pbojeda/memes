@@ -29,4 +29,15 @@ export const productService = {
 
     return response.data;
   },
+
+  /**
+   * Get related products for a given product.
+   */
+  async getRelated(productId: string, limit: number = 4): Promise<ProductListResponse> {
+    const response = await apiClient.get<ProductListResponse>(
+      `/products/${productId}/related`,
+      { params: { limit } }
+    );
+    return response.data;
+  },
 };
